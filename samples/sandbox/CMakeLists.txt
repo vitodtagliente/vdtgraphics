@@ -5,7 +5,7 @@ project(${ProjectId})
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(. ../../include)
+include_directories(. ../../include ../../vdtmath/include)
 
 file(GLOB PROJECT_HEADERS "*.h") 
 file(GLOB PROJECT_SOURCES "*.cpp")
