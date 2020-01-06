@@ -33,5 +33,4 @@ add_library(
 )
 
 # Samples
-add_subdirectory(vendor/vdtmath)
-#add_subdirectory(samples/sandbox)
+add_subdirectory(vdtmath)
