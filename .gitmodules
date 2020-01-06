@@ -1,1 +1,4 @@
 
+[submodule "vdtmath"]
+	path = vdtmath
+	url = https://github.com/vitodtagliente/vdtmath
