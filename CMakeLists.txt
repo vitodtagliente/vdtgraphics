@@ -32,5 +32,5 @@ add_library(
 	vdtmath
 )
 
-# Samples
+# Dependencies
 add_subdirectory(vdtmath)
