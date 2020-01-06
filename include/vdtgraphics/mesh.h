@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "../../math/vector.h"
+#include <vdtmath/vector.h>
+
+using namespace math;
 
 namespace graphics
 {

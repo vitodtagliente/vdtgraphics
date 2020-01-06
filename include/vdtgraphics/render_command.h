@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include "../math/matrix4.h"
+#include <vdtmath/matrix4.h>
+
+using namespace math;
 
 namespace graphics
 {

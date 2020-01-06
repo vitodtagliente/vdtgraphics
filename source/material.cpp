@@ -1,9 +1,9 @@
-#include "material.h"
+#include <vdtgraphics/material.h>
 
-#include "shader_program.h"
-#include "texture.h"
+#include <vdtgraphics/shader_program.h>
+#include <vdtgraphics/texture.h>
 
-namespace awesome
+namespace graphics
 {
 	Material::Material(const Type t_type /*= Type::Default*/)
 		: m_type(t_type)
@@ -52,7 +52,7 @@ namespace awesome
 			else if (pair.second.type == MaterialProperty::Type::Color)
 			{
 				const Color& color = std::get<Color>(pair.second.value);
-				m_shaderProgram->set(pair.first, color.red, color.green, color.blue, color.alpha);
+				m_shaderProgram->set(pair.first, color.red(), color.green(), color.blue(), color.alpha());
 			}
 			else if (pair.second.type == MaterialProperty::Type::Vec4)
 			{

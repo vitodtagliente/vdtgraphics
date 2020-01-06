@@ -1,6 +1,6 @@
-#include "shaders.h"
+#include <vdtgraphics/shaders.h>
 
-namespace awesome
+namespace graphics
 {
 	// shader names
 

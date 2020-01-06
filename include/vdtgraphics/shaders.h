@@ -8,7 +8,7 @@
 // collection of default engine shaders
 // The engine should provide some basic shaders by itself
 
-namespace awesome
+namespace graphics
 {
 	struct Shaders
 	{

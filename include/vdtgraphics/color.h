@@ -8,6 +8,8 @@ namespace graphics
 {
 	class Color
 	{
+	public:
+
 		Color();
 		Color(const unsigned int red, const unsigned int green, const unsigned int blue);
 		Color(const float red, const float green, const float blue, const float alpha = 1.0f);
@@ -36,6 +38,11 @@ namespace graphics
 		static const Color Yellow;
 		static const Color Magenta;
 		static const Color Transparent;
+
+		inline float red() const { return m_red; }
+		inline float green() const { return m_green; }
+		inline float blue() const { return m_blue; }
+		inline float alpha() const { return m_alpha; }
 
 	private:
 		

@@ -1,26 +1,24 @@
 #include <vdtgraphics/renderer.h>
 
-#include "graphics_api.h"
-#include "render_command.h"
-#include "shader_program.h"
-#include "material.h"
-#include "material_library.h"
-#include "texture.h"
-#include "texture_library.h"
-#include "mesh/mesh.h"
-#include "mesh/quad.h"
-#include "mesh/circle.h"
-#include "shaders.h"
+#include <vdtgraphics/graphics_api.h>
+#include <vdtgraphics/render_command.h>
+#include <vdtgraphics/shaders.h>
+#include <vdtgraphics/shader_program.h>
+#include <vdtgraphics/material.h>
+#include <vdtgraphics/material_library.h>
+#include <vdtgraphics/mesh.h>
+#include <vdtgraphics/texture.h>
+#include <vdtgraphics/texture_library.h>
 
 namespace graphics
 {
-	Renderer::Renderer(GraphicsAPI* const t_api)
-		: m_api(t_api)
+	Renderer::Renderer(GraphicsAPI* const api)
+		: m_api(api)
 		, m_commandBuffer()
-		, m_materialLibrary(new MaterialLibrary(t_api))
-		, m_textureLibrary(new TextureLibrary(t_api))
-		, m_quad(t_api->createRenderable(Quad{}))
-		, m_circle(t_api->createRenderable(Circle{}))
+		, m_materialLibrary(new MaterialLibrary(api))
+		, m_textureLibrary(new TextureLibrary(api))
+		, m_quad(api->createRenderable(Mesh{})) // TODO
+		, m_circle(api->createRenderable(Mesh{})) // TODO
 		, m_drawingMode(DrawingMode::Fill)
 	{
 	}
@@ -29,14 +27,14 @@ namespace graphics
 	{
 	}
 	
-	void Renderer::setDrawingMode(const DrawingMode t_drawingMode)
+	void Renderer::setDrawingMode(const DrawingMode drawingMode)
 	{
-		m_drawingMode = t_drawingMode;
+		m_drawingMode = drawingMode;
 	}
 
-	void Renderer::push(Renderable* const t_renderable, Material* const t_material, const matrix4& t_transform)
+	void Renderer::push(Renderable* const renderable, Material* const material, const matrix4& transform)
 	{
-		m_commandBuffer.push_back(RenderCommand(t_renderable, t_material, t_transform));
+		m_commandBuffer.push_back(RenderCommand(renderable, material, transform));
 	}
 
 	void Renderer::render()
@@ -54,39 +52,39 @@ namespace graphics
 		m_commandBuffer.clear();
 	}
 	
-	void Renderer::drawTexture(Texture* const t_texture, const vector2& t_position)
+	void Renderer::drawTexture(Texture* const texture, const vector2& position)
 	{
 		drawTexture(
-			t_texture, 
-			matrix4::translate(to_vec3(t_position))
+			texture, 
+			matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTexture(Texture* const t_texture, const vector2& t_position, const vector2& t_scale)
+	void Renderer::drawTexture(Texture* const texture, const vector2& position, const vector2& scale)
 	{
 		drawTexture(
-			t_texture, 
-			matrix4::scale(to_vec3(t_scale)) * matrix4::translate(to_vec3(t_position))
+			texture, 
+			matrix4::scale(to_vec3(scale)) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTexture(Texture* const t_texture, const vector2& t_position, const float t_theta)
+	void Renderer::drawTexture(Texture* const texture, const vector2& position, const float theta)
 	{
 		drawTexture(
-			t_texture,
-			matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			texture,
+			matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTexture(Texture* const t_texture, const vector2& t_position, const float t_theta, const vector2& t_scale)
+	void Renderer::drawTexture(Texture* const texture, const vector2& position, const float theta, const vector2& scale)
 	{
 		drawTexture(
-			t_texture,
-			matrix4::scale(to_vec3(t_scale)) * matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			texture,
+			matrix4::scale(to_vec3(scale)) * matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTexture(Texture* const t_texture, const matrix4& t_transform)
+	void Renderer::drawTexture(Texture* const texture, const matrix4& transform)
 	{
 		Material* const material = m_materialLibrary->get(Shaders::names::TextureShader);
 
@@ -94,49 +92,49 @@ namespace graphics
 		{
 			Material* const materialInstance = material->createInstance();
 
-			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, t_transform);
-			materialInstance->set(Shaders::params::Texture, t_texture);
-			push(m_quad, materialInstance, t_transform);
+			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
+			materialInstance->set(Shaders::params::Texture, texture);
+			push(m_quad, materialInstance, transform);
 		}
 	}
 
-	void Renderer::drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position)
+	void Renderer::drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position)
 	{
 		drawTextureCrop(
-			t_texture,
-			t_rect,
-			matrix4::translate(to_vec3(t_position))
+			texture,
+			rect,
+			matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const vector2& t_scale)
+	void Renderer::drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const vector2& scale)
 	{
 		drawTextureCrop(
-			t_texture,
-			t_rect,
-			matrix4::scale(to_vec3(t_scale)) * matrix4::translate(to_vec3(t_position))
+			texture,
+			rect,
+			matrix4::scale(to_vec3(scale)) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const float t_theta)
+	void Renderer::drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const float theta)
 	{
 		drawTextureCrop(
-			t_texture,
-			t_rect,
-			matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			texture,
+			rect,
+			matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const float t_theta, const vector2& t_scale)
+	void Renderer::drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const float theta, const vector2& scale)
 	{
 		drawTextureCrop(
-			t_texture,
-			t_rect,
-			matrix4::scale(to_vec3(t_scale)) * matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			texture,
+			rect,
+			matrix4::scale(to_vec3(scale)) * matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawTextureCrop(Texture* const t_texture, const rect& t_rect, const matrix4& t_transform)
+	void Renderer::drawTextureCrop(Texture* const texture, const rect& rect, const matrix4& transform)
 	{
 		static Material* const material = m_materialLibrary->get(Shaders::names::CroppedTextureShader);
 
@@ -144,69 +142,69 @@ namespace graphics
 		{
 			Material* const materialInstance = material->createInstance();
 
-			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, t_transform);
-			materialInstance->set(Shaders::params::Texture, t_texture);
+			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
+			materialInstance->set(Shaders::params::Texture, texture);
 			materialInstance->set(Shaders::params::TextureCropping, vec4(
-				t_rect.x, t_rect.y, t_rect.width, t_rect.height
+				rect.x, rect.y, rect.width, rect.height
 			));
-			push(m_quad, materialInstance, t_transform);
+			push(m_quad, materialInstance, transform);
 		}
 	}
 
-	void Renderer::drawRect(const Color& t_color, const vector2& t_position)
+	void Renderer::drawRect(const Color& color, const vector2& position)
 	{
 		drawRect(
-			t_color,
-			matrix4::translate(to_vec3(t_position))
+			color,
+			matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawRect(const Color& t_color, const vector2& t_position, const vector2& t_scale)
+	void Renderer::drawRect(const Color& color, const vector2& position, const vector2& scale)
 	{
 		drawRect(
-			t_color,
-			matrix4::scale(to_vec3(t_scale)) * matrix4::translate(to_vec3(t_position))
+			color,
+			matrix4::scale(to_vec3(scale)) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawRect(const Color& t_color, const vector2& t_position, const float t_theta)
+	void Renderer::drawRect(const Color& color, const vector2& position, const float theta)
 	{
 		drawRect(
-			t_color,
-			matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			color,
+			matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawRect(const Color& t_color, const vector2& t_position, const float t_theta, const vector2& t_scale)
+	void Renderer::drawRect(const Color& color, const vector2& position, const float theta, const vector2& scale)
 	{
 		drawRect(
-			t_color,
-			matrix4::scale(to_vec3(t_scale)) * matrix4::rotate_z(t_theta) * matrix4::translate(to_vec3(t_position))
+			color,
+			matrix4::scale(to_vec3(scale)) * matrix4::rotate_z(theta) * matrix4::translate(to_vec3(position))
 		);
 	}
 
-	void Renderer::drawRect(const Color& t_color, const matrix4& t_transform)
+	void Renderer::drawRect(const Color& color, const matrix4& transform)
 	{
 		static Material* const material = m_materialLibrary->get(Shaders::names::ColorShader);
 		
 		if (material != nullptr)
 		{
 			Material* const materialInstance = material->createInstance();
-			materialInstance->set(Shaders::params::Color, t_color);
-			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, t_transform);
-			push(m_quad, materialInstance, t_transform);
+			materialInstance->set(Shaders::params::Color, color);
+			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
+			push(m_quad, materialInstance, transform);
 		}
 	}
 
-	void Renderer::drawCircle(const Color& t_color, const vector2& t_position, const float t_radius)
+	void Renderer::drawCircle(const Color& color, const vector2& position, const float radius)
 	{
 		static Material* const material = m_materialLibrary->get(Shaders::names::ColorShader);
 
 		if (material != nullptr)
 		{
-			matrix4 transform = matrix4::scale(vec3(t_radius, t_radius, 0.0f)) * matrix4::translate(to_vec3(t_position));
+			matrix4 transform = matrix4::scale(vec3(radius, radius, 0.0f)) * matrix4::translate(to_vec3(position));
 			Material* const materialInstance = material->createInstance();
-			materialInstance->set(Shaders::params::Color, t_color);
+			materialInstance->set(Shaders::params::Color, color);
 			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
 			push(m_circle, materialInstance, transform);
 		}

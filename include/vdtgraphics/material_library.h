@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace awesome
+namespace graphics
 {
 	class Material;
 	class Shader;
@@ -17,25 +17,25 @@ namespace awesome
 	{
 	public:
 
-		MaterialLibrary(GraphicsAPI* const t_api);
+		MaterialLibrary(GraphicsAPI* const api);
 		~MaterialLibrary();
 
 		void clear();
 
-		Material* const getMaterial(const std::string t_name) const;
-		Shader* const getShader(const std::string& t_name) const;
-		ShaderProgram* const getShaderProgram(const std::string& t_name) const;
+		Material* const getMaterial(const std::string name) const;
+		Shader* const getShader(const std::string& name) const;
+		ShaderProgram* const getShaderProgram(const std::string& name) const;
 
 		// load materials in folder
-		unsigned int loadMaterials(const std::string& t_path);
-		unsigned int loadShaders(const std::string& t_path);
+		unsigned int loadMaterials(const std::string& path);
+		unsigned int loadShaders(const std::string& path);
 
-		bool add(const std::string& t_name, Material* const t_material);
-		bool add(const std::string& t_name, Shader* const t_shader);
-		bool add(const std::string& t_name, ShaderProgram* const t_program);
+		bool add(const std::string& name, Material* const material);
+		bool add(const std::string& name, Shader* const shader);
+		bool add(const std::string& name, ShaderProgram* const program);
 
 		// retrieve a material
-		Material* const get(const std::string& t_name) const;
+		Material* const get(const std::string& name) const;
 
 		const std::map<std::string, Material*>& getMaterials() const { return m_materials; }
 		const std::map<std::string, Shader*>& getShaders() const { return m_shaders; }

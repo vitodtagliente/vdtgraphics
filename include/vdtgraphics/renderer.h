@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include <awesome/core/singleton.h>
-#include <awesome/core/color.h>
-#include <awesome/math/vector.h>
-#include <awesome/math/matrix.h>
-#include <awesome/math/rectangle.h>
+#include <vdtgraphics/color.h>
+#include <vdtmath/matrix.h>
+#include <vdtmath/rectangle.h>
+#include <vdtmath/vector.h>
 #include "command_buffer.h"
 
 namespace graphics
@@ -19,7 +18,7 @@ namespace graphics
 	class TextureLibrary;
 	class Texture;
 
-	class Renderer : public Singleton<Renderer>
+	class Renderer
 	{
 	public:
 
@@ -30,17 +29,17 @@ namespace graphics
 		};
 
 		// dependency injection
-		Renderer(GraphicsAPI* const t_api);
+		Renderer(GraphicsAPI* const api);
 		virtual ~Renderer();
 		
 		virtual void enableAlpha(const bool bEnabled = true) = 0;
-		virtual void clear(const Color& t_color) = 0;
-		virtual void draw(const unsigned int t_vertices = 3) = 0;
-		virtual void drawIndexed(const unsigned int t_vertices) = 0;
-		virtual void setViewport(const int t_width, const int t_height) = 0;
-		virtual void setDrawingMode(const DrawingMode t_drawingMode);
+		virtual void clear(const Color& color) = 0;
+		virtual void draw(const unsigned int vertices = 3) = 0;
+		virtual void drawIndexed(const unsigned int vertices) = 0;
+		virtual void setViewport(const int width, const int height) = 0;
+		virtual void setDrawingMode(const DrawingMode drawingMode);
 		
-		void push(Renderable* const t_renderable, Material* const t_material, const matrix4& t_transform = matrix4::identity);
+		void push(Renderable* const renderable, Material* const material, const matrix4& transform = matrix4::identity);
 		// render all pushed commands
 		void render();
 
@@ -49,25 +48,25 @@ namespace graphics
 		inline TextureLibrary* const getTextureLibrary() const { return m_textureLibrary; }
 
 		// basic 2d drawing utilites
-		void drawTexture(Texture* const t_texture, const vector2& t_position);
-		void drawTexture(Texture* const t_texture, const vector2& t_position, const vector2& t_scale);
-		void drawTexture(Texture* const t_texture, const vector2& t_position, const float t_theta);
-		void drawTexture(Texture* const t_texture, const vector2& t_position, const float t_theta, const vector2& t_scale);
-		void drawTexture(Texture* const t_texture, const matrix4& t_transform);
+		void drawTexture(Texture* const texture, const vector2& position);
+		void drawTexture(Texture* const texture, const vector2& position, const vector2& scale);
+		void drawTexture(Texture* const texture, const vector2& position, const float theta);
+		void drawTexture(Texture* const texture, const vector2& position, const float theta, const vector2& scale);
+		void drawTexture(Texture* const texture, const matrix4& transform);
 		// draw texture atlas
-		void drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position);
-		void drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const vector2& t_scale);
-		void drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const float t_theta);
-		void drawTextureCrop(Texture* const t_texture, const rect& t_rect, const vector2& t_position, const float t_theta, const vector2& t_scale);
-		void drawTextureCrop(Texture* const t_texture, const rect& t_rect, const matrix4& t_transform);
+		void drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position);
+		void drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const vector2& scale);
+		void drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const float theta);
+		void drawTextureCrop(Texture* const texture, const rect& rect, const vector2& position, const float theta, const vector2& scale);
+		void drawTextureCrop(Texture* const texture, const rect& rect, const matrix4& transform);
 		// draw a rectangle 
-		void drawRect(const Color& t_color, const vector2& t_position);
-		void drawRect(const Color& t_color, const vector2& t_position, const vector2& t_scale);
-		void drawRect(const Color& t_color, const vector2& t_position, const float t_theta);
-		void drawRect(const Color& t_color, const vector2& t_position, const float t_theta, const vector2& t_scale);
-		void drawRect(const Color& t_color, const matrix4& t_transform);
+		void drawRect(const Color& color, const vector2& position);
+		void drawRect(const Color& color, const vector2& position, const vector2& scale);
+		void drawRect(const Color& color, const vector2& position, const float theta);
+		void drawRect(const Color& color, const vector2& position, const float theta, const vector2& scale);
+		void drawRect(const Color& color, const matrix4& transform);
 		// draw circle
-		void drawCircle(const Color& t_color, const vector2& t_position, const float t_radius);
+		void drawCircle(const Color& color, const vector2& position, const float radius);
 
 	protected:
 

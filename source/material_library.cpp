@@ -1,15 +1,15 @@
-#include "material_library.h"
+#include <vdtgraphics/material_library.h>
 
 #include <fstream>
-#include "material.h"
-#include "shader.h"
-#include "shader_program.h"
-#include "graphics_api.h"
+#include <vdtgraphics/material.h>
+#include <vdtgraphics/shader.h>
+#include <vdtgraphics/shader_program.h>
+#include <vdtgraphics/graphics_api.h>
 
 namespace graphics
 {
-	MaterialLibrary::MaterialLibrary(GraphicsAPI* const t_api)
-		: m_api(t_api)
+	MaterialLibrary::MaterialLibrary(GraphicsAPI* const api)
+		: m_api(api)
 		, m_materials()
 		, m_shaders()
 		, m_programs()
@@ -26,9 +26,9 @@ namespace graphics
 
 	}
 
-	Material* const MaterialLibrary::getMaterial(const std::string t_name) const
+	Material* const MaterialLibrary::getMaterial(const std::string name) const
 	{
-		const auto it = m_materials.find(t_name);
+		const auto it = m_materials.find(name);
 		if (it != m_materials.end())
 		{
 			return it->second;
@@ -36,9 +36,9 @@ namespace graphics
 		return nullptr;
 	}
 
-	Shader* const MaterialLibrary::getShader(const std::string& t_name) const
+	Shader* const MaterialLibrary::getShader(const std::string& name) const
 	{
-		const auto it = m_shaders.find(t_name);
+		const auto it = m_shaders.find(name);
 		if (it != m_shaders.end())
 		{
 			return it->second;
@@ -46,9 +46,9 @@ namespace graphics
 		return nullptr;
 	}
 
-	ShaderProgram* const MaterialLibrary::getShaderProgram(const std::string& t_name) const
+	ShaderProgram* const MaterialLibrary::getShaderProgram(const std::string& name) const
 	{
-		const auto it = m_programs.find(t_name);
+		const auto it = m_programs.find(name);
 		if (it != m_programs.end())
 		{
 			return it->second;
@@ -56,53 +56,53 @@ namespace graphics
 		return nullptr;
 	}
 
-	unsigned int MaterialLibrary::loadMaterials(const std::string& t_path)
+	unsigned int MaterialLibrary::loadMaterials(const std::string& path)
 	{
 
 		return 0;
 	}
 
-	unsigned int MaterialLibrary::loadShaders(const std::string& t_path)
+	unsigned int MaterialLibrary::loadShaders(const std::string& path)
 	{
 		return 0;
 	}
 	
-	bool MaterialLibrary::add(const std::string& t_name, Material* const t_material)
+	bool MaterialLibrary::add(const std::string& name, Material* const material)
 	{
-		const auto it = m_materials.find(t_name);
+		const auto it = m_materials.find(name);
 		if (it == m_materials.end())
 		{
-			m_materials.insert({ t_name, t_material });
+			m_materials.insert({ name, material });
 			return true;
 		}
 		return false;
 	}
 	
-	bool MaterialLibrary::add(const std::string& t_name, Shader* const t_shader)
+	bool MaterialLibrary::add(const std::string& name, Shader* const shader)
 	{
-		const auto it = m_shaders.find(t_name);
+		const auto it = m_shaders.find(name);
 		if (it == m_shaders.end())
 		{
-			m_shaders.insert({ t_name, t_shader });
+			m_shaders.insert({ name, shader });
 			return true;
 		}
 		return false;
 	}
 	
-	bool MaterialLibrary::add(const std::string& t_name, ShaderProgram* const t_program)
+	bool MaterialLibrary::add(const std::string& name, ShaderProgram* const program)
 	{
-		const auto it = m_programs.find(t_name);
+		const auto it = m_programs.find(name);
 		if (it == m_programs.end())
 		{
-			m_programs.insert({ t_name, t_program });
+			m_programs.insert({ name, program });
 			return true;
 		}
 		return false;
 	}
 	
-	Material* const MaterialLibrary::get(const std::string& t_name) const
+	Material* const MaterialLibrary::get(const std::string& name) const
 	{
-		const auto it = m_materials.find(t_name);
+		const auto it = m_materials.find(name);
 		if (it != m_materials.end())
 		{
 			return it->second;

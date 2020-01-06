@@ -6,11 +6,13 @@
 #include <vector>
 #include <map>
 #include <variant>
-#include <awesome/math/vector.h>
-#include <awesome/math/matrix.h>
-#include <awesome/core/color.h>
+#include <vdtgraphics/color.h>
+#include <vdtmath/matrix.h>
+#include <vdtmath/vector.h>
 
-namespace awesome
+using namespace math;
+
+namespace graphics
 {
 	class ShaderProgram;
 	class Texture;
