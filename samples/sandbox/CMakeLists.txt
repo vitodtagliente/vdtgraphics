@@ -26,8 +26,8 @@ add_executable(
 
 target_link_libraries(
     ${PROJECT_NAME} 
-    vdtgraphics
     glfw
+    vdtgraphics
 )
 
 add_subdirectory(../../ vdtgraphics)
