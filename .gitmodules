@@ -2,3 +2,6 @@
 [submodule "vdtmath"]
 	path = vdtmath
 	url = https://github.com/vitodtagliente/vdtmath
+[submodule "glfw"]
+	path = glfw
+	url = https://github.com/glfw/glfw
