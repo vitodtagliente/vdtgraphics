@@ -1,6 +1,6 @@
 #include <vdtgraphics/image.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include <vdtgraphics/vendor/stb_image.h>
+#include <vdtgraphics/stb/stb_image.h>
 
 namespace graphics
 {
