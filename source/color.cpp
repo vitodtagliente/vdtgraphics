@@ -27,6 +27,26 @@ namespace graphics
 	{
 	}
 
+	void Color::setRed(const float value)
+	{
+		m_red = std::clamp(value, 0.0f, 1.0f);
+	}
+
+	void Color::setGreen(const float value)
+	{
+		m_green = std::clamp(value, 0.0f, 1.0f);
+	}
+
+	void Color::setBlue(const float value)
+	{
+		m_blue = std::clamp(value, 0.0f, 1.0f);
+	}
+
+	void Color::setAlpha(const float value)
+	{
+		m_alpha = std::clamp(value, 0.0f, 1.0f);
+	}
+
 	bool Color::operator==(const Color& color) const
 	{
 		return m_red == color.m_red &&

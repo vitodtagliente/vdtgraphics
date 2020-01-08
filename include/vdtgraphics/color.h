@@ -19,6 +19,16 @@ namespace graphics
 		Color& operator= (const Color& color) = default;
 		Color& operator=(Color&& color) = default;
 
+		inline float red() const { return m_red; }
+		inline float green() const { return m_green; }
+		inline float blue() const { return m_blue; }
+		inline float alpha() const { return m_alpha; }
+
+		void setRed(const float value);
+		void setGreen(const float value);
+		void setBlue(const float value);
+		void setAlpha(const float value);
+
 		bool operator== (const Color& color) const;
 		bool operator!= (const Color& color) const;
 
@@ -28,7 +38,7 @@ namespace graphics
 		Color& operator-= (const Color& color);
 
 		std::string toString() const;
-		
+
 		static const Color White;
 		static const Color Black;
 		static const Color Red;
@@ -38,11 +48,6 @@ namespace graphics
 		static const Color Yellow;
 		static const Color Magenta;
 		static const Color Transparent;
-
-		inline float red() const { return m_red; }
-		inline float green() const { return m_green; }
-		inline float blue() const { return m_blue; }
-		inline float alpha() const { return m_alpha; }
 
 	private:
 		
