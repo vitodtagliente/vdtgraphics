@@ -5,7 +5,12 @@ project(${ProjectId})
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(. ../../include ../../vdtmath/include)
+include_directories(
+    . 
+    ../../include 
+    ../../vdtmath/include
+    ../../glfw/include
+)
 
 file(GLOB PROJECT_HEADERS "*.h") 
 file(GLOB PROJECT_SOURCES "*.cpp")
@@ -22,6 +27,8 @@ add_executable(
 target_link_libraries(
     ${PROJECT_NAME} 
     vdtgraphics
+    glfw
 )
 
 add_subdirectory(../../ vdtgraphics)
+add_subdirectory(../../glfw glfw)
