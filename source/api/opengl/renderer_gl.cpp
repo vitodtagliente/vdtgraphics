@@ -1,6 +1,6 @@
-#include <vdtgraphics/opengl/renderer_gl.h>
-#include <vdtgraphics/opengl/opengl.h>
-#include <vdtgraphics/opengl/graphics_api_gl.h>
+#include <vdtgraphics/api/opengl/renderer_gl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/graphics_api_gl.h>
 
 namespace graphics
 {

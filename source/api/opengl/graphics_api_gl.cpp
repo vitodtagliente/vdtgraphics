@@ -1,9 +1,9 @@
-#include <vdtgraphics/opengl/graphics_api_gl.h>
-#include <vdtgraphics/opengl/opengl.h>
-#include <vdtgraphics/opengl/renderable_gl.h>
-#include <vdtgraphics/opengl/shader_gl.h>
-#include <vdtgraphics/opengl/shader_program_gl.h>
-#include <vdtgraphics/opengl/texture_gl.h>
+#include <vdtgraphics/api/opengl/graphics_api_gl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/renderable_gl.h>
+#include <vdtgraphics/api/opengl/shader_gl.h>
+#include <vdtgraphics/api/opengl/shader_program_gl.h>
+#include <vdtgraphics/api/opengl/texture_gl.h>
 
 namespace graphics
 {

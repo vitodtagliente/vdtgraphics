@@ -1,8 +1,8 @@
-#include <vdtgraphics/opengl/renderable_gl.h>
+#include <vdtgraphics/api/opengl/renderable_gl.h>
 
 #include <vector>
-#include <vdtgraphics/opengl/opengl.h>
-#include <vdtgraphics/opengl/graphics_buffer_gl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/graphics_buffer_gl.h>
 #include <vdtgraphics/mesh.h>
 
 namespace graphics

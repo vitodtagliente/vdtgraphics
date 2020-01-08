@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vdtgraphics/opengl/glad/glad.h>
+#include <vdtgraphics/api/opengl/glad/glad.h>
 
 static void* get_proc(const char *namez);
 

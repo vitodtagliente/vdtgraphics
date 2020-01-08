@@ -1,5 +1,5 @@
-#include <vdtgraphics/opengl/graphics_buffer_gl.h>
-#include <vdtgraphics/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/graphics_buffer_gl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
 
 namespace graphics
 {

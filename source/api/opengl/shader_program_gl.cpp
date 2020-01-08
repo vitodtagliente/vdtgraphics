@@ -1,5 +1,5 @@
-#include <vdtgraphics/opengl/shader_program_gl.h>
-#include <vdtgraphics/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/shader_program_gl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
 #include <vdtgraphics/shader.h>
 
 namespace graphics

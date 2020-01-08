@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vdtgraphics/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/opengl.h>
 #include <GLFW/glfw3.h>
 #include <vdtgraphics/graphics.h>
 
