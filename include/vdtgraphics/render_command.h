@@ -28,13 +28,13 @@ namespace graphics
 		}
 
 		RenderCommand(
-			Renderable* const t_renderable,
-			Material* const t_material,
-			const matrix4& t_transform = matrix4::identity
+			Renderable* const renderable,
+			Material* const material,
+			const matrix4& transform = matrix4::identity
 		)
-			: renderable(t_renderable)
-			, material(t_material)
-			, transform(t_transform)
+			: renderable(renderable)
+			, material(material)
+			, transform(transform)
 		{
 
 		}

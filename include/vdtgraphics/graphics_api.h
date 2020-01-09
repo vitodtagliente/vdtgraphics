@@ -2,18 +2,22 @@
 
 #pragma once 
 
+#include <map>
 #include <initializer_list>
 #include <string>
+#include <vector>
 
 #include "color.h"
 #include "mesh.h"
-#include "renderable.h"
 #include "shader.h"
-#include "shader_program.h"
 #include "texture.h"
 
 namespace graphics
 {
+	class Renderable;
+	class Renderer;
+	class ShaderProgram;
+
 	class GraphicsAPI
 	{
 	public:
@@ -22,6 +26,21 @@ namespace graphics
 		{
 			Null,
 			OpenGL
+		};
+
+		class Factory
+		{
+		public:
+
+			static GraphicsAPI* const get();
+			static GraphicsAPI* const get(const Type type);
+			static const std::vector<Type>& getAvailableTypes();
+
+		private:
+
+			static std::map<Type, GraphicsAPI*> s_apis;
+			static std::vector<Type> s_availableTypes;
+			static GraphicsAPI::Type s_platformDefaultType;
 		};
 
 		GraphicsAPI(const Type type)
@@ -36,20 +55,13 @@ namespace graphics
 
 		inline Type getType() const { return m_type; }
 
-		// low level api abstraction
-		virtual void clear(const Color& color) = 0;
-		virtual void setViewport(const unsigned int width, const unsigned int height) = 0;
-		virtual void draw(const unsigned int vertices = 3) = 0;
-		virtual void drawIndexed(const unsigned int indices) = 0;
-
-		virtual void enableAlpha(const bool enabled = true) = 0;
-
 		// graphics objects creation
+		virtual Renderable* createRenderable(const Mesh& mesh) = 0;
+		virtual Renderer* const createRenderer() const = 0;
 		virtual Shader* createShader(const Shader::Type type, const std::string& source) const = 0;
 		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const = 0;
 		virtual Texture* createTexture(const unsigned char* const data, const unsigned int width, const unsigned int height,
 			const unsigned int components, const Texture::Options& options = Texture::Options{}) const = 0;
-		virtual Renderable* createRenderable(const Mesh& mesh) = 0;
 
 	private:
 

@@ -11,7 +11,7 @@ namespace graphics
 	public:
 
 		Renderable();
-		Renderable(const Mesh& t_mesh);
+		Renderable(const Mesh& mesh);
 		virtual ~Renderable();
 
 		virtual void bind() = 0;

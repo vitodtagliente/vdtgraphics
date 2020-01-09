@@ -1,6 +1,7 @@
 #include <vdtgraphics/api/opengl/graphics_api_gl.h>
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <vdtgraphics/api/opengl/renderable_gl.h>
+#include <vdtgraphics/api/opengl/renderer_gl.h>
 #include <vdtgraphics/api/opengl/shader_gl.h>
 #include <vdtgraphics/api/opengl/shader_program_gl.h>
 #include <vdtgraphics/api/opengl/texture_gl.h>
@@ -25,37 +26,6 @@ namespace graphics
 	{
 	}
 	
-	void GraphicsAPI_GL::clear(const Color& color)
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-	}
-	
-	void GraphicsAPI_GL::setViewport(const unsigned int width, const unsigned int height)
-	{
-		glViewport(0, 0, width, height);
-	}
-	
-	void GraphicsAPI_GL::draw(const unsigned int vertices)
-	{
-		glDrawArrays(GL_TRIANGLES, 0, vertices);
-	}
-	
-	void GraphicsAPI_GL::drawIndexed(const unsigned int indices)
-	{
-		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr);
-	}
-	
-	void GraphicsAPI_GL::enableAlpha(const bool enabled)
-	{
-		if (enabled)
-		{
-			// Enable blending
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
-	}
-	
 	Shader* GraphicsAPI_GL::createShader(const Shader::Type type, const std::string& source) const
 	{
 		return new ShaderGL(type, source);
@@ -76,5 +46,10 @@ namespace graphics
 	Renderable* GraphicsAPI_GL::createRenderable(const Mesh& mesh)
 	{
 		return new RenderableGL(mesh);
+	}
+	
+	Renderer* const GraphicsAPI_GL::createRenderer() const
+	{
+		return new RendererGL((GraphicsAPI*)(this));
 	}
 }

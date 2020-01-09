@@ -7,8 +7,8 @@ namespace graphics
 	{
 	}
 
-	Renderable::Renderable(const Mesh& t_mesh)
-		: m_mesh(t_mesh)
+	Renderable::Renderable(const Mesh& mesh)
+		: m_mesh(mesh)
 	{
 	}
 

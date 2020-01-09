@@ -7,6 +7,7 @@
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/material_library.h>
 #include <vdtgraphics/mesh.h>
+#include <vdtgraphics/renderable.h>
 #include <vdtgraphics/texture.h>
 #include <vdtgraphics/texture_library.h>
 
@@ -17,8 +18,8 @@ namespace graphics
 		, m_commandBuffer()
 		, m_materialLibrary(new MaterialLibrary(api))
 		, m_textureLibrary(new TextureLibrary(api))
-		, m_quad(api->createRenderable(Mesh{})) // TODO
-		, m_circle(api->createRenderable(Mesh{})) // TODO
+		// , m_quad(api->createRenderable(Mesh{})) // TODO
+		// , m_circle(api->createRenderable(Mesh{})) // TODO
 		, m_drawingMode(DrawingMode::Fill)
 	{
 	}

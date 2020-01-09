@@ -7,6 +7,8 @@ using namespace std;
 using namespace graphics;
 
 void render_loop();
+GraphicsAPI* api = nullptr;
+Renderer* renderer = nullptr;
 
 int main(void)
 {
@@ -30,7 +32,11 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     // load GL
-    gladLoadGL();
+    //gladLoadGL();
+
+    api = GraphicsAPI::Factory::get();
+    api->startup();
+    renderer = api->createRenderer();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -48,11 +54,12 @@ int main(void)
         glfwPollEvents();
     }
 
+    api->shutdown();
     glfwTerminate();
     return 0;
 }
 
 void render_loop()
 {
-
+    renderer->clear(Color::Red);
 }
