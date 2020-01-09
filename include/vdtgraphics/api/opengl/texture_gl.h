@@ -10,8 +10,7 @@ namespace graphics
 	{
 	public:
 
-		TextureGL(const unsigned char* const data, const unsigned int width, const unsigned int height,
-			const unsigned int channels, const Options& options = Options{});
+		TextureGL(const Image& image, const Options& options = Options{});
 		~TextureGL();
 
 		virtual void bind() override;

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "image.h"
+
 namespace graphics
 {
 	class Texture
@@ -22,11 +24,10 @@ namespace graphics
 			unsigned int filterMax;
 		};
 
-		Texture(const unsigned char* const data, const unsigned int width, const unsigned int height,
-			const unsigned int channels, const Options& options = Options{});
+		Texture(const Image& image, const Options& options = Options{});
 
 		inline unsigned int id() const { return m_id; }
-		inline bool isValid() const { return m_id != 0; }
+		inline bool isValid() const { return m_id != INVALID_ID; }
 
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
@@ -34,13 +35,13 @@ namespace graphics
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
+		static constexpr unsigned int INVALID_ID = 0;
+
 	protected:
 
 		// texture id
 		unsigned int m_id;
 		// texture size
 		unsigned int m_width, m_height;
-		// format of the texture object
-		unsigned int m_format;
 	};
 }

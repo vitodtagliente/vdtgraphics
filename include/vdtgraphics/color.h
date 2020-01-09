@@ -19,10 +19,10 @@ namespace graphics
 		Color& operator= (const Color& color) = default;
 		Color& operator=(Color&& color) = default;
 
-		inline float red() const { return m_red; }
-		inline float green() const { return m_green; }
-		inline float blue() const { return m_blue; }
-		inline float alpha() const { return m_alpha; }
+		inline float getRed() const { return m_red; }
+		inline float getGreen() const { return m_green; }
+		inline float getBlue() const { return m_blue; }
+		inline float getAlpha() const { return m_alpha; }
 
 		void setRed(const float value);
 		void setGreen(const float value);

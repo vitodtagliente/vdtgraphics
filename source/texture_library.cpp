@@ -47,9 +47,10 @@ namespace graphics
 		const auto it = m_textures.find(name);
 		if (it == m_textures.end())
 		{
-			Image img(filename);
+			// TODO, image refactoring
+			Image img({}, 0, 0, 0);
 			Texture* texture = m_api->createTexture(
-				img.data(), img.getWidth(), img.getHeight(), img.getChannels()
+				img.getData(), img.getWidth(), img.getHeight(), img.getChannels()
 			);
 			m_textures.insert({ name, texture });
 			return texture;

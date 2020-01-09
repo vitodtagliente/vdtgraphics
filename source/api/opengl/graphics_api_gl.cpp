@@ -28,7 +28,7 @@ namespace graphics
 	void GraphicsAPI_GL::clear(const Color& color)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(color.red(), color.green(), color.blue(), color.alpha());
+		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 	
 	void GraphicsAPI_GL::setViewport(const unsigned int width, const unsigned int height)
@@ -68,7 +68,9 @@ namespace graphics
 	
 	Texture* GraphicsAPI_GL::createTexture(const unsigned char* const data, const unsigned int width, const unsigned int height, const unsigned int components, const Texture::Options& options) const
 	{
-		return new TextureGL(data, width, height, components, options);
+		// IMAGE REFACTORING
+		// return new TextureGL(data, width, height, components, options);
+		return nullptr;
 	}
 	
 	Renderable* GraphicsAPI_GL::createRenderable(const Mesh& mesh)

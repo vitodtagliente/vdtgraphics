@@ -22,7 +22,7 @@ namespace graphics
 	void RendererGL::clear(const Color& color)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(color.red(), color.green(), color.blue(), color.alpha());
+		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	void RendererGL::draw(const unsigned int vertices)

@@ -10,13 +10,13 @@ namespace graphics
 	{
 	public:
 
-		Image(const std::string& filename);
+		Image(unsigned char* const data, const int width, const int height, const int channels);
 		~Image();
 
-		unsigned char* data() const;
-		int getWidth() const;
-		int getHeight() const;
-		int getChannels() const;
+		inline unsigned char* const getData() const { return m_data; }
+		inline int getWidth() const { return m_width; }
+		inline int getHeight() const { return m_height; }
+		inline int getChannels() const { return m_channels; }
 
 	private:
 

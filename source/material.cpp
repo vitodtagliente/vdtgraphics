@@ -52,7 +52,7 @@ namespace graphics
 			else if (pair.second.type == MaterialProperty::Type::Color)
 			{
 				const Color& color = std::get<Color>(pair.second.value);
-				m_shaderProgram->set(pair.first, color.red(), color.green(), color.blue(), color.alpha());
+				m_shaderProgram->set(pair.first, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 			}
 			else if (pair.second.type == MaterialProperty::Type::Vec4)
 			{

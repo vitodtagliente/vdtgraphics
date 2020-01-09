@@ -14,17 +14,17 @@ namespace graphics
 	Color::Color(const unsigned int red, const unsigned int green, const unsigned int blue)
 		: m_alpha(1.0f)
 	{
-		m_red = static_cast<float>(red) / 255.0f;
-		m_green = static_cast<float>(green) / 255.0f;
-		m_blue = static_cast<float>(blue) / 255.0f;
+		m_red = std::clamp(static_cast<float>(red) / 255.0f, 0.0f, 1.0f);
+		m_green = std::clamp(static_cast<float>(green) / 255.0f, 0.0f, 1.0f);
+		m_blue = std::clamp(static_cast<float>(blue) / 255.0f, 0.0f, 1.0f);
 	}
 
 	Color::Color(const float red, const float green, const float blue, const float alpha)
-		: m_red(red)
-		, m_green(green)
-		, m_blue(blue)
-		, m_alpha(alpha)
 	{
+		m_red = std::clamp(red, 0.0f, 1.0f);
+		m_green = std::clamp(green, 0.0f, 1.0f);
+		m_blue = std::clamp(blue, 0.0f, 1.0f);
+		m_alpha = std::clamp(alpha, 0.0f, 1.0f);
 	}
 
 	void Color::setRed(const float value)
@@ -63,38 +63,38 @@ namespace graphics
 	Color Color::operator+(const Color& color) const
 	{
 		return {
-			std::min(m_red + color.m_red, 1.0f),
-			std::min(m_green + color.m_green, 1.0f),
-			std::min(m_blue + color.m_blue, 1.0f),
-			std::min(m_alpha + color.m_alpha, 1.0f),
+			m_red + color.m_red,
+			m_green + color.m_green,
+			m_blue + color.m_blue,
+			m_alpha + color.m_alpha
 		};
 	}
 
 	Color Color::operator-(const Color& color) const
 	{
 		return {
-			std::max(m_red + color.m_red, 0.0f),
-			std::max(m_green + color.m_green, 0.0f),
-			std::max(m_blue + color.m_blue, 0.0f),
-			std::max(m_alpha + color.m_alpha, 0.0f),
+			m_red - color.m_red,
+			m_green - color.m_green,
+			m_blue - color.m_blue,
+			m_alpha - color.m_alpha
 		};
 	}
 
 	Color& Color::operator+=(const Color& color)
 	{
-		m_red = std::min(m_red + color.m_red, 1.0f);
-		m_green = std::min(m_green + color.m_green, 1.0f);
-		m_blue = std::min(m_blue + color.m_blue, 1.0f);
-		m_alpha = std::min(m_alpha + color.m_alpha, 1.0f);
+		m_red = std::clamp(m_red + color.m_red, 0.0f, 1.0f);
+		m_green = std::clamp(m_green + color.m_green, 0.0f, 1.0f);
+		m_blue = std::clamp(m_blue + color.m_blue, 0.0f, 1.0f);
+		m_alpha = std::clamp(m_alpha + color.m_alpha, 0.0f, 1.0f);
 		return *this;
 	}
 
 	Color& Color::operator-=(const Color& color)
 	{
-		m_red = std::max(m_red + color.m_red, 0.0f);
-		m_green = std::max(m_green + color.m_green, 0.0f);
-		m_blue = std::max(m_blue + color.m_blue, 0.0f);
-		m_alpha = std::max(m_alpha + color.m_alpha, 0.0f);
+		m_red = std::clamp(m_red - color.m_red, 0.0f, 1.0f);
+		m_green = std::clamp(m_green - color.m_green, 0.0f, 1.0f);
+		m_blue = std::clamp(m_blue - color.m_blue, 0.0f, 1.0f);
+		m_alpha = std::clamp(m_alpha - color.m_alpha, 0.0f, 1.0f);
 		return *this;
 	}
 

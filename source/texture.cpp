@@ -9,12 +9,10 @@ namespace graphics
 		, filterMax()
 	{}
 
-	Texture::Texture(const unsigned char* const data, const unsigned int width, const unsigned int height,
-		const unsigned int channels, const Options& options /*= Options{}*/)
-		: m_id(0)
-		, m_width(width)
-		, m_height(height)
-		, m_format()
+	Texture::Texture(const Image& image, const Options& options /*= Options{}*/)
+		: m_id(INVALID_ID)
+		, m_width(image.getWidth())
+		, m_height(image.getHeight())
 	{
 
 	}

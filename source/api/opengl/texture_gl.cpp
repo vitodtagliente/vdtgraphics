@@ -12,9 +12,8 @@ namespace graphics
 
 	}
 
-	TextureGL::TextureGL(const unsigned char* const data, const unsigned int width, const unsigned int height,
-		const unsigned int channels, const Options& options /* = Options */)
-		: Texture(data, width, height, channels, options)
+	TextureGL::TextureGL(const Image& image, const Options& options /* = Options */)
+		: Texture(image, options)
 	{
 		// generate the texture
 		glGenTextures(1, &m_id);
@@ -26,19 +25,19 @@ namespace graphics
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, options.filterMin);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, options.filterMax);
 
-		if (data)
+		unsigned int format = 0;
+		switch (image.getChannels())
 		{
-			if (channels == 1)
-				m_format = GL_RED;
-			else if (channels == 3)
-				m_format = GL_RGB;
-			else if (channels == 4)
-				m_format = GL_RGBA;
-
-			glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
-				0, m_format, GL_UNSIGNED_BYTE, data
-			);
+		case 1: format = GL_RED; break;
+		case 4: format = GL_RGBA; break;
+		case 3: 
+		default:
+			format = GL_RGB; break;
 		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, format, image.getWidth(), image.getHeight(),
+			0, format, GL_UNSIGNED_BYTE, image.getData()
+		);
 	}
 
 	TextureGL::~TextureGL()
