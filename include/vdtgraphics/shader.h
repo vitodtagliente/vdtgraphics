@@ -44,6 +44,7 @@ namespace graphics
 		inline bool isValid() const { return m_id != 0; }
 
 		static std::string to_string(const Type type);
+		static Type to_type(const std::string& str);
 
 	protected:
 

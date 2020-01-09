@@ -11,6 +11,6 @@ namespace graphics
 	public:
 
 		ShaderGL(const Type type, const std::string& source);
-		~ShaderGL();
+		virtual ~ShaderGL() override;
 	};
 }

@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 #include <variant>
-#include <vdtgraphics/color.h>
+#include "color.h"
 #include <vdtmath/matrix.h>
 #include <vdtmath/vector.h>
 

@@ -81,4 +81,11 @@ namespace graphics
 			return "fragment";
 		}
 	}
+	
+	Shader::Type Shader::to_type(const std::string& str)
+	{
+		if (str == "fragment")
+			return Type::Fragment;
+		return Type::Vertex;
+	}
 }

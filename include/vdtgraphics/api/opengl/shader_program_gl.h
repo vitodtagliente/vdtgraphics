@@ -12,7 +12,7 @@ namespace graphics
 	public:
 
 		ShaderProgramGL(const std::initializer_list<Shader*>& shaders);
-		~ShaderProgramGL();
+		virtual ~ShaderProgramGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
@@ -29,7 +29,7 @@ namespace graphics
 		// find the uniform layout location
 		int getUniformLocation(const std::string& name) const;
 
-		// uniform locations
+		// cached uniform locations
 		mutable std::map<std::string, unsigned int> m_uniformLocations;
 	};
 }
