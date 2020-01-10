@@ -15,7 +15,6 @@ namespace graphics
 		{
 			vector3 position;
 			vector2 uv;
-
 		};
 
 		Mesh();
@@ -24,7 +23,7 @@ namespace graphics
 		Mesh(const Mesh& mesh);
 		virtual ~Mesh();
 
-		void getData(std::vector<float>& data) const;
+		std::vector<float> getData() const;
 
 		Mesh& operator= (const Mesh& mesh);
 		

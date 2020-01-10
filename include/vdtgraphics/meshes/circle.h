@@ -10,7 +10,7 @@ namespace graphics
 	{
 	public:
 
-		Circle(const unsigned int t_steps = 360);
+		Circle(const unsigned int steps = 360);
 
 	};
 }

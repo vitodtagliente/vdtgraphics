@@ -9,48 +9,50 @@ namespace graphics
 	
 	}
 
-	Mesh::Mesh(const std::vector<VertexData>& t_vertices)
-		: vertices(t_vertices)
+	Mesh::Mesh(const std::vector<VertexData>& vertices)
+		: vertices(vertices)
 		, indices()
 	{
 	}
 
-	Mesh::Mesh(const std::vector<VertexData>& t_vertices, const std::vector<unsigned int>& t_indices)
-		: vertices(t_vertices)
-		, indices(t_indices)
+	Mesh::Mesh(const std::vector<VertexData>& vertices, const std::vector<unsigned int>& indices)
+		: vertices(vertices)
+		, indices(indices)
 	{
 	}
 
-	Mesh::Mesh(const Mesh& t_mesh)
+	Mesh::Mesh(const Mesh& mesh)
 	{
-		vertices = t_mesh.vertices;
-		indices = t_mesh.indices;
+		vertices = mesh.vertices;
+		indices = mesh.indices;
 	}
 
 	Mesh::~Mesh()
 	{
 	}
 
-	void Mesh::getData(std::vector<float>& t_data) const
+	std::vector<float> Mesh::getData() const
 	{
-		t_data.clear();
+		std::vector<float> data;
 
 		for (const VertexData& vertex_data : vertices)
 		{
 			// vertex position
-			t_data.push_back(vertex_data.position.x);
-			t_data.push_back(vertex_data.position.y);
-			t_data.push_back(vertex_data.position.z);
+			data.push_back(vertex_data.position.x);
+			data.push_back(vertex_data.position.y);
+			data.push_back(vertex_data.position.z);
 			// vertex uv
-			t_data.push_back(vertex_data.uv.x);
-			t_data.push_back(vertex_data.uv.y);
+			data.push_back(vertex_data.uv.x);
+			data.push_back(vertex_data.uv.y);
 		}
+
+		return data;
 	}
 
-	Mesh& Mesh::operator=(const Mesh& t_mesh)
+	Mesh& Mesh::operator=(const Mesh& mesh)
 	{
-		vertices = t_mesh.vertices;
-		indices = t_mesh.indices;
+		vertices = mesh.vertices;
+		indices = mesh.indices;
 		return *this;
 	}
 

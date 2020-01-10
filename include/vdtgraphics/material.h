@@ -57,9 +57,9 @@ namespace graphics
 			Default
 		};
 
-		Material(const Type t_type = Type::Default);
-		Material(ShaderProgram * const t_shaderProgram, const Type t_type = Type::Default);
-		Material(const Material& t_materal) = delete;
+		Material(const Type type = Type::Default);
+		Material(ShaderProgram * const shaderProgram, const Type type = Type::Default);
+		Material(const Material& materal) = delete;
 		~Material();
 
 		void bind();
@@ -70,19 +70,19 @@ namespace graphics
 		inline Material* const getParent() const { return m_parent; }
 
 		inline const std::map<std::string, MaterialProperty>& getProperties() const { return m_properties; }
-		std::vector<MaterialProperty> getProperties(const MaterialProperty::Type t_type) const;
+		std::vector<MaterialProperty> getProperties(const MaterialProperty::Type type) const;
 
-		void set(const std::string& t_name, const bool t_value);
-		void set(const std::string& t_name, const int t_value);
-		void set(const std::string& t_name, const float t_value);
-		void set(const std::string& t_name, const vec2 t_value);
-		void set(const std::string& t_name, const vec3 t_value);
-		void set(const std::string& t_name, const vec4 t_value);
-		void set(const std::string& t_name, const mat2 t_value);
-		void set(const std::string& t_name, const mat3 t_value);
-		void set(const std::string& t_name, const mat4 t_value);
-		void set(const std::string& t_name, Texture * const t_value);
-		void set(const std::string& t_name, const Color& t_value);
+		void set(const std::string& name, const bool value);
+		void set(const std::string& name, const int value);
+		void set(const std::string& name, const float value);
+		void set(const std::string& name, const vec2 value);
+		void set(const std::string& name, const vec3 value);
+		void set(const std::string& name, const vec4 value);
+		void set(const std::string& name, const mat2 value);
+		void set(const std::string& name, const mat3 value);
+		void set(const std::string& name, const mat4 value);
+		void set(const std::string& name, Texture* const value);
+		void set(const std::string& name, const Color& value);
 
 		// create a new instance of this material
 		// example: many sprites that use differents uniforms parameters

@@ -3,14 +3,14 @@
 
 namespace graphics
 {
-	Texture::Options::Options()
-		: wrapS(GL_REPEAT)
-		, wrapT(GL_REPEAT)
-		, filterMin(GL_LINEAR)
-		, filterMax(GL_LINEAR)
-	{
-
-	}
+	// Texture::Options::Options()
+	// 	: wrapS(GL_REPEAT)
+	// 	, wrapT(GL_REPEAT)
+	// 	, filterMin(GL_LINEAR)
+	// 	, filterMax(GL_LINEAR)
+	// {
+	// 
+	// }
 
 	TextureGL::TextureGL(const Image& image, const Options& options /* = Options */)
 		: Texture(image, options)

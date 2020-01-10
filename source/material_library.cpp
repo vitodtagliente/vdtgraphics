@@ -55,17 +55,6 @@ namespace graphics
 		}
 		return nullptr;
 	}
-
-	unsigned int MaterialLibrary::loadMaterials(const std::string& path)
-	{
-
-		return 0;
-	}
-
-	unsigned int MaterialLibrary::loadShaders(const std::string& path)
-	{
-		return 0;
-	}
 	
 	bool MaterialLibrary::add(const std::string& name, Material* const material)
 	{

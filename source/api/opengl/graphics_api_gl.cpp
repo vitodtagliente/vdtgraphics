@@ -36,11 +36,9 @@ namespace graphics
 		return new ShaderProgramGL(shaders);
 	}
 	
-	Texture* GraphicsAPI_GL::createTexture(const unsigned char* const data, const unsigned int width, const unsigned int height, const unsigned int components, const Texture::Options& options) const
+	Texture* GraphicsAPI_GL::createTexture(const Image& image, const Texture::Options& options) const
 	{
-		// IMAGE REFACTORING
-		// return new TextureGL(data, width, height, components, options);
-		return nullptr;
+		return new TextureGL(image, options);
 	}
 	
 	Renderable* GraphicsAPI_GL::createRenderable(const Mesh& mesh)

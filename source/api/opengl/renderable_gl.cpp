@@ -22,8 +22,7 @@ namespace graphics
 		, m_ebo()
 	{
 		// get mesh vertex data
-		std::vector<float> vertex_data;
-		mesh.getData(vertex_data);
+		const std::vector<float>& vertex_data = mesh.getData();
 		// generate the vertex array object
 		glGenVertexArrays(1, &m_vao);
 		glGenBuffers(1, &m_vbo);

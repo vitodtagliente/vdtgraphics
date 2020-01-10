@@ -15,7 +15,7 @@ namespace graphics
 		~CommandBuffer();
 
 		void sort();
-		void push_back(const RenderCommand& t_command);
+		void push_back(const RenderCommand& command);
 		inline const std::vector<RenderCommand>& getCommands() const { return m_commands; }
 		void clear();
 

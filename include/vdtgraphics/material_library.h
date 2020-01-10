@@ -26,10 +26,6 @@ namespace graphics
 		Shader* const getShader(const std::string& name) const;
 		ShaderProgram* const getShaderProgram(const std::string& name) const;
 
-		// load materials in folder
-		unsigned int loadMaterials(const std::string& path);
-		unsigned int loadShaders(const std::string& path);
-
 		bool add(const std::string& name, Material* const material);
 		bool add(const std::string& name, Shader* const shader);
 		bool add(const std::string& name, ShaderProgram* const program);

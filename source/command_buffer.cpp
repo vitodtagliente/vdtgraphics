@@ -16,9 +16,9 @@ namespace graphics
 		// to be implemented
 	}
 
-	void CommandBuffer::push_back(const RenderCommand& t_command)
+	void CommandBuffer::push_back(const RenderCommand& command)
 	{
-		m_commands.push_back(t_command);
+		m_commands.push_back(command);
 	}
 	
 	void CommandBuffer::clear()

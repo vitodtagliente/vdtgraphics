@@ -5,8 +5,8 @@
 
 namespace graphics
 {
-	Material::Material(const Type t_type /*= Type::Default*/)
-		: m_type(t_type)
+	Material::Material(const Type type /*= Type::Default*/)
+		: m_type(type)
 		, m_shaderProgram()
 		, m_properties()
 		, m_instances()
@@ -15,9 +15,9 @@ namespace graphics
 
 	}
 
-	Material::Material(ShaderProgram * const t_shaderProgram, const Type t_type /*= Type::Default*/)
-		: m_type(t_type)
-		, m_shaderProgram(t_shaderProgram)
+	Material::Material(ShaderProgram * const shaderProgram, const Type type /*= Type::Default*/)
+		: m_type(type)
+		, m_shaderProgram(shaderProgram)
 		, m_properties()
 		, m_instances()
 		, m_parent()
@@ -72,13 +72,13 @@ namespace graphics
 		m_shaderProgram->unbind();
 	}
 
-	std::vector<MaterialProperty> Material::getProperties(const MaterialProperty::Type t_type) const
+	std::vector<MaterialProperty> Material::getProperties(const MaterialProperty::Type type) const
 	{
 		std::vector<MaterialProperty> result;
 
 		for (const auto& pair : m_properties)
 		{
-			if (pair.second.type == t_type)
+			if (pair.second.type == type)
 			{
 				result.push_back(pair.second);
 			}
@@ -87,59 +87,59 @@ namespace graphics
 		return result;
 	}
 
-	void Material::set(const std::string& t_name, const bool t_value)
+	void Material::set(const std::string& name, const bool value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Bool, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Bool, value} });
 	}
 
-	void Material::set(const std::string& t_name, const int t_value)
+	void Material::set(const std::string& name, const int value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Int, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Int, value} });
 	}
 
-	void Material::set(const std::string& t_name, const float t_value)
+	void Material::set(const std::string& name, const float value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Float, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Float, value} });
 	}
 
-	void Material::set(const std::string& t_name, const vec2 t_value)
+	void Material::set(const std::string& name, const vec2 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Vec2, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Vec2, value} });
 	}
 
-	void Material::set(const std::string& t_name, const vec3 t_value)
+	void Material::set(const std::string& name, const vec3 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Vec3, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Vec3, value} });
 	}
 
-	void Material::set(const std::string& t_name, const vec4 t_value)
+	void Material::set(const std::string& name, const vec4 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Vec4, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Vec4, value} });
 	}
 
-	void Material::set(const std::string& t_name, const mat2 t_value)
+	void Material::set(const std::string& name, const mat2 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Mat2, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Mat2, value} });
 	}
 
-	void Material::set(const std::string& t_name, const mat3 t_value)
+	void Material::set(const std::string& name, const mat3 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Mat3, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Mat3, value} });
 	}
 
-	void Material::set(const std::string& t_name, const mat4 t_value)
+	void Material::set(const std::string& name, const mat4 value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Mat4, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Mat4, value} });
 	}
 
-	void Material::set(const std::string& t_name, Texture* const t_value)
+	void Material::set(const std::string& name, Texture* const value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Texture2D, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Texture2D, value} });
 	}
 
-	void Material::set(const std::string& t_name, const Color& t_value)
+	void Material::set(const std::string& name, const Color& value)
 	{
-		m_properties.insert({ t_name, {MaterialProperty::Type::Color, t_value} });
+		m_properties.insert({ name, {MaterialProperty::Type::Color, value} });
 	}
 
 	Material* const Material::createInstance() const

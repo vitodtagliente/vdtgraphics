@@ -49,9 +49,7 @@ namespace graphics
 		{
 			// TODO, image refactoring
 			Image img({}, 0, 0, 0);
-			Texture* texture = m_api->createTexture(
-				img.getData(), img.getWidth(), img.getHeight(), img.getChannels()
-			);
+			Texture* texture = m_api->createTexture(img);
 			m_textures.insert({ name, texture });
 			return texture;
 		}

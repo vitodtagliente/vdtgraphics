@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "color.h"
+#include "image.h"
 #include "mesh.h"
 #include "shader.h"
 #include "texture.h"
@@ -60,8 +61,7 @@ namespace graphics
 		virtual Renderer* const createRenderer() const = 0;
 		virtual Shader* createShader(const Shader::Type type, const std::string& source) const = 0;
 		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const = 0;
-		virtual Texture* createTexture(const unsigned char* const data, const unsigned int width, const unsigned int height,
-			const unsigned int components, const Texture::Options& options = Texture::Options{}) const = 0;
+		virtual Texture* createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) const = 0;
 
 	private:
 
