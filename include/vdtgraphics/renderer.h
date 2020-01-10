@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <map>
+#include <string>
 #include <vdtgraphics/color.h>
 #include <vdtmath/matrix.h>
 #include <vdtmath/rectangle.h>
@@ -31,7 +33,8 @@ namespace graphics
 		// dependency injection
 		Renderer(GraphicsAPI* const api);
 		virtual ~Renderer();
-		
+
+		void initializeMaterials();
 		virtual void enableAlpha(const bool bEnabled = true) = 0;
 		virtual void clear(const Color& color) = 0;
 		virtual void draw(const unsigned int vertices = 3) = 0;
@@ -69,6 +72,8 @@ namespace graphics
 		void drawCircle(const Color& color, const vector2& position, const float radius);
 
 	protected:
+
+		virtual const std::map<std::string, std::string>& getDefaultShaderSources() const = 0;
 
 		// graphics api
 		GraphicsAPI* m_api;

@@ -20,5 +20,9 @@ namespace graphics
 		virtual void drawIndexed(const unsigned int vertices) override;
 		virtual void setViewport(const int width, const int height) override;
 		virtual void setDrawingMode(const DrawingMode drawingMode) override;
+		
+	private:
+
+		virtual const std::map<std::string, std::string>& getDefaultShaderSources() const override;
 	};
 }

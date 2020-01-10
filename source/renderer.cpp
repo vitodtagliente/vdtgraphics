@@ -7,6 +7,8 @@
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/material_library.h>
 #include <vdtgraphics/mesh.h>
+#include <vdtgraphics/meshes/circle.h>
+#include <vdtgraphics/meshes/quad.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/texture.h>
 #include <vdtgraphics/texture_library.h>
@@ -18,10 +20,11 @@ namespace graphics
 		, m_commandBuffer()
 		, m_materialLibrary(new MaterialLibrary(api))
 		, m_textureLibrary(new TextureLibrary(api))
-		// , m_quad(api->createRenderable(Mesh{})) // TODO
-		// , m_circle(api->createRenderable(Mesh{})) // TODO
+		, m_quad(api->createRenderable(Quad{})) 
+		, m_circle(api->createRenderable(Circle{})) 
 		, m_drawingMode(DrawingMode::Fill)
 	{
+
 	}
 	
 	Renderer::~Renderer()
@@ -47,7 +50,7 @@ namespace graphics
 			// bind the data to render
 			command.renderable->bind();
 			// render the command
-			drawIndexed(command.renderable->getMesh().indices.size());
+			drawIndexed(static_cast<unsigned int>(command.renderable->getMesh().indices.size()));
 		}
 
 		m_commandBuffer.clear();
@@ -208,6 +211,33 @@ namespace graphics
 			materialInstance->set(Shaders::params::Color, color);
 			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
 			push(m_circle, materialInstance, transform);
+		}
+	}
+	
+	void Renderer::initializeMaterials()
+	{
+		for (const std::pair<std::string, std::string>& shader : getDefaultShaderSources())
+		{
+			std::map<Shader::Type, std::string> sources;
+			Shader::Reader::parse(shader.second, sources);
+			// create shaders
+			auto vertex = m_api->createShader(Shader::Type::Vertex, sources[Shader::Type::Vertex]);
+			auto fragment = m_api->createShader(Shader::Type::Fragment, sources[Shader::Type::Fragment]);
+			auto program = m_api->createShaderProgram({ vertex, fragment });
+
+			// free shaders
+			delete vertex;
+			delete fragment;
+
+			if (program->getState() == ShaderProgram::State::Linked)
+			{
+				Material* const material = new Material(program);
+				getMaterialLibrary()->add(shader.first, material);
+			}
+			else
+			{
+				delete program;
+			}
 		}
 	}
 }

@@ -37,6 +37,7 @@ int main(void)
     api = GraphicsAPI::Factory::get();
     api->startup();
     renderer = api->createRenderer();
+    renderer->initializeMaterials();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -62,4 +63,7 @@ int main(void)
 void render_loop()
 {
     renderer->clear(Color::Red);
+    renderer->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
+    renderer->drawCircle(Color::Green, {}, .4f);
+    renderer->render();
 }
