@@ -2,6 +2,7 @@
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <GLFW/glfw3.h>
 #include <vdtgraphics/graphics.h>
+#include <sstream>
 
 using namespace std;
 using namespace graphics;
@@ -9,6 +10,29 @@ using namespace graphics;
 void render_loop();
 GraphicsAPI* api = nullptr;
 Renderer* renderer = nullptr;
+
+int nbFrames = 0;
+double lastTime = 0;
+void showFPS(GLFWwindow* pWindow)
+{
+    // Measure speed
+    double currentTime = glfwGetTime();
+    double delta = currentTime - lastTime;
+    nbFrames++;
+    if (delta >= 1.0) { // If last cout was more than 1 sec ago
+        cout << 1000.0 / double(nbFrames) << endl;
+
+        int fps = double(nbFrames) / delta;
+
+        std::stringstream ss;
+        ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS]";
+
+        glfwSetWindowTitle(pWindow, ss.str().c_str());
+
+        nbFrames = 0;
+        lastTime = currentTime;
+    }
+}
 
 int main(void)
 {
@@ -42,6 +66,9 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        // display the FPS
+        showFPS(window);
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
