@@ -19,11 +19,14 @@ namespace graphics
 
 	MaterialLibrary::~MaterialLibrary()
 	{
+		clear();
 	}
 
 	void MaterialLibrary::clear()
 	{
-
+		freeResources(m_materials);
+		freeResources(m_shaders);
+		freeResources(m_programs);
 	}
 
 	Material* const MaterialLibrary::getMaterial(const std::string name) const

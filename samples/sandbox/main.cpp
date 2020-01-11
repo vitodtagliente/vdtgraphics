@@ -91,6 +91,7 @@ void render_loop()
 {
     renderer->clear(Color::Black);
     renderer->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
-    renderer->drawCircle(Color::Green, {}, .4f);
+    ////for(int i = 0; i < 300; ++i)
+    //renderer->drawCircle(Color::Green, {}, .4f);
     renderer->render();
 }

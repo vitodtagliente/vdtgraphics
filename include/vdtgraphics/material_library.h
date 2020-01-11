@@ -39,6 +39,16 @@ namespace graphics
 
 	private:
 
+		template <typename T>
+		void freeResources(std::map<std::string, T>& map)
+		{
+			for (auto it = map.begin(); it != map.end(); ++it)
+			{
+				delete it->second;
+			}
+			map.clear();
+		}
+
 		GraphicsAPI* m_api;
 		std::map<std::string, Material*> m_materials;
 		std::map<std::string, Shader*> m_shaders;

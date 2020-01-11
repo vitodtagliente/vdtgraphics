@@ -193,7 +193,8 @@ namespace graphics
 		
 		if (material != nullptr)
 		{
-			Material* const materialInstance = material->createInstance();
+			// memory leak issue
+			Material* const materialInstance = material; // material->createInstance();
 			materialInstance->set(Shaders::params::Color, color);
 			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
 			push(m_quad, materialInstance, transform);
