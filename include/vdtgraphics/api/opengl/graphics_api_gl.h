@@ -17,10 +17,10 @@ namespace graphics
 		virtual void shutdown() override;
 
 		// graphics objects creation
+		virtual Context* const createContext(const Context::Type type) override;
 		virtual Shader* createShader(const Shader::Type type, const std::string& source) const override;
 		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const override;
 		virtual Texture* createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) const override;
 		virtual Renderable* createRenderable(const Mesh& mesh) override;
-		virtual Renderer* const createRenderer() const override;
 	};
 }

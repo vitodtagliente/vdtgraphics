@@ -1,5 +1,7 @@
 #include <vdtgraphics/graphics_api.h>
 #include <vdtgraphics/platform.h>
+#include <vdtgraphics/renderer_2d.h>
+#include <vdtgraphics/renderer_3d.h>
 
 #ifdef USE_OPENGL
 #include <vdtgraphics/api/opengl/graphics_gl.h>
@@ -65,4 +67,14 @@ namespace graphics
 		GraphicsAPI::Type::Null
 #endif
 		;
+
+	Renderer2D* const GraphicsAPI::createRenderer2D(Context* const context) const
+	{
+		return new Renderer2D(context);
+	}
+
+	Renderer3D* const GraphicsAPI::createRenderer3D(Context* const context) const
+	{
+		return new Renderer3D(context);
+	}
 }

@@ -1,7 +1,7 @@
 #include <vdtgraphics/api/opengl/graphics_api_gl.h>
 #include <vdtgraphics/api/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/context_gl.h>
 #include <vdtgraphics/api/opengl/renderable_gl.h>
-#include <vdtgraphics/api/opengl/renderer_gl.h>
 #include <vdtgraphics/api/opengl/shader_gl.h>
 #include <vdtgraphics/api/opengl/shader_program_gl.h>
 #include <vdtgraphics/api/opengl/texture_gl.h>
@@ -26,6 +26,11 @@ namespace graphics
 	{
 	}
 	
+	Context* const GraphicsAPI_GL::createContext(const Context::Type type)
+	{
+		return new ContextGL((GraphicsAPI*)(this), type);
+	}
+
 	Shader* GraphicsAPI_GL::createShader(const Shader::Type type, const std::string& source) const
 	{
 		return new ShaderGL(type, source);
@@ -44,10 +49,5 @@ namespace graphics
 	Renderable* GraphicsAPI_GL::createRenderable(const Mesh& mesh)
 	{
 		return new RenderableGL(mesh);
-	}
-	
-	Renderer* const GraphicsAPI_GL::createRenderer() const
-	{
-		return new RendererGL((GraphicsAPI*)(this));
 	}
 }

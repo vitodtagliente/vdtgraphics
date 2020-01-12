@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "color.h"
+#include "context.h"
 #include "image.h"
 #include "mesh.h"
 #include "shader.h"
@@ -16,7 +17,8 @@
 namespace graphics
 {
 	class Renderable;
-	class Renderer;
+	class Renderer2D;
+	class Renderer3D;
 	class ShaderProgram;
 
 	class GraphicsAPI
@@ -57,8 +59,10 @@ namespace graphics
 		inline Type getType() const { return m_type; }
 
 		// graphics objects creation
+		virtual Context* const createContext(const Context::Type type) = 0;
 		virtual Renderable* createRenderable(const Mesh& mesh) = 0;
-		virtual Renderer* const createRenderer() const = 0;
+		virtual Renderer2D* const createRenderer2D(Context* const context) const;
+		virtual Renderer3D* const createRenderer3D(Context* const context) const;
 		virtual Shader* createShader(const Shader::Type type, const std::string& source) const = 0;
 		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const = 0;
 		virtual Texture* createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) const = 0;

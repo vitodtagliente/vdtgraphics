@@ -11,13 +11,12 @@ namespace graphics
 	class Material;
 	class Shader;
 	class ShaderProgram;
-	class GraphicsAPI;
 
 	class MaterialLibrary final
 	{
 	public:
 
-		MaterialLibrary(GraphicsAPI* const api);
+		MaterialLibrary();
 		~MaterialLibrary();
 
 		void clear();
@@ -49,7 +48,6 @@ namespace graphics
 			map.clear();
 		}
 
-		GraphicsAPI* m_api;
 		std::map<std::string, Material*> m_materials;
 		std::map<std::string, Shader*> m_shaders;
 		std::map<std::string, ShaderProgram*> m_programs;

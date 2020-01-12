@@ -9,7 +9,7 @@ using namespace graphics;
 
 void render_loop();
 GraphicsAPI* api = nullptr;
-Renderer* renderer = nullptr;
+Renderer2D* renderer2d = nullptr;
 
 int nbFrames = 0;
 double lastTime = 0;
@@ -60,8 +60,8 @@ int main(void)
 
     api = GraphicsAPI::Factory::get();
     api->startup();
-    renderer = api->createRenderer();
-    renderer->initializeMaterials();
+    renderer2d = api->createRenderer2D(api->createContext(Context::Type::Default));
+    //renderer->initializeMaterials();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -89,9 +89,9 @@ int main(void)
 
 void render_loop()
 {
-    renderer->clear(Color::Black);
-    renderer->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
+    renderer2d->clear(Color::Black);
+    //renderer->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
     ////for(int i = 0; i < 300; ++i)
     //renderer->drawCircle(Color::Green, {}, .4f);
-    renderer->render();
+    renderer2d->render();
 }

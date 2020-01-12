@@ -4,13 +4,11 @@
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_program.h>
-#include <vdtgraphics/graphics_api.h>
 
 namespace graphics
 {
-	MaterialLibrary::MaterialLibrary(GraphicsAPI* const api)
-		: m_api(api)
-		, m_materials()
+	MaterialLibrary::MaterialLibrary()
+		: m_materials()
 		, m_shaders()
 		, m_programs()
 	{
