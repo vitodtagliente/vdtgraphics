@@ -30,7 +30,7 @@ namespace graphics
 		public:
 			// read the file content
 			static bool load(const std::string& filename, std::string& source);
-			// read different shader sources from the same file
+			// parse different shader sources from the same source
 			static bool parse(const std::string& content, std::map<Type, std::string>& sources);
 		};
 

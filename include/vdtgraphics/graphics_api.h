@@ -59,7 +59,7 @@ namespace graphics
 		inline Type getType() const { return m_type; }
 
 		// graphics objects creation
-		virtual Context* const createContext(const Context::Type type) = 0;
+		virtual Context* const createContext(const Context::Type type = Context::Type::Default) = 0;
 		virtual Renderable* createRenderable(const Mesh& mesh) = 0;
 		virtual Renderer2D* const createRenderer2D(Context* const context) const;
 		virtual Renderer3D* const createRenderer3D(Context* const context) const;

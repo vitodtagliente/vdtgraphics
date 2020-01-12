@@ -60,7 +60,7 @@ int main(void)
 
     api = GraphicsAPI::Factory::get();
     api->startup();
-    renderer2d = api->createRenderer2D(api->createContext(Context::Type::Default));
+    renderer2d = api->createRenderer2D(api->createContext());
     //renderer->initializeMaterials();
 
     /* Loop until the user closes the window */

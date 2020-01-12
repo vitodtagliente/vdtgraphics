@@ -29,13 +29,21 @@ namespace graphics
 		for (const RenderCommand& command : m_commandBuffer)
 		{
 			// bind the material
+			// (activate shaders properties)
 			command.material->bind();
 			// bind the data to render
 			command.renderable->bind();
 			// render the command
-			m_context->drawIndexed(static_cast<unsigned int>(command.renderable->getMesh().indices.size()));
+			const Mesh& mesh = command.renderable->getMesh();
+			if (mesh.indices.size() != 0)
+			{
+				m_context->drawIndexed(static_cast<unsigned int>(mesh.indices.size()));
+			}
+			else
+			{
+				m_context->draw(static_cast<unsigned int>(mesh.vertices.size()));
+			}
 		}
-
 		m_commandBuffer.clear();
 	}
 

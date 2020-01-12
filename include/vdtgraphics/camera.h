@@ -8,6 +8,12 @@ namespace graphics
 	{
 	public:
 
+		enum class Type
+		{
+			Ortographic,
+			Perspective
+		};
+
 	private:
 	};
 }
