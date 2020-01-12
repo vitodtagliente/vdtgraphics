@@ -15,6 +15,8 @@ namespace graphics
 		Renderer2D(Context* const context);
 		virtual ~Renderer2D() = default;
 
+		virtual void initialize() override;
+
 		// draw a rectangle 
 		void drawRect(const Color& color, const vector2& position);
 		void drawRect(const Color& color, const vector2& position, const vector2& scale);

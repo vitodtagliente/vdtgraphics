@@ -6,6 +6,7 @@
 #include <vdtgraphics/mesh.h>
 #include <vdtgraphics/meshes/circle.h>
 #include <vdtgraphics/meshes/quad.h>
+#include <vdtgraphics/shader_library.h>
 #include <vdtgraphics/shaders.h>
 
 namespace graphics
@@ -15,6 +16,24 @@ namespace graphics
 		, m_circle(context->getAPI()->createRenderable(Circle{}))
 		, m_quad(context->getAPI()->createRenderable(Quad{}))
 	{		
+	}
+
+	void Renderer2D::initialize()
+	{
+		// initialize 2d default materials 
+		if (ShaderLibrary* library = m_context->getAPI()->getShaderLibrary())
+		{
+			for (const std::string& name : { Shaders::names::ColorShader
+				, Shaders::names::TextureShader
+				, Shaders::names::CroppedTextureShader })
+			{
+				if (ShaderProgram* const program = library->get(name))
+				{
+					Material* const material = new Material(program);
+					m_materialLibrary.add(name, material);
+				}					
+			}
+		}		
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position)
@@ -55,7 +74,7 @@ namespace graphics
 
 		if (material != nullptr)
 		{
-			Material* const materialInstance = material;
+			Material* const materialInstance = material->createInstance();
 			materialInstance->set(Shaders::params::Color, color);
 			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
 			push(m_quad, materialInstance, transform);

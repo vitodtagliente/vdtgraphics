@@ -19,6 +19,7 @@ namespace graphics
 	class Renderable;
 	class Renderer2D;
 	class Renderer3D;
+	class ShaderLibrary;
 	class ShaderProgram;
 
 	class GraphicsAPI
@@ -48,6 +49,7 @@ namespace graphics
 
 		GraphicsAPI(const Type type)
 			: m_type(type)
+			, m_shaderLibrary()
 		{
 
 		}
@@ -67,9 +69,13 @@ namespace graphics
 		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const = 0;
 		virtual Texture* createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) const = 0;
 
-	private:
+		ShaderLibrary* const getShaderLibrary() const { return m_shaderLibrary; }
+
+	protected:
 
 		// api type
 		Type m_type;
+		// shader library
+		ShaderLibrary* m_shaderLibrary;
 	};
 }

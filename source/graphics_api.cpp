@@ -70,11 +70,15 @@ namespace graphics
 
 	Renderer2D* const GraphicsAPI::createRenderer2D(Context* const context) const
 	{
-		return new Renderer2D(context);
+		Renderer2D* const renderer =  new Renderer2D(context);
+		renderer->initialize();
+		return renderer;
 	}
 
 	Renderer3D* const GraphicsAPI::createRenderer3D(Context* const context) const
 	{
-		return new Renderer3D(context);
+		Renderer3D* const renderer = new Renderer3D(context);
+		renderer->initialize();
+		return renderer;
 	}
 }

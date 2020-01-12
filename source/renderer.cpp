@@ -13,6 +13,10 @@ namespace graphics
 		, m_drawingMode(DrawingMode::Fill)
 	{
 	}
+
+	void Renderer::initialize()
+	{
+	}
 	
 	void Renderer::setDrawingMode(const DrawingMode drawingMode)
 	{
@@ -26,7 +30,7 @@ namespace graphics
 
 	void Renderer::render()
 	{
-		for (const RenderCommand& command : m_commandBuffer)
+		for (RenderCommand& command : m_commandBuffer)
 		{
 			// bind the material
 			// (activate shaders properties)
@@ -43,6 +47,8 @@ namespace graphics
 			{
 				m_context->draw(static_cast<unsigned int>(mesh.vertices.size()));
 			}
+
+			command.free();
 		}
 		m_commandBuffer.clear();
 	}

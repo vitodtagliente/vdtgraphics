@@ -15,28 +15,16 @@ namespace graphics
 
 	struct RenderCommand
 	{
+		RenderCommand();
+		RenderCommand(Renderable* const renderable,
+			Material* const material,
+			const matrix4& transform = matrix4::identity);
+		~RenderCommand();
+
+		void free();
+
 		Renderable* renderable;
 		Material* material;
 		matrix4 transform;
-
-		RenderCommand()
-			: renderable()
-			, material()
-			, transform(matrix4::identity)
-		{
-
-		}
-
-		RenderCommand(
-			Renderable* const renderable,
-			Material* const material,
-			const matrix4& transform = matrix4::identity
-		)
-			: renderable(renderable)
-			, material(material)
-			, transform(transform)
-		{
-
-		}
 	};
 }

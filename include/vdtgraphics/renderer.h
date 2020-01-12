@@ -27,6 +27,8 @@ namespace graphics
 		Renderer(Context* const context);
 		virtual ~Renderer() = default;
 
+		virtual void initialize();
+
 		inline Context* const getContext() const { return m_context; }
 		inline MaterialLibrary& getMaterialLibrary() { return m_materialLibrary; }
 		inline TextureLibrary& getTextureLibrary() { return m_textureLibrary; }

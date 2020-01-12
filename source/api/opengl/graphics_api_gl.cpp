@@ -1,8 +1,10 @@
 #include <vdtgraphics/api/opengl/graphics_api_gl.h>
+
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <vdtgraphics/api/opengl/context_gl.h>
 #include <vdtgraphics/api/opengl/renderable_gl.h>
 #include <vdtgraphics/api/opengl/shader_gl.h>
+#include <vdtgraphics/api/opengl/shader_library_gl.h>
 #include <vdtgraphics/api/opengl/shader_program_gl.h>
 #include <vdtgraphics/api/opengl/texture_gl.h>
 
@@ -11,6 +13,7 @@ namespace graphics
 	GraphicsAPI_GL::GraphicsAPI_GL()
 		: GraphicsAPI(GraphicsAPI::Type::OpenGL)
 	{
+		
 	}
 
 	GraphicsAPI_GL::~GraphicsAPI_GL()
@@ -19,7 +22,14 @@ namespace graphics
 
 	bool GraphicsAPI_GL::startup()
 	{
-		return gladLoadGL();
+		if (gladLoadGL())
+		{
+			m_shaderLibrary = new ShaderLibraryGL((GraphicsAPI*)(this));
+			m_shaderLibrary->initialize();
+
+			return true;
+		}
+		return false;
 	}
 	
 	void GraphicsAPI_GL::shutdown()
