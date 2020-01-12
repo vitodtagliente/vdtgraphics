@@ -90,8 +90,7 @@ int main(void)
 void render_loop()
 {
     renderer2d->clear(Color::Black);
-    //renderer->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
-    ////for(int i = 0; i < 300; ++i)
-    //renderer->drawCircle(Color::Green, {}, .4f);
+    renderer2d->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
+    renderer2d->drawCircle(Color::Green, {}, .4f);
     renderer2d->render();
 }
