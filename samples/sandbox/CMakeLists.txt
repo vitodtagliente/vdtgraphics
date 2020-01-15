@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(
     . 
     ../../include 
-    ../../vdtmath/include
-    ../../glfw/include
+    ../../vendor/vdtmath/include
+    ../../vendor/glfw/include
 )
 
 file(GLOB PROJECT_HEADERS "*.h") 
@@ -31,4 +31,4 @@ target_link_libraries(
 )
 
 add_subdirectory(../../ vdtgraphics)
-add_subdirectory(../../glfw glfw)
+add_subdirectory(../../vendor/glfw glfw)

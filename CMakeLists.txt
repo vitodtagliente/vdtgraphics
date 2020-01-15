@@ -5,7 +5,10 @@ enable_testing()
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(include vdtmath/include)
+include_directories(
+	include 
+	vendor/vdtmath/include
+)
 
 file(GLOB_RECURSE PROJECT_HEADERS "include/vdtgraphics/*.h") 
 file(GLOB_RECURSE PROJECT_SOURCES "source/*.cpp")
@@ -45,4 +48,4 @@ add_library(
 )
 
 # Dependencies
-add_subdirectory(vdtmath)
+add_subdirectory(vendor/vdtmath)
