@@ -3,9 +3,11 @@
 #include <GLFW/glfw3.h>
 #include <vdtgraphics/graphics.h>
 #include <sstream>
+#include <vdtmath/math.h>
 
 using namespace std;
 using namespace graphics;
+using namespace math;
 
 void render_loop();
 GraphicsAPI* api = nullptr;

@@ -44,8 +44,8 @@ add_library(
 	STATIC
     ${PROJECT_HEADERS}
     ${PROJECT_SOURCES} 
-	vdtmath
 )
 
-# Dependencies
-add_subdirectory(vendor/vdtmath)
+if(NOT TARGET vdtmath)
+	add_subdirectory(vendor/vdtmath)
+endif()
