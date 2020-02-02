@@ -1,14 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
+if(TARGET vdtgraphics)
+	return()
+endif()
 project(vdtgraphics)
 
-enable_testing()
-
 set(CMAKE_CXX_STANDARD 17)
-
-include_directories(
-	include 
-	vendor/vdtmath/include
-)
 
 file(GLOB_RECURSE PROJECT_HEADERS "include/vdtgraphics/*.h") 
 file(GLOB_RECURSE PROJECT_SOURCES "source/*.cpp")
@@ -43,9 +39,13 @@ add_library(
     ${PROJECT_NAME} 
 	STATIC
     ${PROJECT_HEADERS}
-    ${PROJECT_SOURCES} 
+    ${PROJECT_SOURCES}
 )
 
-if(NOT TARGET vdtmath)
-	add_subdirectory(vendor/vdtmath)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+
+if(NOT TARGET glfw)
+    add_subdirectory(vendor/vdtmath)
 endif()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC vdtmath)

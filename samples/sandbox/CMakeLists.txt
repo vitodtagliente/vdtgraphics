@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(
     . 
-    ../../include 
-    ../../vendor/vdtmath/include
-    ../../vendor/glfw/include
 )
 
 file(GLOB PROJECT_HEADERS "*.h") 
@@ -26,10 +23,10 @@ add_executable(
 
 target_link_libraries(
     ${PROJECT_NAME} 
-    glfw
-    vdtgraphics
-    vdtmath
 )
 
 add_subdirectory(../../ vdtgraphics)
 add_subdirectory(../../vendor/glfw glfw)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC vdtgraphics)
