@@ -10,7 +10,7 @@ namespace graphics
 	{
 	public:
 
-		ContextGL(GraphicsAPI* const api, const Type type = Type::Default);
+		ContextGL(API* const api, const Type type = Type::Default);
 		virtual ~ContextGL() override = default;
 
 		virtual void enableAlpha(const bool bEnabled = true) override;

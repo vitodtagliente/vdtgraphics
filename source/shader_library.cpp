@@ -1,11 +1,11 @@
 #include <vdtgraphics/shader_library.h>
 
-#include <vdtgraphics/graphics_api.h>
+#include <vdtgraphics/api.h>
 #include <vdtgraphics/shader_program.h>
 
 namespace graphics
 {
-	ShaderLibrary::ShaderLibrary(GraphicsAPI* const api)
+	ShaderLibrary::ShaderLibrary(API* const api)
 		: m_api(api)
 		, m_programs()
 	{

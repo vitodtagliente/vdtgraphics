@@ -22,7 +22,7 @@ namespace graphics
 	class ShaderLibrary;
 	class ShaderProgram;
 
-	class GraphicsAPI
+	class API
 	{
 	public:
 
@@ -36,24 +36,24 @@ namespace graphics
 		{
 		public:
 
-			static GraphicsAPI* const get();
-			static GraphicsAPI* const get(const Type type);
+			static API* const get();
+			static API* const get(const Type type);
 			static const std::vector<Type>& getAvailableTypes();
 
 		private:
 
-			static std::map<Type, GraphicsAPI*> s_apis;
+			static std::map<Type, API*> s_apis;
 			static std::vector<Type> s_availableTypes;
-			static GraphicsAPI::Type s_platformDefaultType;
+			static API::Type s_platformDefaultType;
 		};
 
-		GraphicsAPI(const Type type)
+		API(const Type type)
 			: m_type(type)
 			, m_shaderLibrary()
 		{
 
 		}
-		~GraphicsAPI() = default;
+		~API() = default;
 
 		virtual bool startup() = 0;
 		virtual void shutdown() = 0;

@@ -6,7 +6,7 @@
 
 namespace graphics
 {
-	class GraphicsAPI;
+	class API;
 
 	class Context
 	{
@@ -17,10 +17,10 @@ namespace graphics
 			Default
 		};
 
-		Context(GraphicsAPI* const api, const Type type = Type::Default);
+		Context(API* const api, const Type type = Type::Default);
 		virtual ~Context() = default;
 
-		inline GraphicsAPI* const getAPI() const { return m_api; }
+		inline API* const getAPI() const { return m_api; }
 		inline Type getType() const { return m_type; }
 
 		virtual void enableAlpha(const bool bEnabled = true) = 0;
@@ -32,7 +32,7 @@ namespace graphics
 	private:
 
 		// graphics api
-		GraphicsAPI* m_api;
+		API* m_api;
 		// context type
 		Type m_type;
 

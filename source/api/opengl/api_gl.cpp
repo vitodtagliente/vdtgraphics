@@ -1,4 +1,4 @@
-#include <vdtgraphics/api/opengl/graphics_api_gl.h>
+#include <vdtgraphics/api/opengl/api_gl.h>
 
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <vdtgraphics/api/opengl/context_gl.h>
@@ -11,7 +11,7 @@
 namespace graphics
 {
 	GraphicsAPI_GL::GraphicsAPI_GL()
-		: GraphicsAPI(GraphicsAPI::Type::OpenGL)
+		: API(API::Type::OpenGL)
 	{
 		
 	}
@@ -24,7 +24,7 @@ namespace graphics
 	{
 		if (gladLoadGL())
 		{
-			m_shaderLibrary = new ShaderLibraryGL((GraphicsAPI*)(this));
+			m_shaderLibrary = new ShaderLibraryGL((API*)(this));
 			m_shaderLibrary->initialize();
 
 			return true;
@@ -38,7 +38,7 @@ namespace graphics
 	
 	Context* const GraphicsAPI_GL::createContext(const Context::Type type)
 	{
-		return new ContextGL((GraphicsAPI*)(this), type);
+		return new ContextGL((API*)(this), type);
 	}
 
 	Shader* GraphicsAPI_GL::createShader(const Shader::Type type, const std::string& source) const

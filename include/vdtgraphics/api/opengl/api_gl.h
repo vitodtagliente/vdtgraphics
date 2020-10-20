@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <vdtgraphics/graphics_api.h>
+#include <vdtgraphics/api.h>
 
 namespace graphics
 {
-	class GraphicsAPI_GL : public GraphicsAPI
+	class GraphicsAPI_GL : public API
 	{
 	public:
 

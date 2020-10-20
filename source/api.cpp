@@ -1,4 +1,4 @@
-#include <vdtgraphics/graphics_api.h>
+#include <vdtgraphics/api.h>
 #include <vdtgraphics/platform.h>
 #include <vdtgraphics/renderer_2d.h>
 #include <vdtgraphics/renderer_3d.h>
@@ -9,12 +9,12 @@
 
 namespace graphics
 {
-	GraphicsAPI* const GraphicsAPI::Factory::get()
+	API* const API::Factory::get()
 	{
 		return get(s_platformDefaultType);
 	}
 
-	GraphicsAPI* const GraphicsAPI::Factory::get(const Type type)
+	API* const API::Factory::get(const Type type)
 	{
 		if (std::find(s_availableTypes.begin(), s_availableTypes.end(), type) != s_availableTypes.end())
 		{
@@ -29,15 +29,15 @@ namespace graphics
 			switch (type)
 			{
 #ifdef USE_OPENGL
-			case GraphicsAPI::Type::OpenGL:
+			case API::Type::OpenGL:
 			{
-				GraphicsAPI* const new_api = new GraphicsAPI_GL();
+				API* const new_api = new GraphicsAPI_GL();
 				s_apis.insert({ type, new_api });
 				return new_api;
 			}
 			break;
 #endif 
-			case GraphicsAPI::Type::Null:
+			case API::Type::Null:
 			default:
 				return nullptr;
 			break;
@@ -46,36 +46,36 @@ namespace graphics
 		return nullptr;
 	}
 
-	const std::vector<GraphicsAPI::Type>& GraphicsAPI::Factory::getAvailableTypes()
+	const std::vector<API::Type>& API::Factory::getAvailableTypes()
 	{
 		return s_availableTypes;
 	}
 
-	std::map<GraphicsAPI::Type, GraphicsAPI*> GraphicsAPI::Factory::s_apis{};
+	std::map<API::Type, API*> API::Factory::s_apis{};
 
-	std::vector<GraphicsAPI::Type> GraphicsAPI::Factory::s_availableTypes{
-		GraphicsAPI::Type::Null
+	std::vector<API::Type> API::Factory::s_availableTypes{
+		API::Type::Null
 #ifdef USE_OPENGL
-		, GraphicsAPI::Type::OpenGL
+		, API::Type::OpenGL
 #endif
 	};
 
-	GraphicsAPI::Type GraphicsAPI::Factory::s_platformDefaultType =
+	API::Type API::Factory::s_platformDefaultType =
 #ifdef USE_OPENGL
-		GraphicsAPI::Type::OpenGL
+		API::Type::OpenGL
 #else 
 		GraphicsAPI::Type::Null
 #endif
 		;
 
-	Renderer2D* const GraphicsAPI::createRenderer2D(Context* const context) const
+	Renderer2D* const API::createRenderer2D(Context* const context) const
 	{
 		Renderer2D* const renderer =  new Renderer2D(context);
 		renderer->initialize();
 		return renderer;
 	}
 
-	Renderer3D* const GraphicsAPI::createRenderer3D(Context* const context) const
+	Renderer3D* const API::createRenderer3D(Context* const context) const
 	{
 		Renderer3D* const renderer = new Renderer3D(context);
 		renderer->initialize();

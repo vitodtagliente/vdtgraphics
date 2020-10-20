@@ -10,7 +10,7 @@ namespace graphics
 	{
 	public:
 
-		ShaderLibraryGL(GraphicsAPI* const api);
+		ShaderLibraryGL(API* const api);
 		virtual ~ShaderLibraryGL() override = default;
 	
 	private:

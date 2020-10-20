@@ -9,14 +9,14 @@
 
 namespace graphics
 {
-	class GraphicsAPI;
+	class API;
 	class ShaderProgram;
 
 	class ShaderLibrary
 	{
 	public:
 
-		ShaderLibrary(GraphicsAPI* const api);
+		ShaderLibrary(API* const api);
 		virtual ~ShaderLibrary();
 
 		void add(const std::string& name, ShaderProgram* const program);
@@ -42,7 +42,7 @@ namespace graphics
 			map.clear();
 		}
 
-		GraphicsAPI* m_api;
+		API* m_api;
 		std::map<std::string, ShaderProgram*> m_programs;
 	};
 }

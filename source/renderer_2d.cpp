@@ -1,6 +1,6 @@
 #include <vdtgraphics/renderer_2d.h>
 #include <vdtgraphics/context.h>
-#include <vdtgraphics/graphics_api.h>
+#include <vdtgraphics/api.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/mesh.h>

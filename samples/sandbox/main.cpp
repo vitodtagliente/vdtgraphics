@@ -10,7 +10,7 @@ using namespace graphics;
 using namespace math;
 
 void render_loop();
-GraphicsAPI* api = nullptr;
+API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
 
 int nbFrames = 0;
@@ -60,7 +60,7 @@ int main(void)
     // load GL
     //gladLoadGL();
 
-    api = GraphicsAPI::Factory::get();
+    api = API::Factory::get();
     api->startup();
     renderer2d = api->createRenderer2D(api->createContext());
     //renderer->initializeMaterials();

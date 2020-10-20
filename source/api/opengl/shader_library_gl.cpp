@@ -4,7 +4,7 @@
 
 namespace graphics
 {
-	ShaderLibraryGL::ShaderLibraryGL(GraphicsAPI* const api)
+	ShaderLibraryGL::ShaderLibraryGL(API* const api)
 		: ShaderLibrary(api)
 	{
 	}

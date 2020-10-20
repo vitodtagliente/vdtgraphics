@@ -3,7 +3,7 @@
 
 namespace graphics
 {
-	ContextGL::ContextGL(GraphicsAPI* const api, const Type type)
+	ContextGL::ContextGL(API* const api, const Type type)
 		: Context(api, type)
 	{
 	}
