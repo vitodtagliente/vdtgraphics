@@ -2,7 +2,7 @@
 
 namespace graphics
 {
-	Image::Image(unsigned char* const data, const int width, const int height, const int channels)
+	Image::Image(unsigned char* const data, const unsigned int width, const unsigned int height, const unsigned int channels)
 		: m_data(data)
 		, m_width(width)
 		, m_height(height)

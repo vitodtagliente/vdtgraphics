@@ -17,7 +17,7 @@ namespace graphics
 			auto shader = *it;
 			if (shader)
 			{
-				glAttachShader(m_id, shader->id());
+				glAttachShader(m_id, shader->getId());
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace graphics
 				auto shader = *it;
 				if (shader)
 				{
-					glDetachShader(m_id, shader->id());
+					glDetachShader(m_id, shader->getId());
 				}
 			}
 			m_state = State::Linked;

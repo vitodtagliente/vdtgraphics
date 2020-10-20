@@ -16,4 +16,9 @@ namespace graphics
 	{
 
 	}
+	
+	Texture::~Texture()
+	{
+		
+	}
 }

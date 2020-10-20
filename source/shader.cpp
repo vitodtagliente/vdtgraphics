@@ -15,7 +15,7 @@ namespace graphics
 		{
 			while (std::getline(file, line))
 			{
-				source += line + end_line;
+				source += line + "\n";
 			}
 			file.close();
 			return true;
@@ -35,7 +35,7 @@ namespace graphics
 			std::string source{};
 			while (std::getline(stream, line))
 			{
-				if (line.find(shader_section) != std::string::npos)
+				if (line.find("#shader") != std::string::npos)
 				{
 					if (firsfound)
 					{
@@ -50,7 +50,7 @@ namespace graphics
 
 					source.clear();
 				}
-				else source += line + end_line;
+				else source += line + "\n";
 			}
 
 			if (firsfound && !source.empty())
@@ -63,7 +63,7 @@ namespace graphics
 	}
 
 	Shader::Shader(const Type type, const std::string& source)
-		: m_id()
+		: m_id(INVALID_ID)
 		, m_type(type)
 		, m_state(State::Unknown)
 		, m_errorMessage()
