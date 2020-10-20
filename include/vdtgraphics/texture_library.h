@@ -2,39 +2,17 @@
 
 #pragma once
 
-#include <initializer_list>
-#include <map>
-#include <string>
-#include <vector>
+#include "resource_library.h"
+#include "texture.h"
 
 namespace graphics
 {
-	class Texture;
-
-	class TextureLibrary
+	class TextureLibrary : public ResourceLibrary<Texture>
 	{
 	public:
 
 		TextureLibrary();
-		~TextureLibrary();
-
-		void clear();
-
-		// add a texture
-		bool add(const std::string& name, Texture* const texture);
-		// remove a texture
-		bool remove(const std::string& name, const bool remove = true);
-
-		// retrieve a texture
-		Texture* const get(const std::string& name) const;
-
-		// retrieve all textures
-		const std::map<std::string, Texture*>& getTextures() const { return m_textures; }
-
-	private:
-
-		// cached textures
-		std::map<std::string, Texture*> m_textures;
+		~TextureLibrary() = default;
 
 	};
 }
