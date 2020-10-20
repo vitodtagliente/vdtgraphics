@@ -60,6 +60,11 @@ namespace graphics
 			m_resources.clear();
 		}
 
+		size_t size() const 
+		{
+			return m_resources.size();
+		}
+
 	private:
 
 		// cached textures
