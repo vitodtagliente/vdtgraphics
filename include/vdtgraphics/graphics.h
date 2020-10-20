@@ -3,10 +3,10 @@
 #pragma once
 
 #include "api.h"
+#include "buffer.h"
 #include "color.h"
 #include "context.h"
 #include "command_buffer.h"
-#include "graphics_buffer.h"
 #include "image.h"
 #include "material.h"
 #include "material_library.h"

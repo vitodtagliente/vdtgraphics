@@ -1,10 +1,10 @@
-#include <vdtgraphics/api/opengl/graphics_buffer_gl.h>
+#include <vdtgraphics/api/opengl/buffer_gl.h>
 #include <vdtgraphics/api/opengl/opengl.h>
 
 namespace graphics
 {
-	GraphicsBufferGL::GraphicsBufferGL(const Type type, const void* const data, const std::size_t size)
-		: GraphicsBuffer(type, data, size)
+	BufferGL::BufferGL(const Type type, const void* const data, const std::size_t size)
+		: Buffer(type, data, size)
 		, m_id()
 		, m_nativeType()
 	{
@@ -12,11 +12,11 @@ namespace graphics
 
 		switch (type)
 		{
-		case GraphicsBuffer::Type::Index:
+		case Buffer::Type::Index:
 			m_nativeType = GL_ELEMENT_ARRAY_BUFFER;
 			break;
 		default:
-		case GraphicsBuffer::Type::Vertex:
+		case Buffer::Type::Vertex:
 			m_nativeType = GL_ARRAY_BUFFER;
 			break;
 		}
@@ -25,17 +25,17 @@ namespace graphics
 		glBufferData(m_nativeType, size, data, GL_STATIC_DRAW);
 	}
 
-	GraphicsBufferGL::~GraphicsBufferGL()
+	BufferGL::~BufferGL()
 	{
 		glDeleteBuffers(1, &m_id);
 	}
 
-	void GraphicsBufferGL::bind()
+	void BufferGL::bind()
 	{
 		glBindBuffer(m_nativeType, m_id);
 	}
 
-	void GraphicsBufferGL::unbind()
+	void BufferGL::unbind()
 	{
 		glBindBuffer(m_nativeType, 0);
 	}

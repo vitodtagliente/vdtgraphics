@@ -2,16 +2,16 @@
 
 #pragma once
 
-#include <vdtgraphics/graphics_buffer.h>
+#include <vdtgraphics/buffer.h>
 
 namespace graphics
 {
-	class GraphicsBufferGL final : public GraphicsBuffer
+	class BufferGL final : public Buffer
 	{
 	public:
 
-		GraphicsBufferGL(const Type type, const void* const data, const std::size_t size);
-		virtual ~GraphicsBufferGL() override;
+		BufferGL(const Type type, const void* const data, const std::size_t size);
+		virtual ~BufferGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;

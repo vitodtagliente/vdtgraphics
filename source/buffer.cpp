@@ -1,8 +1,8 @@
-#include <vdtgraphics/graphics_buffer.h>
+#include <vdtgraphics/buffer.h>
 
 namespace graphics
 {
-	GraphicsBufferElement::GraphicsBufferElement(
+	BufferElement::BufferElement(
 		const unsigned int count,
 		const Type type,
 		const std::size_t size,
@@ -15,32 +15,32 @@ namespace graphics
 	{
 	}
 
-	GraphicsBufferLayout::GraphicsBufferLayout()
+	BufferLayout::BufferLayout()
 		: m_elements()
 		, m_stride(0)
 	{
 
 	}
 
-	void GraphicsBufferLayout::push(const GraphicsBufferElement& element)
+	void BufferLayout::push(const BufferElement& element)
 	{
 		m_elements.push_back(element);
 		m_stride += element.size;
 	}
 
-	void GraphicsBufferLayout::clear()
+	void BufferLayout::clear()
 	{
 		m_elements.clear();
 	}
 
-	GraphicsBuffer::GraphicsBuffer(const Type type, const void * const data, const std::size_t size)
+	Buffer::Buffer(const Type type, const void * const data, const std::size_t size)
 		: layout()
 		, m_type(type)
 		, m_size(size)
 	{
 	}
 
-	GraphicsBuffer::~GraphicsBuffer()
+	Buffer::~Buffer()
 	{
 	}
 }

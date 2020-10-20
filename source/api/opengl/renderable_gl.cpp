@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <vdtgraphics/api/opengl/opengl.h>
-#include <vdtgraphics/api/opengl/graphics_buffer_gl.h>
+#include <vdtgraphics/api/opengl/buffer_gl.h>
 #include <vdtgraphics/mesh.h>
 
 namespace graphics

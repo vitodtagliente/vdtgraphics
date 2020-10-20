@@ -7,7 +7,7 @@
 
 namespace graphics
 {
-	struct GraphicsBufferElement
+	struct BufferElement
 	{
 		enum class Type
 		{
@@ -26,7 +26,7 @@ namespace graphics
 		// size
 		std::size_t size;
 
-		GraphicsBufferElement(
+		BufferElement(
 			const unsigned int count,
 			const Type type,
 			const std::size_t size,
@@ -34,27 +34,27 @@ namespace graphics
 		);
 	};
 
-	class GraphicsBufferLayout
+	class BufferLayout
 	{
 	public:
 
-		GraphicsBufferLayout();
+		BufferLayout();
 
 		inline std::size_t getStride() const { return m_stride; }
-		inline const std::vector<GraphicsBufferElement>& getElements() const { return m_elements; }
+		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
 
-		void push(const GraphicsBufferElement& element);
+		void push(const BufferElement& element);
 		void clear();
 
 	private:
 
 		// buffer elements
-		std::vector<GraphicsBufferElement> m_elements;
+		std::vector<BufferElement> m_elements;
 		// layout stride
 		std::size_t m_stride;
 	};
 
-	class GraphicsBuffer
+	class Buffer
 	{
 	public:
 
@@ -64,8 +64,8 @@ namespace graphics
 			Index
 		};
 
-		GraphicsBuffer(const Type type, const void * const data, const std::size_t size);
-		virtual ~GraphicsBuffer();
+		Buffer(const Type type, const void * const data, const std::size_t size);
+		virtual ~Buffer();
 
 		inline Type type() const { return m_type; }
 		inline std::size_t size() const { return m_size; }
@@ -74,7 +74,7 @@ namespace graphics
 		virtual void unbind() = 0;
 
 		// buffer layout
-		GraphicsBufferLayout layout;
+		BufferLayout layout;
 
 	protected:
 
