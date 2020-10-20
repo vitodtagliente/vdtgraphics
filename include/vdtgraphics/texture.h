@@ -28,7 +28,7 @@ namespace graphics
 
 		Texture(const Image& image, const Options& options = Options{});
 		Texture(const Texture&) = delete;
-		~Texture();
+		virtual ~Texture();
 
 		inline id_t getId() const { return m_id; }
 		inline bool isValid() const { return m_id != INVALID_ID; }

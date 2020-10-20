@@ -4,7 +4,7 @@
 namespace graphics
 {
 	ShaderProgram::ShaderProgram(const std::initializer_list<Shader*>& shaders)
-		: m_id()
+		: m_id(INVALID_ID)
 		, m_state(State::Unknown)
 		, m_errorMessage()
 	{
