@@ -5,7 +5,6 @@ namespace graphics
 {
 	BufferGL::BufferGL(const Type type, const void* const data, const std::size_t size)
 		: Buffer(type, data, size)
-		, m_id()
 		, m_nativeType()
 	{
 		glGenBuffers(1, &m_id);

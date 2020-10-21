@@ -10,7 +10,7 @@ namespace graphics
 	{
 	public:
 
-		Renderer3D(Context* const context);
+		Renderer3D(API* const api);
 		virtual ~Renderer3D() = default;
 	};
 

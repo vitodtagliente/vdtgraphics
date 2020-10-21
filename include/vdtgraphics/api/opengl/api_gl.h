@@ -6,21 +6,25 @@
 
 namespace graphics
 {
-	class GraphicsAPI_GL : public API
+	class API_GL : public API
 	{
 	public:
 
-		GraphicsAPI_GL();
-		~GraphicsAPI_GL();
+		API_GL();
+		virtual ~API_GL();
 
 		virtual bool startup() override;
 		virtual void shutdown() override;
 
-		// graphics objects creation
-		virtual Context* const createContext(const Context::Type type) override;
-		virtual Shader* createShader(const Shader::Type type, const std::string& source) const override;
-		virtual ShaderProgram* createShaderProgram(const std::initializer_list<Shader*>& shaders) const override;
-		virtual Texture* createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) const override;
-		virtual Renderable* createRenderable(const Mesh& mesh) override;
+		virtual Renderable* const createRenderable(const Mesh& mesh) override;
+		virtual Shader* const createShader(const Shader::Type type, const std::string& source) override;
+		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) override;
+		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) override;
+
+		virtual void enableAlpha(const bool enabled = true) override;
+		virtual void clear(const Color& color) override;
+		virtual void draw(const unsigned int vertices = 3) override;
+		virtual void drawIndexed(const unsigned int numIndexes) override;
+		virtual void setViewport(const int width, const int height) override;
 	};
 }

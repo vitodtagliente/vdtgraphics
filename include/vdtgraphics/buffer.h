@@ -58,6 +58,8 @@ namespace graphics
 	{
 	public:
 
+		typedef unsigned int id_t;
+
 		enum class Type
 		{
 			Vertex,
@@ -67,6 +69,7 @@ namespace graphics
 		Buffer(const Type type, const void * const data, const std::size_t size);
 		virtual ~Buffer();
 
+		inline id_t getId() const { return m_id; }
 		inline Type type() const { return m_type; }
 		inline std::size_t size() const { return m_size; }
 
@@ -76,8 +79,12 @@ namespace graphics
 		// buffer layout
 		BufferLayout layout;
 
+		static constexpr id_t INVALID_ID = 0;
+
 	protected:
 
+		// the id of the buffer
+		id_t m_id;
 		// buffer type
 		Type m_type;
 		// buffer size

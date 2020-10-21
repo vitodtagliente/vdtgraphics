@@ -1,10 +1,12 @@
 #include <vdtgraphics/renderer_3d.h>
 
+#include <vdtgraphics/api.h>
+
 namespace graphics
 {
 
-	Renderer3D::Renderer3D(Context* const context)
-		: Renderer(context)
+	Renderer3D::Renderer3D(API* const api)
+		: Renderer(api)
 	{
 	}
 

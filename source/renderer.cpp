@@ -1,26 +1,20 @@
 #include <vdtgraphics/renderer.h>
-#include <vdtgraphics/context.h>
+
+#include <vdtgraphics/api.h>
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/renderable.h>
 
 namespace graphics
 {
-	Renderer::Renderer(Context* const context)
-		: m_context(context)
+	Renderer::Renderer(API* const api)
+		: m_api(api)
 		, m_materialLibrary()
-		, m_textureLibrary()
 		, m_commandBuffer()
-		, m_drawingMode(DrawingMode::Fill)
 	{
 	}
 
 	void Renderer::initialize()
 	{
-	}
-	
-	void Renderer::setDrawingMode(const DrawingMode drawingMode)
-	{
-		m_drawingMode = drawingMode;
 	}
 	
 	void Renderer::push(Renderable* const renderable, Material* const material, const math::matrix4& transform)
@@ -41,11 +35,11 @@ namespace graphics
 			const Mesh& mesh = command.renderable->getMesh();
 			if (mesh.indices.size() != 0)
 			{
-				m_context->drawIndexed(static_cast<unsigned int>(mesh.indices.size()));
+				m_api->drawIndexed(static_cast<unsigned int>(mesh.indices.size()));
 			}
 			else
 			{
-				m_context->draw(static_cast<unsigned int>(mesh.vertices.size()));
+				m_api->draw(static_cast<unsigned int>(mesh.vertices.size()));
 			}
 
 			command.free();
@@ -55,6 +49,6 @@ namespace graphics
 
 	void Renderer::clear(const Color& color)
 	{
-		m_context->clear(color);
+		m_api->clear(color);
 	}
 }

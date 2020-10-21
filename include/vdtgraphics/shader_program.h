@@ -7,6 +7,7 @@
 
 namespace graphics
 {
+	class API;
 	class Shader;
 
 	class ShaderProgram
@@ -26,6 +27,8 @@ namespace graphics
 		ShaderProgram(const std::initializer_list<Shader*>& shaders);
 		ShaderProgram(const ShaderProgram&) = delete;
 		virtual ~ShaderProgram() = default;
+
+		static ShaderProgram* const parse(API* const api, const std::string& source);
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;

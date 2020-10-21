@@ -1,7 +1,5 @@
 #include <vdtgraphics/api.h>
 #include <vdtgraphics/platform.h>
-#include <vdtgraphics/renderer_2d.h>
-#include <vdtgraphics/renderer_3d.h>
 
 #ifdef USE_OPENGL
 #include <vdtgraphics/api/opengl/graphics_gl.h>
@@ -31,7 +29,7 @@ namespace graphics
 #ifdef USE_OPENGL
 			case API::Type::OpenGL:
 			{
-				API* const new_api = new GraphicsAPI_GL();
+				API* const new_api = new API_GL();
 				s_apis.insert({ type, new_api });
 				return new_api;
 			}
@@ -67,17 +65,17 @@ namespace graphics
 		GraphicsAPI::Type::Null
 #endif
 		;
-
-	Renderer2D* const API::createRenderer2D(Context* const context) const
+	
+	Renderer2D* const API::createRenderer2D()
 	{
-		Renderer2D* const renderer =  new Renderer2D(context);
+		Renderer2D* renderer = new Renderer2D(this);
 		renderer->initialize();
 		return renderer;
 	}
 
-	Renderer3D* const API::createRenderer3D(Context* const context) const
+	Renderer3D* const API::createRenderer3D()
 	{
-		Renderer3D* const renderer = new Renderer3D(context);
+		Renderer3D* renderer = new Renderer3D(this);
 		renderer->initialize();
 		return renderer;
 	}

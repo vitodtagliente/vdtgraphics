@@ -1,7 +1,6 @@
 /// Copyright (c) Vito Domenico Tagliente
 
 #include "opengl.h"
-#include "context_gl.h"
 #include "api_gl.h"
 #include "buffer_gl.h"
 #include "renderable_gl.h"

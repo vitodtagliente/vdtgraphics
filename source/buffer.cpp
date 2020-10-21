@@ -34,7 +34,8 @@ namespace graphics
 	}
 
 	Buffer::Buffer(const Type type, const void * const data, const std::size_t size)
-		: layout()
+		: m_id(INVALID_ID)
+		, layout()
 		, m_type(type)
 		, m_size(size)
 	{

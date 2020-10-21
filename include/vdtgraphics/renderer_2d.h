@@ -12,7 +12,7 @@ namespace graphics
 	{
 	public:
 
-		Renderer2D(Context* const context);
+		Renderer2D(API* const api);
 		virtual ~Renderer2D() = default;
 
 		virtual void initialize() override;

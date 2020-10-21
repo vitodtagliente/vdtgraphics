@@ -15,13 +15,9 @@ namespace graphics
 
 		virtual void bind() override;
 		virtual void unbind() override;
-	
-		inline unsigned int id() const { return m_id; }
 
 	private:
 
-		// buffer id
-		unsigned int m_id;
 		// native buffer type
 		unsigned int m_nativeType;
 	};

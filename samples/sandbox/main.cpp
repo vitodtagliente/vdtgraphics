@@ -62,7 +62,7 @@ int main(void)
 
     api = API::Factory::get();
     api->startup();
-    renderer2d = api->createRenderer2D(api->createContext());
+    renderer2d = api->createRenderer2D();
     //renderer->initializeMaterials();
 
     /* Loop until the user closes the window */

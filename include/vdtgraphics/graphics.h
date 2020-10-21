@@ -5,7 +5,6 @@
 #include "api.h"
 #include "buffer.h"
 #include "color.h"
-#include "context.h"
 #include "command_buffer.h"
 #include "image.h"
 #include "material.h"

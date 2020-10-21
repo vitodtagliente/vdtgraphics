@@ -1,5 +1,5 @@
 #include <vdtgraphics/renderer_2d.h>
-#include <vdtgraphics/context.h>
+
 #include <vdtgraphics/api.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/material.h>
@@ -11,17 +11,18 @@
 
 namespace graphics
 {
-	Renderer2D::Renderer2D(Context* const context)
-		: Renderer(context)
-		, m_circle(context->getAPI()->createRenderable(Circle{}))
-		, m_quad(context->getAPI()->createRenderable(Quad{}))
+	Renderer2D::Renderer2D(API* const api)
+		: Renderer(api)
+		, m_circle(api->createRenderable(Circle{}))
+		, m_quad(api->createRenderable(Quad{}))
 	{		
 	}
 
 	void Renderer2D::initialize()
 	{
 		// initialize 2d default materials 
-		if (ShaderLibrary* library = m_context->getAPI()->getShaderLibrary())
+		/*
+		if (ShaderLibrary* library = m_api->getShaderLibrary())
 		{
 			for (const std::string& name : { Shaders::names::ColorShader
 				, Shaders::names::TextureShader
@@ -33,7 +34,8 @@ namespace graphics
 					m_materialLibrary.add(name, material);
 				}					
 			}
-		}		
+		}
+		*/
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position)
