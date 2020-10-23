@@ -4,12 +4,15 @@
 
 #include <initializer_list>
 #include <map>
+#include <string>
 #include <vector>
 
+#include "material.h"
 #include "mesh.h"
 #include "renderable.h"
 #include "renderer_2d.h"
 #include "renderer_3d.h"
+#include "resource_library.h"
 #include "shader.h"
 #include "shader_program.h"
 #include "texture.h"
@@ -47,18 +50,19 @@ namespace graphics
 
 		}
 		API(const API&) = delete;
-		~API() = default;
+		virtual ~API() = default;
 
-		virtual bool startup() = 0;
+		virtual bool startup();
 		virtual void shutdown() = 0;
 
 		API& operator= (const API&) = delete;
 
 		inline Type getType() const { return m_type; }
+		const ResourceLibrary<Material>& getMaterialLibrary() const { return m_materialLibrary; }
 
 		virtual Renderable* const createRenderable(const Mesh& mesh) = 0;
-		Renderer2D* const createRenderer2D();
-		Renderer3D* const createRenderer3D();
+		virtual Renderer2D* const createRenderer2D() = 0;
+		virtual Renderer3D* const createRenderer3D() = 0;
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) = 0;
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) = 0;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) = 0;
@@ -71,7 +75,12 @@ namespace graphics
 
 	protected:
 
+		virtual bool initialize();
+		virtual const std::map<std::string, std::string>& getDefaultShaderSources() const = 0;
+
 		// api type
 		Type m_type;
+		// default meterial library
+		ResourceLibrary<Material> m_materialLibrary;
 	};
 }

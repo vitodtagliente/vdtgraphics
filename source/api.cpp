@@ -5,6 +5,8 @@
 #include <vdtgraphics/api/opengl/graphics_gl.h>
 #endif 
 
+#include <vdtgraphics/shader_program.h>
+
 namespace graphics
 {
 	API* const API::Factory::get()
@@ -65,18 +67,22 @@ namespace graphics
 		GraphicsAPI::Type::Null
 #endif
 		;
-	
-	Renderer2D* const API::createRenderer2D()
+	bool API::startup()
 	{
-		Renderer2D* renderer = new Renderer2D(this);
-		renderer->initialize();
-		return renderer;
+		return initialize();
 	}
-
-	Renderer3D* const API::createRenderer3D()
+	
+	bool API::initialize()
 	{
-		Renderer3D* renderer = new Renderer3D(this);
-		renderer->initialize();
-		return renderer;
+		for (const auto& pair : getDefaultShaderSources())
+		{
+			ShaderProgram* const program = ShaderProgram::parse(this, pair.second);
+			if (program)
+			{
+				Material* material = new Material(program);
+				m_materialLibrary.add(pair.first, material);
+			}
+		}
+		return true;
 	}
 }

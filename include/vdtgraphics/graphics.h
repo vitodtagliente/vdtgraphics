@@ -8,7 +8,6 @@
 #include "command_buffer.h"
 #include "image.h"
 #include "material.h"
-#include "material_library.h"
 #include "mesh.h"
 #include "render_command.h"
 #include "renderable.h"
@@ -18,4 +17,3 @@
 #include "shader.h"
 #include "shader_program.h"
 #include "texture.h"
-#include "texture_library.h"

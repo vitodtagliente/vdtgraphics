@@ -6,8 +6,6 @@
 #include <vdtgraphics/mesh.h>
 #include <vdtgraphics/meshes/circle.h>
 #include <vdtgraphics/meshes/quad.h>
-#include <vdtgraphics/shader_library.h>
-#include <vdtgraphics/shaders.h>
 
 namespace graphics
 {
@@ -16,26 +14,6 @@ namespace graphics
 		, m_circle(api->createRenderable(Circle{}))
 		, m_quad(api->createRenderable(Quad{}))
 	{		
-	}
-
-	void Renderer2D::initialize()
-	{
-		// initialize 2d default materials 
-		/*
-		if (ShaderLibrary* library = m_api->getShaderLibrary())
-		{
-			for (const std::string& name : { Shaders::names::ColorShader
-				, Shaders::names::TextureShader
-				, Shaders::names::CroppedTextureShader })
-			{
-				if (ShaderProgram* const program = library->get(name))
-				{
-					Material* const material = new Material(program);
-					m_materialLibrary.add(name, material);
-				}					
-			}
-		}
-		*/
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position)
@@ -72,27 +50,27 @@ namespace graphics
 
 	void Renderer2D::drawRect(const Color& color, const matrix4& transform)
 	{
-		static Material* const material = getMaterialLibrary().get(Shaders::names::ColorShader);
+		static Material* const material = m_api->getMaterialLibrary().get(Material::Default::Name::Color);
 
 		if (material != nullptr)
 		{
 			Material* const materialInstance = material->createInstance();
-			materialInstance->set(Shaders::params::Color, color);
-			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
+			materialInstance->set(Material::Default::Property::Color, color);
+			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
 			push(m_quad, materialInstance, transform);
 		}
 	}
 
 	void Renderer2D::drawCircle(const Color& color, const vector2& position, const float radius)
 	{
-		static Material* const material = getMaterialLibrary().get(Shaders::names::ColorShader);
+		static Material* const material = m_api->getMaterialLibrary().get(Material::Default::Name::Color);
 
 		if (material != nullptr)
 		{
 			matrix4 transform = matrix4::scale(vec3(radius, radius, 0.0f)) * matrix4::translate(to_vec3(position));
 			Material* const materialInstance = material->createInstance();
-			materialInstance->set(Shaders::params::Color, color);
-			materialInstance->set(Shaders::params::ModelViewProjectionMatrix, transform);
+			materialInstance->set(Material::Default::Property::Color, color);
+			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
 			push(m_circle, materialInstance, transform);
 		}
 	}

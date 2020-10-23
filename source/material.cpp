@@ -5,6 +5,17 @@
 
 namespace graphics
 {
+	const std::string Material::Default::Name::Color = "color";
+	const std::string Material::Default::Name::Texture = "texture";
+	const std::string Material::Default::Name::CroppedTexture = "cropped_texture";
+
+	const std::string Material::Default::Property::ModelViewProjectionMatrix = "u_ModelViewProjectionMatrix";
+	const std::string Material::Default::Property::ViewProjectionMatrix = "u_ViewProjectionMatrix";
+	const std::string Material::Default::Property::ModelTransformMatrix = "u_Transform";
+	const std::string Material::Default::Property::Color = "u_Color";
+	const std::string Material::Default::Property::Texture = "u_Texture";
+	const std::string Material::Default::Property::TextureCropping = "u_TextureCropping";
+
 	Material::Material(const Type type /*= Type::Default*/)
 		: m_type(type)
 		, m_shaderProgram()

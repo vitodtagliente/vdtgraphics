@@ -1,14 +1,12 @@
 #include <vdtgraphics/renderer.h>
 
 #include <vdtgraphics/api.h>
-#include <vdtgraphics/material.h>
 #include <vdtgraphics/renderable.h>
 
 namespace graphics
 {
 	Renderer::Renderer(API* const api)
 		: m_api(api)
-		, m_materialLibrary()
 		, m_commandBuffer()
 	{
 	}

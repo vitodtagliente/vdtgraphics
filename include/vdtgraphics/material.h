@@ -88,6 +88,26 @@ namespace graphics
 		// example: many sprites that use differents uniforms parameters
 		Material* const createInstance() const;
 
+		struct Default
+		{
+			struct Name
+			{
+				static const std::string Color;
+				static const std::string Texture;
+				static const std::string CroppedTexture;
+			};
+
+			struct Property
+			{
+				static const std::string ModelViewProjectionMatrix;
+				static const std::string ViewProjectionMatrix;
+				static const std::string ModelTransformMatrix;
+				static const std::string Texture;
+				static const std::string Color;
+				static const std::string TextureCropping;
+			};
+		};
+
 	private:
 
 		// material type
