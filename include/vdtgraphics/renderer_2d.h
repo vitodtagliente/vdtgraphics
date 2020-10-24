@@ -24,6 +24,8 @@ namespace graphics
 		// draw circle
 		void drawCircle(const Color& color, const vector2& position, const float radius);
 
+		void drawTexture(Texture* const texture, const vector2& position);
+
 	private:
 
 		// generic 2d renderables

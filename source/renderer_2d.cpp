@@ -74,4 +74,18 @@ namespace graphics
 			push(m_circle, materialInstance, transform);
 		}
 	}
+
+	void Renderer2D::drawTexture(Texture* const texture, const vector2& position)
+	{
+		static Material* const material = m_api->getMaterialLibrary().get(Material::Default::Name::Texture);
+
+		if (material != nullptr)
+		{
+			matrix4 transform = matrix4::translate(to_vec3(position));
+			Material* const materialInstance = material->createInstance();
+			materialInstance->set(Material::Default::Property::Texture, texture);
+			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
+			push(m_circle, materialInstance, transform);
+		}
+	}
 }
