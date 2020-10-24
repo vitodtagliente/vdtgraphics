@@ -5,9 +5,6 @@
 #include <sstream>
 #include <vdtmath/math.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 using namespace std;
 using namespace graphics;
 using namespace math;
@@ -15,24 +12,8 @@ using namespace math;
 void render_loop();
 API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
-Texture* batmanTxt = nullptr;
-unsigned char* imageData = nullptr;
+Texture* batmanTexture = nullptr;
 
-bool loadImage(const std::string& filename, Image& image)
-{
-    int width;
-    int height;
-    int channels;
-
-    stbi_set_flip_vertically_on_load(1);
-    imageData = stbi_load(filename.c_str(), &width, &height, &channels, 4);
-    if (imageData != nullptr)
-    {
-        image = Image(imageData, width, height, channels);
-        return true;
-    }
-    return false;
-}
 
 int nbFrames = 0;
 double lastTime = 0;
@@ -87,8 +68,8 @@ int main(void)
     // api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
     Image batmanImg;
-    loadImage("batman_logo.png", batmanImg);
-    batmanTxt = api->createTexture(batmanImg);
+    Image::load("batman_logo.png", batmanImg);
+    batmanTexture = api->createTexture(batmanImg);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -118,7 +99,7 @@ int main(void)
 
 void render_loop()
 {
-    renderer2d->drawTexture(batmanTxt, {});
+    renderer2d->drawTexture(batmanTexture, {});
     renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     renderer2d->drawCircle(Color::Green, {}, .4f);
     renderer2d->clear(Color::Blue);
