@@ -84,7 +84,7 @@ namespace graphics
 	
 	void Image::free()
 	{
-		std::free(&m_pixels[0]);
+		m_pixels.clear();
 	}
 
 	bool Image::load(const std::string& filename, Image& image)
