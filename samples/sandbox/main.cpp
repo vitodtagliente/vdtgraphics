@@ -83,6 +83,7 @@ int main(void)
 
     api = API::Factory::get();
     api->startup();
+    api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
     Image batmanImg;
     loadImage("../../assets/batman_logo.png", batmanImg);
@@ -115,9 +116,9 @@ int main(void)
 
 void render_loop()
 {
-    renderer2d->clear(Color::Blue);
     renderer2d->drawTexture(batmanTxt, {});
-    renderer2d->drawRect(Color::Blue, { -.3f, -.3f }, { .2f, .4f });
+    renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     renderer2d->drawCircle(Color::Green, {}, .4f);
+    renderer2d->clear(Color::Blue);
     renderer2d->render();
 }

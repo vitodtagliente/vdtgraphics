@@ -3,10 +3,10 @@
 namespace graphics
 {	
 	Texture::Options::Options()
-		: wrapS()
-		, wrapT()
-		, filterMin()
-		, filterMax()
+		: wrapS(0)
+		, wrapT(0)
+		, filterMin(0)
+		, filterMax(0)
 	{}
 
 	Texture::Texture(const Image& image, const Options& options /*= Options{}*/)
