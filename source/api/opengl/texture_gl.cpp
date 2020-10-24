@@ -11,10 +11,10 @@ namespace graphics
 		glBindTexture(GL_TEXTURE_2D, m_id);
 
 		/* set the texture wrapping/filtering options (on the currently bound texture object) */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, options.wrapS == 0 ? GL_REPEAT : options.wrapS);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, options.wrapT == 0 ? GL_REPEAT : options.wrapT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, options.filterMin == 0 ? GL_LINEAR : options.filterMin);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, options.filterMax == 0 ? GL_LINEAR : options.filterMax);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		unsigned int format = 0;
 		switch (image.getChannels())

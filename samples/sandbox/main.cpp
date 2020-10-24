@@ -83,12 +83,12 @@ int main(void)
 
     api = API::Factory::get();
     api->startup();
-    api->enableAlpha(true);
+    glEnable(GL_TEXTURE_2D);
+    // api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
     Image batmanImg;
-    loadImage("../../assets/batman_logo.png", batmanImg);
+    loadImage("batman_logo.png", batmanImg);
     batmanTxt = api->createTexture(batmanImg);
-    batmanImg.free();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -108,6 +108,8 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
+
+    batmanImg.free();
 
     api->shutdown();
     glfwTerminate();
