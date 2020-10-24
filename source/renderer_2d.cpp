@@ -85,7 +85,7 @@ namespace graphics
 			Material* const materialInstance = material->createInstance();
 			materialInstance->set(Material::Default::Property::Texture, texture);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
-			push(m_circle, materialInstance, transform);
+			push(m_quad, materialInstance, transform);
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include <vdtgraphics/graphics.h>
 #include <sstream>
 #include <vdtmath/math.h>
+#include <vdtgraphics/meshes/quad.h>
 
 using namespace std;
 using namespace graphics;
@@ -13,7 +14,6 @@ void render_loop();
 API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
 Texture* batmanTexture = nullptr;
-
 
 int nbFrames = 0;
 double lastTime = 0;
@@ -64,11 +64,11 @@ int main(void)
 
     api = API::Factory::get();
     api->startup();
-    glEnable(GL_TEXTURE_2D);
-    // api->enableAlpha(true);
+    api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
     Image batmanImg;
     Image::load("batman_logo.png", batmanImg);
+    batmanImg.flipVertically();
     batmanTexture = api->createTexture(batmanImg);
 
     /* Loop until the user closes the window */
@@ -99,9 +99,12 @@ int main(void)
 
 void render_loop()
 {
+    renderer2d->clear(Color::Blue);
+
     renderer2d->drawTexture(batmanTexture, {});
     renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     renderer2d->drawCircle(Color::Green, {}, .4f);
-    renderer2d->clear(Color::Blue);
+
     renderer2d->render();
+    
 }
