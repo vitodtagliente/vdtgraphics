@@ -6,22 +6,26 @@
 
 namespace graphics
 {
+	class API;
+
 	class Renderable
 	{
 	public:
 
-		Renderable();
 		Renderable(const Mesh& mesh);
 		virtual ~Renderable();
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
-		inline const Mesh& getMesh() const { return m_mesh; }
+		virtual void render(API* const api);
+
+		inline unsigned int getVerticesCount() const { return m_vertices; }
+		inline unsigned int getIndicesCount() const { return m_indices; }
 
 	private:
 
-		// mesh
-		Mesh m_mesh;
+		unsigned int m_vertices;
+		unsigned int m_indices;
 	};
 }

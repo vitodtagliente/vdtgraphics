@@ -28,17 +28,7 @@ namespace graphics
 			// (activate shaders properties)
 			command.material->bind();
 			// bind the data to render
-			command.renderable->bind();
-			// render the command
-			const Mesh& mesh = command.renderable->getMesh();
-			if (mesh.indices.size() != 0)
-			{
-				m_api->drawIndexed(static_cast<unsigned int>(mesh.indices.size()));
-			}
-			else
-			{
-				m_api->draw(static_cast<unsigned int>(mesh.vertices.size()));
-			}
+			command.renderable->render(m_api);
 
 			command.free();
 		}

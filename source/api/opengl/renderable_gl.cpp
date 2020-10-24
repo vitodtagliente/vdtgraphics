@@ -7,14 +7,6 @@
 
 namespace graphics
 {
-	RenderableGL::RenderableGL()
-		: Renderable()
-		, m_vao()
-		, m_vbo()
-		, m_ebo()
-	{
-	}
-
 	RenderableGL::RenderableGL(const Mesh& mesh)
 		: Renderable(mesh)
 		, m_vao()

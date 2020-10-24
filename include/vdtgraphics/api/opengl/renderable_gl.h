@@ -10,7 +10,6 @@ namespace graphics
 	{
 	public:
 
-		RenderableGL();
 		RenderableGL(const Mesh& mesh);
 		virtual ~RenderableGL() override;
 

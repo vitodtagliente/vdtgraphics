@@ -7,7 +7,7 @@
 
 namespace graphics
 {
-	template <typename T>
+	template <typename V, typename K = std::string>
 	class ResourceLibrary
 	{
 	public:
@@ -18,7 +18,7 @@ namespace graphics
 			clear();
 		}
 
-		void add(const std::string& name, T* const resource)
+		void add(const K& name, V* const resource)
 		{
 			const auto it = m_resources.find(name);
 			if (it == m_resources.end())
@@ -31,7 +31,7 @@ namespace graphics
 			}
 		}
 
-		void remove(const std::string& name)
+		void remove(const K& name)
 		{
 			const auto it = m_resources.find(name);
 			if (it != m_resources.end())
@@ -41,7 +41,7 @@ namespace graphics
 			}
 		}
 
-		T* const get(const std::string& name) const
+		V* const get(const K& name) const
 		{
 			const auto it = m_resources.find(name);
 			if (it != m_resources.end())
@@ -68,7 +68,7 @@ namespace graphics
 	private:
 
 		// cached textures
-		std::map<std::string, T*> m_resources;
+		std::map<K, V*> m_resources;
 
 	};
 }
