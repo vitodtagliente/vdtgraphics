@@ -20,9 +20,6 @@ namespace graphics
 
 		virtual void render(API* const api);
 
-		inline unsigned int getVerticesCount() const { return m_vertices; }
-		inline unsigned int getIndicesCount() const { return m_indices; }
-
 	private:
 
 		unsigned int m_vertices;
