@@ -15,6 +15,12 @@ API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
 Texture* batmanTexture = nullptr;
 
+float RandomFloat(float min, float max)
+{
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}
+
 int nbFrames = 0;
 double lastTime = 0;
 void showFPS(GLFWwindow* pWindow)
@@ -101,9 +107,13 @@ void render_loop()
 {
     renderer2d->clear(Color::Blue);
 
-    renderer2d->drawTexture(batmanTexture, {});
     renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     renderer2d->drawCircle(Color::Green, {}, .4f);
+
+    for (auto i = 0; i < 190; ++i)
+    {
+        renderer2d->drawTexture(batmanTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
+    }
 
     renderer2d->render();
     
