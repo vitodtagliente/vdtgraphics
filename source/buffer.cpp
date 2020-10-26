@@ -33,15 +33,19 @@ namespace graphics
 		m_elements.clear();
 	}
 
-	Buffer::Buffer(const Type type, const void * const data, const std::size_t size)
+	Buffer::Buffer(const Type type, const Mode mode)
 		: m_id(INVALID_ID)
-		, layout()
 		, m_type(type)
-		, m_size(size)
+		, m_mode(mode)
 	{
 	}
 
 	Buffer::~Buffer()
+	{
+	}
+
+	IndexBuffer::IndexBuffer(unsigned int* indices, const std::size_t count)
+		: m_count(count)
 	{
 	}
 }

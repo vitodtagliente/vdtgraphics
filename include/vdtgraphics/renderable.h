@@ -20,6 +20,8 @@ namespace graphics
 
 		virtual void render(API* const api);
 
+		bool oneTimeRendering = false;
+
 	private:
 
 		unsigned int m_vertices;

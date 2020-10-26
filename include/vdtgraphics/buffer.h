@@ -66,18 +66,23 @@ namespace graphics
 			Index
 		};
 
-		Buffer(const Type type, const void * const data, const std::size_t size);
+		enum class Mode
+		{
+			Static,
+			Dynamic
+		};
+
+		Buffer(const Type type, const Mode mode = Mode::Static);
 		virtual ~Buffer();
 
 		inline id_t getId() const { return m_id; }
-		inline Type type() const { return m_type; }
-		inline std::size_t size() const { return m_size; }
+		inline Type getType() const { return m_type; }
+		inline Mode getMode() const { return m_mode; }
+
+		virtual void fill(const void* data, const std::size_t size, const BufferLayout& layout = {}) = 0;
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
-
-		// buffer layout
-		BufferLayout layout;
 
 		static constexpr id_t INVALID_ID = 0;
 
@@ -87,8 +92,27 @@ namespace graphics
 		id_t m_id;
 		// buffer type
 		Type m_type;
-		// buffer size
-		std::size_t m_size;
+		// buffer mode
+		Mode m_mode;
+	};
 
+	class VertexBuffer
+	{
+
+	};
+
+	class IndexBuffer
+	{
+	public:
+		IndexBuffer(unsigned int* indices, const std::size_t count);
+		virtual ~IndexBuffer() = default;
+
+		virtual void bind() = 0;
+		virtual void unbind() = 0;
+
+		inline std::size_t getCount() const { return m_count; }
+
+	private:
+		std::size_t m_count;
 	};
 }

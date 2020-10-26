@@ -13,7 +13,7 @@ using namespace math;
 void render_loop();
 API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
-Texture* batmanTexture = nullptr;
+Texture* batmanTexture = nullptr, * wallTexture = nullptr;
 
 float RandomFloat(float min, float max)
 {
@@ -72,10 +72,16 @@ int main(void)
     api->startup();
     api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
+
     Image batmanImg;
     Image::load("batman_logo.png", batmanImg);
     batmanImg.flipVertically();
     batmanTexture = api->createTexture(batmanImg);
+
+    Image wallImg;
+    Image::load("texture_atlas.png", wallImg);
+    wallImg.flipVertically();
+    wallTexture = api->createTexture(wallImg);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -105,15 +111,16 @@ int main(void)
 
 void render_loop()
 {
-    renderer2d->clear(Color::Blue);
+    renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
     renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     renderer2d->drawCircle(Color::Green, {}, .4f);
 
-    for (auto i = 0; i < 190; ++i)
-    {
-        renderer2d->drawTexture(batmanTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
-    }
+    // for (int i = 0; i < 50; ++i)
+    // {
+    //     renderer2d->drawTexture(wallTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
+    // }
+    renderer2d->drawTexture(batmanTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
 
     renderer2d->render();
     

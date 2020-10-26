@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <vdtmath/vector.h>
+#include "color.h"
 
 using namespace math;
 
@@ -14,7 +15,9 @@ namespace graphics
 		struct VertexData
 		{
 			vector3 position;
+			Color color;
 			vector2 uv;
+			unsigned int texture;
 		};
 
 		Mesh();

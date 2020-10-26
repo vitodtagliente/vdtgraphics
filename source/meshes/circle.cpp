@@ -9,10 +9,10 @@ namespace graphics
 		const float step_amount = 360.0f / steps;
 		// center vertex
 		vertices.push_back({});
-		vertices.push_back({ {cosf(theta), sinf(theta), 0.0f}, {0.0f, 0.0f} });
+		vertices.push_back({ {cosf(theta), sinf(theta), 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0 });
 		for (unsigned int i = 1; i < steps; ++i)
 		{
-			vertices.push_back({ {cosf(theta), sinf(theta), 0.0f}, {0.0f, 0.0f} });
+			vertices.push_back({ {cosf(theta), sinf(theta), 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0 });
 			indices.push_back(0);
 			indices.push_back(static_cast<unsigned int>(vertices.size() - 1));
 			indices.push_back(static_cast<unsigned int>(vertices.size()));

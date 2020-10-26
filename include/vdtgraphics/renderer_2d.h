@@ -3,6 +3,7 @@
 #pragma once
 
 #include "renderer.h"
+#include "sprite_batch.h"
 #include <vdtmath/vector2.h>
 #include <vdtmath/matrix4.h>
 
@@ -26,10 +27,13 @@ namespace graphics
 
 		void drawTexture(Texture* const texture, const vector2& position);
 
+		virtual void render() override;
+
 	private:
 
 		// generic 2d renderables
 		Renderable* m_circle;
 		Renderable* m_quad;
+		SpriteBatch m_spriteBatch;
 	};
 }

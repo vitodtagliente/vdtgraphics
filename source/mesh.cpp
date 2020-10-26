@@ -41,9 +41,16 @@ namespace graphics
 			data.push_back(vertex_data.position.x);
 			data.push_back(vertex_data.position.y);
 			data.push_back(vertex_data.position.z);
+			// vertex color
+			data.push_back(vertex_data.color.getRed());
+			data.push_back(vertex_data.color.getGreen());
+			data.push_back(vertex_data.color.getBlue());
+			data.push_back(vertex_data.color.getAlpha());
 			// vertex uv
 			data.push_back(vertex_data.uv.x);
 			data.push_back(vertex_data.uv.y);
+			// texture index
+			data.push_back(static_cast<float>(vertex_data.texture));
 		}
 
 		return data;

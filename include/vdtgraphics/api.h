@@ -72,6 +72,7 @@ namespace graphics
 		virtual void drawIndexed(const unsigned int numIndexes) = 0;
 		virtual void enableAlpha(const bool enabled = true) = 0;
 		virtual void setViewport(const int width, const int height) = 0;
+		virtual unsigned int getTextureUnits() const = 0;
 
 	protected:
 

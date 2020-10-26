@@ -28,6 +28,7 @@ namespace graphics
 		virtual void draw(const unsigned int vertices = 3) override;
 		virtual void drawIndexed(const unsigned int numIndexes) override;
 		virtual void setViewport(const int width, const int height) override;
+		virtual unsigned int getTextureUnits() const override;
 
 	private:
 

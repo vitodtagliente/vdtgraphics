@@ -13,6 +13,7 @@ namespace graphics
 		: Renderer(api)
 		, m_circle(api->createRenderable(Circle{}))
 		, m_quad(api->createRenderable(Quad{}))
+		, m_spriteBatch(api->getTextureUnits())
 	{		
 	}
 
@@ -77,15 +78,23 @@ namespace graphics
 
 	void Renderer2D::drawTexture(Texture* const texture, const vector2& position)
 	{
-		static Material* const material = m_api->getMaterialLibrary().get(Material::Default::Name::Texture);
+		// static Material* const material = m_api->getMaterialLibrary().get(Material::Default::Name::Texture);
+		// 
+		// if (material != nullptr)
+		// {
+		// 	matrix4 transform = matrix4::translate(to_vec3(position));
+		// 	Material* const materialInstance = material->createInstance();
+		// 	materialInstance->set(Material::Default::Property::Texture, texture);
+		// 	materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
+		// 	push(m_quad, materialInstance, transform);
+		// }
 
-		if (material != nullptr)
-		{
-			matrix4 transform = matrix4::translate(to_vec3(position));
-			Material* const materialInstance = material->createInstance();
-			materialInstance->set(Material::Default::Property::Texture, texture);
-			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
-			push(m_quad, materialInstance, transform);
-		}
+		m_spriteBatch.add(texture);
+	}
+	
+	void Renderer2D::render()
+	{
+		m_spriteBatch.render(m_api, this);
+		Renderer::render();
 	}
 }
