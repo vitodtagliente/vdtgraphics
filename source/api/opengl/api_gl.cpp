@@ -1,6 +1,7 @@
 #include <vdtgraphics/api/opengl/api_gl.h>
 
 #include <vdtgraphics/api/opengl/opengl.h>
+#include <vdtgraphics/api/opengl/buffer_gl.h>
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/api/opengl/renderable_gl.h>
 #include <vdtgraphics/api/opengl/renderer2d_gl.h>
@@ -32,6 +33,11 @@ namespace graphics
 	
 	void API_GL::shutdown()
 	{
+	}
+
+	IndexBuffer* const API_GL::createIndexBuffer(unsigned int* indices, const std::size_t count)
+	{
+		return new IndexBufferGL(indices, count);
 	}
 
 	Renderable* const API_GL::createRenderable(const Mesh& mesh)
@@ -66,6 +72,11 @@ namespace graphics
 	Texture* const API_GL::createTexture(const Image& image, const Texture::Options& options)
 	{
 		return new TextureGL(image, options);
+	}
+
+	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const std::size_t size)
+	{
+		return new VertexBufferGL(data, size);
 	}
 
 	void API_GL::enableAlpha(const bool enabled)

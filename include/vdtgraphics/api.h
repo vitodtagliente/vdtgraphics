@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "buffer.h"
 #include "material.h"
 #include "mesh.h"
 #include "renderable.h"
@@ -60,12 +61,14 @@ namespace graphics
 		inline Type getType() const { return m_type; }
 		const ResourceLibrary<Material>& getMaterialLibrary() const { return m_materialLibrary; }
 
+		virtual IndexBuffer* const createIndexBuffer(unsigned int* indices, const std::size_t count) = 0;
 		virtual Renderable* const createRenderable(const Mesh& mesh) = 0;
 		virtual Renderer2D* const createRenderer2D() = 0;
 		virtual Renderer3D* const createRenderer3D() = 0;
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) = 0;
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) = 0;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) = 0;
+		virtual VertexBuffer* const createVertexBuffer(const void* data, const std::size_t size) = 0;
 
 		virtual void clear(const Color& color) = 0;
 		virtual void draw(const unsigned int vertices = 3) = 0;

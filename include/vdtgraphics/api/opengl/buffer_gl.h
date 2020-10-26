@@ -6,7 +6,7 @@
 
 namespace graphics
 {
-	class VertexBufferGL : VertexBuffer
+	class VertexBufferGL : public VertexBuffer
 	{
 	public:
 		typedef unsigned int id_t;
