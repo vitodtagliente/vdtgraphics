@@ -4,61 +4,43 @@
 
 namespace graphics
 {
-	BufferGL::BufferGL(const Type type, const Mode mode)
-		: Buffer(type, mode)
-		, m_nativeType()
+	VertexBufferGL::VertexBufferGL(const std::size_t size)
+		: VertexBuffer(size)
 	{
 		glGenBuffers(1, &m_id);
-
-		switch (type)
-		{
-		case Buffer::Type::Index:
-			m_nativeType = GL_ELEMENT_ARRAY_BUFFER;
-			break;
-		default:
-		case Buffer::Type::Vertex:
-			m_nativeType = GL_ARRAY_BUFFER;
-			break;
-		}
+	}
+	VertexBufferGL::VertexBufferGL(const void* data, const std::size_t size)
+		: VertexBuffer(data, size)
+	{
+		glGenBuffers(1, &m_id);
+		bind();
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		unbind();
 	}
 
-	BufferGL::~BufferGL()
+	VertexBufferGL::~VertexBufferGL()
 	{
 		glDeleteBuffers(1, &m_id);
 	}
 
-	void BufferGL::fill(const void* data, const std::size_t dataSize, const BufferLayout& layout)
+	void VertexBufferGL::bind()
 	{
-		bind();
-		glBufferData(m_nativeType, dataSize, data, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, m_id);
+	}
 
-		unsigned int elementIndex = 0;
-		std::size_t size = 0;
-		for (const BufferElement& element : layout.getElements())
+	void VertexBufferGL::unbind()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void VertexBufferGL::set(const void* data, const std::size_t size)
+	{
+		if (m_type == Type::Dynamic)
 		{
-			glVertexAttribPointer(
-				elementIndex, 
-				element.count, 
-				GL_FLOAT, 
-				element.normalized ? GL_TRUE : GL_FALSE, 
-				layout.getStride(), 
-				(void*)size
-			);
-			glEnableVertexAttribArray(elementIndex++);
-			size += element.size;
+			bind();
+			glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+			unbind();
 		}
-
-		unbind();
-	}
-
-	void BufferGL::bind()
-	{
-		glBindBuffer(m_nativeType, m_id);
-	}
-
-	void BufferGL::unbind()
-	{
-		glBindBuffer(m_nativeType, 0);
 	}
 	
 	IndexBufferGL::IndexBufferGL(unsigned int* indices, const std::size_t count)

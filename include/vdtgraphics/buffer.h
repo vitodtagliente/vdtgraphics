@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 #include <vector>
 
 namespace graphics
@@ -11,25 +12,25 @@ namespace graphics
 	{
 		enum class Type
 		{
-			Char,
+			None = 0,
 			Float,
-			Integer,
-			UnsignedInteger
+			Int,
+			Bool
 		};
 
-		// the number of elements
-		unsigned int count;
+		// the name of the element
+		std::string name;
 		// the type
 		Type type;
+		// num of components
+		unsigned int count;
 		// normalized
 		bool normalized;
-		// size
-		std::size_t size;
 
 		BufferElement(
-			const unsigned int count,
+			const std::string& name,
 			const Type type,
-			const std::size_t size,
+			const unsigned int count,
 			const bool normalized = false
 		);
 	};
@@ -40,65 +41,50 @@ namespace graphics
 
 		BufferLayout();
 
-		inline std::size_t getStride() const { return m_stride; }
 		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
-
 		void push(const BufferElement& element);
 		void clear();
+
+		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
+		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
+		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); }
+		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
 
 	private:
 
 		// buffer elements
 		std::vector<BufferElement> m_elements;
-		// layout stride
-		std::size_t m_stride;
 	};
 
-	class Buffer
+	class VertexBuffer
 	{
 	public:
 
-		typedef unsigned int id_t;
-
 		enum class Type
-		{
-			Vertex,
-			Index
-		};
-
-		enum class Mode
 		{
 			Static,
 			Dynamic
 		};
 
-		Buffer(const Type type, const Mode mode = Mode::Static);
-		virtual ~Buffer();
+		VertexBuffer(const std::size_t size);
+		VertexBuffer(const void* data, const std::size_t size);
+		virtual ~VertexBuffer() = default;
 
-		inline id_t getId() const { return m_id; }
 		inline Type getType() const { return m_type; }
-		inline Mode getMode() const { return m_mode; }
-
-		virtual void fill(const void* data, const std::size_t size, const BufferLayout& layout = {}) = 0;
+		inline std::size_t getSize() const { return m_size; }
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
-		static constexpr id_t INVALID_ID = 0;
+		virtual void set(const void* data, const std::size_t size) = 0;
+
+		BufferLayout layout;
 
 	protected:
-
-		// the id of the buffer
-		id_t m_id;
 		// buffer type
 		Type m_type;
-		// buffer mode
-		Mode m_mode;
-	};
-
-	class VertexBuffer
-	{
-
+		// size
+		std::size_t m_size;
 	};
 
 	class IndexBuffer

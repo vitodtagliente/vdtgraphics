@@ -2,22 +2,21 @@
 
 namespace graphics
 {
+
 	BufferElement::BufferElement(
-		const unsigned int count,
-		const Type type,
-		const std::size_t size,
-		const bool normalized
-		)
-		: count(count)
+		const std::string& name, 
+		const Type type, 
+		const unsigned int count, 
+		const bool normalized)
+		: name(name)
 		, type(type)
+		, count(count)
 		, normalized(normalized)
-		, size(count * size)
 	{
 	}
 
 	BufferLayout::BufferLayout()
 		: m_elements()
-		, m_stride(0)
 	{
 
 	}
@@ -25,7 +24,6 @@ namespace graphics
 	void BufferLayout::push(const BufferElement& element)
 	{
 		m_elements.push_back(element);
-		m_stride += element.size;
 	}
 
 	void BufferLayout::clear()
@@ -33,14 +31,15 @@ namespace graphics
 		m_elements.clear();
 	}
 
-	Buffer::Buffer(const Type type, const Mode mode)
-		: m_id(INVALID_ID)
-		, m_type(type)
-		, m_mode(mode)
+	VertexBuffer::VertexBuffer(const std::size_t size)
+		: m_type(Type::Dynamic)
+		, m_size(size)
 	{
 	}
 
-	Buffer::~Buffer()
+	VertexBuffer::VertexBuffer(const void* data, const std::size_t size)
+		: m_type(Type::Static)
+		, m_size(size)
 	{
 	}
 

@@ -6,21 +6,22 @@
 
 namespace graphics
 {
-	class BufferGL final : public Buffer
+	class VertexBufferGL : VertexBuffer
 	{
 	public:
+		typedef unsigned int id_t;
 
-		BufferGL(const Type type, const Mode mode = Mode::Static);
-		virtual ~BufferGL() override;
-
-		virtual void fill(const void* data, const std::size_t size, const BufferLayout& layout = {}) override;
+		VertexBufferGL(const std::size_t size);
+		VertexBufferGL(const void* data, const std::size_t size);
+		virtual ~VertexBufferGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
 
-	private:
+		virtual void set(const void* data, const std::size_t size) override;
 
-		unsigned int m_nativeType;
+	protected:
+		id_t m_id;
 	};
 
 	class IndexBufferGL final : public IndexBuffer
