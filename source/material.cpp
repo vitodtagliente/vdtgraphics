@@ -63,12 +63,14 @@ namespace graphics
 			else if (pair.second.type == MaterialProperty::Type::Texture2DArray)
 			{
 				int textures_counter = 0;
+				std::vector<int> indices;
 				const std::vector<Texture*>& textures = std::get<std::vector<Texture*>>(pair.second.value);
 				for (Texture* const texture : textures)
 				{
-					texture->bind();
-					m_shaderProgram->set(pair.first, textures_counter++);
+					texture->bind(textures_counter);
+					indices.push_back(textures_counter++);
 				}
+				m_shaderProgram->set(pair.first, indices);
 			}
 			else if (pair.second.type == MaterialProperty::Type::Color)
 			{

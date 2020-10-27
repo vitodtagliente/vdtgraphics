@@ -38,6 +38,7 @@ namespace graphics
 		inline unsigned int getHeight() const { return m_height; }
 
 		virtual void bind() = 0;
+		virtual void bind(const unsigned int slot) = 0;
 		virtual void unbind() = 0;
 
 		Texture& operator=(const Texture& texture) = delete;

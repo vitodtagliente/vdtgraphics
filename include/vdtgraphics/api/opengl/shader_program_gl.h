@@ -22,6 +22,7 @@ namespace graphics
 		virtual void set(const std::string& name, const int value) override;
 		virtual void set(const std::string& name, const float value) override;
 		virtual void set(const std::string& name, const float* const matrix) override;
+		virtual void set(const std::string& name, const std::vector<int>& value) override;
 		virtual void set(const std::string& name, const float f1, const float f2, const float f3, const float f4) override;
 
 	private:

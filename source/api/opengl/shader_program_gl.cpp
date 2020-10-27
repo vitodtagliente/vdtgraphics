@@ -87,6 +87,11 @@ namespace graphics
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix);
 	}
 
+	void ShaderProgramGL::set(const std::string& name, const std::vector<int>& value)
+	{
+		glUniform1iv(getUniformLocation(name), value.size(), &value[0]);
+	}
+
 	void ShaderProgramGL::set(const std::string& name, const float f1, const float f2, const float f3, const float f4)
 	{
 		glUniform4f(getUniformLocation(name), f1, f2, f3, f4);

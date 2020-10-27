@@ -4,6 +4,7 @@
 
 #include <initializer_list>
 #include <string>
+#include <vector>
 
 namespace graphics
 {
@@ -56,6 +57,7 @@ namespace graphics
 		virtual void set(const std::string& name, const int value) = 0;
 		virtual void set(const std::string& name, const float value) = 0;
 		virtual void set(const std::string& name, const float* const matrix) = 0;
+		virtual void set(const std::string& name, const std::vector<int>& value) = 0;
 		virtual void set(const std::string& name, const float f1, const float f2, const float f3, const float f4) = 0;
 
 		static constexpr id_t INVALID_ID = 0;

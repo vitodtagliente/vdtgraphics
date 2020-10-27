@@ -14,7 +14,7 @@ namespace graphics
 		~TextureGL();
 
 		virtual void bind() override;
-		void bind(const unsigned int slot);
+		virtual void bind(const unsigned int slot) override;
 		virtual void unbind() override;
 	};
 }
