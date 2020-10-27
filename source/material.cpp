@@ -14,6 +14,7 @@ namespace graphics
 	const std::string Material::Default::Property::ModelTransformMatrix = "u_Transform";
 	const std::string Material::Default::Property::Color = "u_Color";
 	const std::string Material::Default::Property::Texture = "u_Texture";
+	const std::string Material::Default::Property::Textures = "u_Textures";
 	const std::string Material::Default::Property::TextureCropping = "u_TextureCropping";
 
 	Material::Material(const Type type /*= Type::Default*/)
@@ -48,13 +49,22 @@ namespace graphics
 	{
 		m_shaderProgram->bind();
 
-		int textures_counter = 0;
 		for (const auto& pair : m_properties)
 		{
 			if (pair.second.type == MaterialProperty::Type::Texture2D)
 			{
 				Texture* const texture = std::get<Texture*>(pair.second.value);
 				if (texture)
+				{
+					texture->bind();
+					m_shaderProgram->set(pair.first, 0);
+				}
+			}
+			else if (pair.second.type == MaterialProperty::Type::Texture2DArray)
+			{
+				int textures_counter = 0;
+				const std::vector<Texture*>& textures = std::get<std::vector<Texture*>>(pair.second.value);
+				for (Texture* const texture : textures)
 				{
 					texture->bind();
 					m_shaderProgram->set(pair.first, textures_counter++);
@@ -146,6 +156,11 @@ namespace graphics
 	void Material::set(const std::string& name, Texture* const value)
 	{
 		m_properties.insert({ name, {MaterialProperty::Type::Texture2D, value} });
+	}
+
+	void Material::set(const std::string& name, const std::vector<Texture*>& value)
+	{
+		m_properties.insert({ name, {MaterialProperty::Type::Texture2DArray, value} });
 	}
 
 	void Material::set(const std::string& name, const Color& value)

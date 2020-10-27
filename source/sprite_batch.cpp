@@ -44,10 +44,9 @@ namespace graphics
 			Renderable* renderable = api->createRenderable(mesh);
 			renderable->oneTimeRendering = true;
 			Material* materialInstance = api->getMaterialLibrary().get(Material::Default::Name::Texture)->createInstance();
-			for (Texture* texture : batch.textures)
-			{
-				materialInstance->set(Material::Default::Property::Texture, texture);
-			}
+			
+			materialInstance->set(Material::Default::Property::Textures, batch.textures);
+			
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
 			renderer->push(renderable, materialInstance, math::matrix4::identity);
 		}

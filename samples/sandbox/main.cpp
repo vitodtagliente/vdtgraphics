@@ -121,6 +121,7 @@ void render_loop()
     //     renderer2d->drawTexture(wallTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
     // }
     renderer2d->drawTexture(batmanTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
+    renderer2d->drawTexture(wallTexture, { RandomFloat(-.5f, .5f), RandomFloat(-.5f, .5f) });
 
     renderer2d->render();
     

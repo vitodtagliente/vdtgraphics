@@ -23,7 +23,7 @@ namespace graphics
 			bool, float, int, 
 			vec2, vec3, vec4, 
 			mat2, mat3, mat4, 
-			Texture*, Color
+			Texture*, std::vector<Texture*>, Color
 		>;
 
 		enum class Type
@@ -33,6 +33,7 @@ namespace graphics
 			Int,
 			Texture1D,
 			Texture2D,
+			Texture2DArray,
 			Texture3D,
 			TextureCube,
 			Vec2,
@@ -82,6 +83,7 @@ namespace graphics
 		void set(const std::string& name, const mat3 value);
 		void set(const std::string& name, const mat4 value);
 		void set(const std::string& name, Texture* const value);
+		void set(const std::string& name, const std::vector<Texture*>& value);
 		void set(const std::string& name, const Color& value);
 
 		// create a new instance of this material
@@ -103,6 +105,7 @@ namespace graphics
 				static const std::string ViewProjectionMatrix;
 				static const std::string ModelTransformMatrix;
 				static const std::string Texture;
+				static const std::string Textures;
 				static const std::string Color;
 				static const std::string TextureCropping;
 			};
