@@ -13,20 +13,20 @@ namespace graphics
 	{
 	}
 	
-	void SpriteBatch::add(Texture* const texture)
+	void SpriteBatch::add(Texture* const texture, const vector2& position)
 	{
 		unsigned int texture_index;
 		BatchData& batch = findCandidateBatch(texture, texture_index);
 
 		const unsigned int start_index = static_cast<unsigned int>(batch.mesh.vertices.size());
 		//  top right
-		batch.mesh.vertices.push_back({ { 1.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, texture_index });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, texture_index });
 		// bottom right
-		batch.mesh.vertices.push_back({ { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0, 0.0f }, texture_index });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0, 0.0f }, texture_index });
 		// bottom left
-		batch.mesh.vertices.push_back({ { -1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 0.0f }, texture_index });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 0.0f }, texture_index });
 		// top left
-		batch.mesh.vertices.push_back({ { -1.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 1.0f }, texture_index });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 1.0f }, texture_index });
 
 		batch.mesh.indices.push_back(start_index + 0);
 		batch.mesh.indices.push_back(start_index + 1);
@@ -40,7 +40,7 @@ namespace graphics
 	{
 		m_batches.clear();
 	}
-	
+
 	SpriteBatch::BatchData& SpriteBatch::findCandidateBatch(Texture* const texture, unsigned int& textureIndex)
 	{
 		textureIndex = 0;

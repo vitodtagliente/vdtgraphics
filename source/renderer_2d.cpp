@@ -78,7 +78,7 @@ namespace graphics
 
 	void Renderer2D::drawTexture(Texture* const texture, const vector2& position)
 	{
-		m_spriteBatch.add(texture);
+		m_spriteBatch.add(texture, position);
 	}
 
 	void Renderer2D::render()

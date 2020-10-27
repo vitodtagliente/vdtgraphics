@@ -27,7 +27,7 @@ namespace graphics
 
 		SpriteBatch(const unsigned int textureUnits);
 
-		void add(Texture* const texture);
+		void add(Texture* const texture, const vector2& position = vector2::zero);
 		void clear();
 
 		std::vector<BatchData>::iterator begin() { return m_batches.begin(); }
