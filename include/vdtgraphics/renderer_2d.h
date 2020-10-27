@@ -31,6 +31,8 @@ namespace graphics
 
 	private:
 
+		void pushSpriteBatch(const SpriteBatch& spritebatch);
+
 		// generic 2d renderables
 		Renderable* m_circle;
 		Renderable* m_quad;

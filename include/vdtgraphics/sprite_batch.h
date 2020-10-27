@@ -19,19 +19,25 @@ namespace graphics
 	{
 	public:
 
+		struct BatchData
+		{
+			Mesh mesh;
+			std::vector<Texture*> textures;
+		};
+
 		SpriteBatch(const unsigned int textureUnits);
 
 		void add(Texture* const texture);
-		void render(API* const api, Renderer2D* const renderer);
+		void clear();
+
+		std::vector<BatchData>::iterator begin() { return m_batches.begin(); }
+		std::vector<BatchData>::iterator end() { return m_batches.end(); }
+		std::vector<BatchData>::const_iterator begin() const { return m_batches.begin(); }
+		std::vector<BatchData>::const_iterator end() const { return m_batches.end(); }
+
+		const std::vector<BatchData>& getBatches() const { return m_batches; }
 
 	private:
-
-		struct BatchData
-		{
-			std::vector<Mesh::VertexData> vertices;
-			std::vector<unsigned int> indices;
-			std::vector<Texture*> textures;
-		};
 
 		BatchData& findCandidateBatch(Texture* const texture, unsigned int& textureIndex);
 
