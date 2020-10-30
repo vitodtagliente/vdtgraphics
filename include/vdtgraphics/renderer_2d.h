@@ -3,12 +3,17 @@
 #pragma once
 
 #include "renderer.h"
-#include "sprite_batch.h"
 #include <vdtmath/vector2.h>
 #include <vdtmath/matrix4.h>
+#include "mesh.h"
 
 namespace graphics
 {
+	class API;
+	class VertexBuffer;
+	class IndexBuffer;
+	class Texture;
+
 	class Renderer2D : public Renderer
 	{
 	public:
@@ -31,11 +36,17 @@ namespace graphics
 
 	private:
 
-		void pushSpriteBatch(const SpriteBatch& spritebatch);
+		struct BatchData
+		{
+			Renderable* renderable;
+			Mesh mesh;
+			std::vector<Texture*> textures;
+		};
 
-		// generic 2d renderables
-		Renderable* m_circle;
-		Renderable* m_quad;
-		SpriteBatch m_spriteBatch;
+		BatchData& findCandidateBatch(Texture* const texture, unsigned int& textureIndex);
+		void addQuad(BatchData& batch, const vector2& position, const Color& color, const unsigned int textureIndex);
+
+		unsigned int m_textureUnits;
+		std::vector<BatchData> m_batches;
 	};
 }

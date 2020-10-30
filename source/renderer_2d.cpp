@@ -1,6 +1,7 @@
 #include <vdtgraphics/renderer_2d.h>
 
 #include <vdtgraphics/api.h>
+#include <vdtgraphics/buffer.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/mesh.h>
@@ -11,9 +12,8 @@ namespace graphics
 {
 	Renderer2D::Renderer2D(API* const api)
 		: Renderer(api)
-		, m_circle(api->createRenderable(Circle{}))
-		, m_quad(api->createRenderable(Quad{}))
-		, m_spriteBatch(api->getTextureUnits())
+		, m_textureUnits(api->getTextureUnits())
+		, m_batches()
 	{
 	}
 
@@ -58,7 +58,7 @@ namespace graphics
 			Material* const materialInstance = material->createInstance();
 			materialInstance->set(Material::Default::Property::Color, color);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
-			push(m_quad, materialInstance, transform);
+			//push(m_quad, materialInstance, transform);
 		}
 	}
 
@@ -72,27 +72,20 @@ namespace graphics
 			Material* const materialInstance = material->createInstance();
 			materialInstance->set(Material::Default::Property::Color, color);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
-			push(m_circle, materialInstance, transform);
+			//push(m_circle, materialInstance, transform);
 		}
 	}
 
 	void Renderer2D::drawTexture(Texture* const texture, const vector2& position)
 	{
-		m_spriteBatch.add(texture, position);
+		unsigned int textureIndex;
+		BatchData& batch = findCandidateBatch(texture, textureIndex);
+		addQuad(batch, position, Color::White, textureIndex);
 	}
 
 	void Renderer2D::render()
 	{
-		pushSpriteBatch(m_spriteBatch);
-
-		Renderer::render();
-
-		m_spriteBatch.clear();
-	}
-
-	void Renderer2D::pushSpriteBatch(const SpriteBatch& spritebatch)
-	{
-		for (const SpriteBatch::BatchData& batch : spritebatch.getBatches())
+		for (const BatchData& batch : m_batches)
 		{
 			Renderable* renderable = m_api->createRenderable(batch.mesh);
 			renderable->oneTimeRendering = true;
@@ -100,9 +93,59 @@ namespace graphics
 			Material* materialInstance = m_api->getMaterialLibrary().get(Material::Default::Name::Texture)->createInstance();
 
 			materialInstance->set(Material::Default::Property::Textures, batch.textures);
-
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
 			push(renderable, materialInstance, math::matrix4::identity);
 		}
+
+		Renderer::render();
+	}
+
+	Renderer2D::BatchData& Renderer2D::findCandidateBatch(Texture* const texture, unsigned int& textureIndex)
+	{
+		textureIndex = 0;
+		if (m_batches.empty())
+		{
+			BatchData newBatch;
+			//VertexBuffer* vertexBudder = m_api->createVertexBuffer(1024);
+			//IndexBuffer* indexBuffer = m_api->createIndexBuffer()
+			m_batches.push_back(newBatch);
+			m_batches[0].textures.push_back(texture);
+			return m_batches[0];
+		}
+
+		// TODO
+		BatchData& batch = m_batches[0];
+		for (int i = 0; i < batch.textures.size(); ++i)
+		{
+			if (texture == batch.textures[i])
+			{
+				textureIndex = i;
+				return batch;
+			}
+		}
+
+		textureIndex = batch.textures.size();
+		batch.textures.push_back(texture);
+		return batch;
+	}
+
+	void Renderer2D::addQuad(BatchData& batch, const vector2& position, const Color& color, const unsigned int textureIndex)
+	{
+		const unsigned int start_index = static_cast<unsigned int>(batch.mesh.vertices.size());
+		//  top right
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, textureIndex });
+		// bottom right
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0, 0.0f }, textureIndex });
+		// bottom left
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 0.0f }, textureIndex });
+		// top left
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 1.0f }, textureIndex });
+
+		batch.mesh.indices.push_back(start_index + 0);
+		batch.mesh.indices.push_back(start_index + 1);
+		batch.mesh.indices.push_back(start_index + 3);
+		batch.mesh.indices.push_back(start_index + 1);
+		batch.mesh.indices.push_back(start_index + 2);
+		batch.mesh.indices.push_back(start_index + 3);
 	}
 }

@@ -35,9 +35,14 @@ namespace graphics
 	{
 	}
 
-	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int* indices, const std::size_t count)
+	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type)
 	{
-		return new IndexBufferGL(indices, count);
+		return new IndexBufferGL(indices, size, type);
+	}
+
+	IndexBuffer* const API_GL::createIndexBuffer(const std::size_t size)
+	{
+		return new IndexBufferGL(size);
 	}
 
 	Renderable* const API_GL::createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer)
@@ -79,9 +84,14 @@ namespace graphics
 		return new TextureGL(image, options);
 	}
 
-	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const std::size_t size)
+	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const std::size_t size, const BufferType type)
 	{
-		return new VertexBufferGL(data, size);
+		return new VertexBufferGL(data, size, type);
+	}
+
+	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t size)
+	{
+		return new VertexBufferGL(size);
 	}
 
 	void API_GL::enableAlpha(const bool enabled)

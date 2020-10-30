@@ -16,7 +16,8 @@ namespace graphics
 		virtual bool startup() override;
 		virtual void shutdown() override;
 
-		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t count) override;
+		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static) override;
+		virtual IndexBuffer* const createIndexBuffer(const std::size_t size) override;
 		virtual Renderable* const createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer) override;
 		virtual Renderable* const createRenderable(const Mesh& mesh) override;
 		virtual Renderer2D* const createRenderer2D() override;
@@ -24,7 +25,8 @@ namespace graphics
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) override;
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) override;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) override;
-		virtual VertexBuffer* const createVertexBuffer(const void* data, const std::size_t size) override;
+		virtual VertexBuffer* const createVertexBuffer(const void* data, const std::size_t size, const BufferType type = BufferType::Static) override;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t size) override;
 
 		virtual void enableAlpha(const bool enabled = true) override;
 		virtual void clear(const Color& color) override;

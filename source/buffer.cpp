@@ -36,19 +36,26 @@ namespace graphics
 	}
 
 	VertexBuffer::VertexBuffer(const std::size_t size)
-		: m_type(Type::Dynamic)
+		: m_type(BufferType::Dynamic)
 		, m_size(size)
 	{
 	}
 
-	VertexBuffer::VertexBuffer(const void* data, const std::size_t size)
-		: m_type(Type::Static)
+	VertexBuffer::VertexBuffer(const void* data, const std::size_t size, const BufferType type)
+		: m_type(type)
 		, m_size(size)
 	{
 	}
 
-	IndexBuffer::IndexBuffer(const unsigned int* indices, const std::size_t count)
-		: m_count(count)
+	IndexBuffer::IndexBuffer(const std::size_t size)
+		: m_type(BufferType::Dynamic)
+		, m_size(size)
+	{
+	}
+
+	IndexBuffer::IndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type)
+		: m_type(type)
+		, m_size(size)
 	{
 	}
 }

@@ -61,21 +61,21 @@ namespace graphics
 		std::size_t m_stride;
 	};
 
+	enum class BufferType
+	{
+		Dynamic,
+		Static
+	};
+
 	class VertexBuffer
 	{
 	public:
 
-		enum class Type
-		{
-			Static,
-			Dynamic
-		};
-
 		VertexBuffer(const std::size_t size);
-		VertexBuffer(const void* data, const std::size_t size);
+		VertexBuffer(const void* data, const std::size_t size, const BufferType type = BufferType::Static);
 		virtual ~VertexBuffer() = default;
 
-		inline Type getType() const { return m_type; }
+		inline BufferType getType() const { return m_type; }
 		inline std::size_t getSize() const { return m_size; }
 
 		virtual void bind() = 0;
@@ -86,8 +86,9 @@ namespace graphics
 		BufferLayout layout;
 
 	protected:
+
 		// buffer type
-		Type m_type;
+		BufferType m_type;
 		// size
 		std::size_t m_size;
 	};
@@ -95,15 +96,23 @@ namespace graphics
 	class IndexBuffer
 	{
 	public:
-		IndexBuffer(const unsigned int* indices, const std::size_t count);
+
+		IndexBuffer(const std::size_t size);
+		IndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static);
 		virtual ~IndexBuffer() = default;
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
-		inline std::size_t getCount() const { return m_count; }
+		inline BufferType getType() const { return m_type; }
+		inline std::size_t getSize() const { return m_size; }
 
-	private:
-		std::size_t m_count;
+		virtual void set(const unsigned int* indices, const std::size_t size) = 0;
+
+	protected:
+
+		// buffer type
+		BufferType m_type;
+		std::size_t m_size;
 	};
 }

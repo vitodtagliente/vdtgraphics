@@ -34,9 +34,9 @@ namespace graphics
 	void Renderable::render(API* const api)
 	{
 		bind();
-		if (m_indexBuffer->getCount() != 0)
+		if (m_indexBuffer && m_indexBuffer->getSize() != 0)
 		{
-			api->drawIndexed(static_cast<unsigned int>(m_indexBuffer->getCount()));
+			api->drawIndexed(static_cast<unsigned int>(m_indexBuffer->getSize()));
 		}
 		else
 		{

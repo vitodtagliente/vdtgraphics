@@ -8,9 +8,13 @@ namespace graphics
 		: VertexBuffer(size)
 	{
 		glGenBuffers(1, &m_id);
+		bind();
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+		unbind();
 	}
-	VertexBufferGL::VertexBufferGL(const void* data, const std::size_t size)
-		: VertexBuffer(data, size)
+
+	VertexBufferGL::VertexBufferGL(const void* data, const std::size_t size, const BufferType type)
+		: VertexBuffer(data, size, type)
 	{
 		glGenBuffers(1, &m_id);
 		bind();
@@ -35,7 +39,7 @@ namespace graphics
 
 	void VertexBufferGL::set(const void* data, const std::size_t size)
 	{
-		if (m_type == Type::Dynamic)
+		if (m_type == BufferType::Dynamic)
 		{
 			bind();
 			glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -43,8 +47,8 @@ namespace graphics
 		}
 	}
 	
-	IndexBufferGL::IndexBufferGL(const unsigned int* indices, const std::size_t count)
-		: IndexBuffer(indices, count)
+	IndexBufferGL::IndexBufferGL(const std::size_t size)
+		: IndexBuffer(size)
 		, m_id()
 	{
 		glGenBuffers(1, &m_id);
@@ -53,7 +57,24 @@ namespace graphics
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER
-			, count * sizeof(unsigned int)
+			, size * sizeof(unsigned int)
+			, nullptr
+			, GL_DYNAMIC_DRAW);
+
+		unbind();
+	}
+
+	IndexBufferGL::IndexBufferGL(const unsigned int* indices, const std::size_t size, const BufferType type)
+		: IndexBuffer(indices, size, type)
+		, m_id()
+	{
+		glGenBuffers(1, &m_id);
+
+		bind();
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER
+			, size * sizeof(unsigned int)
 			, indices
 			, GL_STATIC_DRAW);
 
@@ -73,5 +94,11 @@ namespace graphics
 	void IndexBufferGL::unbind()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+	
+	void IndexBufferGL::set(const unsigned int* indices, const std::size_t size)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(unsigned int), indices);
+		m_size = size;
 	}
 }
