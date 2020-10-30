@@ -19,7 +19,7 @@ namespace graphics
 	public:
 
 		Renderer2D(API* const api);
-		virtual ~Renderer2D() = default;
+		virtual ~Renderer2D();
 
 		// draw a rectangle 
 		void drawRect(const Color& color, const vector2& position);

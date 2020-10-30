@@ -7,6 +7,7 @@
 #include <vdtmath/matrix4.h>
 #include "color.h"
 #include "command_buffer.h"
+#include "graphic_resource.h"
 #include "material.h"
 #include "resource_library.h"
 #include "shader_program.h"
@@ -16,7 +17,7 @@ namespace graphics
 	class API;
 	class Renderable;
 
-	class Renderer
+	class Renderer : public GraphicResource<GraphicResourceType::Renderer>
 	{
 	public:
 

@@ -54,7 +54,8 @@ namespace graphics
 		virtual ~API() = default;
 
 		virtual bool startup();
-		virtual void shutdown() = 0;
+		virtual void update();
+		virtual void shutdown();
 
 		API& operator= (const API&) = delete;
 

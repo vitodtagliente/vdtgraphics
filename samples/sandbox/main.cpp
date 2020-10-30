@@ -84,13 +84,15 @@ int main(void)
     wallTexture = api->createTexture(wallImg);
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    bool run = true;
+    while (!glfwWindowShouldClose(window) && run)
     {
         // display the FPS
         showFPS(window);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+        api->update();
 
         // render logic
         render_loop();

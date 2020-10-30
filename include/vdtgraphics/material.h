@@ -7,6 +7,7 @@
 #include <map>
 #include <variant>
 #include "color.h"
+#include "graphic_resource.h"
 #include <vdtmath/matrix.h>
 #include <vdtmath/vector.h>
 
@@ -49,7 +50,7 @@ namespace graphics
 		value_t value;
 	};
 
-	class Material
+	class Material : public GraphicResource<GraphicResourceType::Material>
 	{
 	public:
 

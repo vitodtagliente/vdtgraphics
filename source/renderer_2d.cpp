@@ -17,6 +17,14 @@ namespace graphics
 	{
 	}
 
+	Renderer2D::~Renderer2D()
+	{
+		for (const BatchData& batch : m_batches)
+		{
+			delete batch.renderable;
+		}
+	}
+
 	void Renderer2D::drawRect(const Color& color, const vector2& position)
 	{
 		drawRect(
@@ -85,15 +93,18 @@ namespace graphics
 
 	void Renderer2D::render()
 	{
-		for (const BatchData& batch : m_batches)
+		for (BatchData& batch : m_batches)
 		{
-			Renderable* renderable = m_api->createRenderable(batch.mesh);
-			renderable->oneTimeRendering = true;
+			Renderable* const renderable = batch.renderable;
+			renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size());
+			renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
+			batch.mesh.vertices.clear();
+			batch.mesh.indices.clear();
 
 			Material* materialInstance = m_api->getMaterialLibrary().get(Material::Default::Name::Texture)->createInstance();
-
 			materialInstance->set(Material::Default::Property::Textures, batch.textures);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
+
 			push(renderable, materialInstance, math::matrix4::identity);
 		}
 
@@ -106,8 +117,14 @@ namespace graphics
 		if (m_batches.empty())
 		{
 			BatchData newBatch;
-			//VertexBuffer* vertexBudder = m_api->createVertexBuffer(1024);
-			//IndexBuffer* indexBuffer = m_api->createIndexBuffer()
+			static const unsigned int MaxQuads = 1000;
+			VertexBuffer* vertexBuffer = m_api->createVertexBuffer(MaxQuads * 4);
+			vertexBuffer->layout.push(BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3));
+			vertexBuffer->layout.push(BufferElement("color", BufferElement::Type::Float, 4, sizeof(float) * 4));
+			vertexBuffer->layout.push(BufferElement("texture_coords", BufferElement::Type::Float, 2, sizeof(float) * 2));
+			vertexBuffer->layout.push(BufferElement("texture_index", BufferElement::Type::Float, 1, sizeof(float) * 1));
+			IndexBuffer* indexBuffer = m_api->createIndexBuffer(MaxQuads * 6);
+			newBatch.renderable = m_api->createRenderable(vertexBuffer, indexBuffer);
 			m_batches.push_back(newBatch);
 			m_batches[0].textures.push_back(texture);
 			return m_batches[0];

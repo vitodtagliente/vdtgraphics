@@ -3,13 +3,14 @@
 #pragma once
 
 #include "buffer.h"
+#include "graphic_resource.h"
 #include "mesh.h"
 
 namespace graphics
 {
 	class API;
 
-	class Renderable
+	class Renderable : public GraphicResource<GraphicResourceType::Renderable>
 	{
 	public:
 
@@ -22,10 +23,6 @@ namespace graphics
 
 		inline VertexBuffer* const getVertexBuffer() const { return m_vertexBuffer; }
 		inline IndexBuffer* const getIndexBuffer() const { return m_indexBuffer; }
-
-		virtual void render(API* const api);
-
-		bool oneTimeRendering = false;
 
 	protected:
 

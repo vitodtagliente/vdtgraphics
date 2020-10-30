@@ -5,14 +5,14 @@
 #include <initializer_list>
 #include <string>
 #include <vector>
+#include "graphic_resource.h"
 
 namespace graphics
 {
 	class API;
 	class Shader;
 
-	class ShaderProgram
-
+	class ShaderProgram : public GraphicResource<GraphicResourceType::ShaderProgram>
 	{
 	public:
 

@@ -30,9 +30,15 @@ namespace graphics
 		}
 		return false;
 	}
+
+	void API_GL::update()
+	{
+		API::update();
+	}
 	
 	void API_GL::shutdown()
 	{
+		API::shutdown();
 	}
 
 	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type)

@@ -28,7 +28,10 @@ namespace graphics
 			// (activate shaders properties)
 			command.material->bind();
 			// bind the data to render
-			command.renderable->render(m_api);
+			Renderable* const renderable = command.renderable;
+			renderable->bind();
+			m_api->drawIndexed(static_cast<unsigned int>(renderable->getIndexBuffer()->getSize()));
+			renderable->unbind();
 
 			command.free();
 		}

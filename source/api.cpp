@@ -5,6 +5,7 @@
 #include <vdtgraphics/api/opengl/graphics_gl.h>
 #endif 
 
+#include <vdtgraphics/graphic_resource.h>
 #include <vdtgraphics/shader_program.h>
 
 namespace graphics
@@ -70,6 +71,16 @@ namespace graphics
 	bool API::startup()
 	{
 		return initialize();
+	}
+
+	void API::update()
+	{
+		ResourcePool::getInstance().refresh();
+	}
+
+	void API::shutdown()
+	{
+		ResourcePool::getInstance().clear();
 	}
 	
 	bool API::initialize()

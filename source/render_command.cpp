@@ -28,11 +28,6 @@ namespace graphics
 	
 	void RenderCommand::free()
 	{
-		if (renderable->oneTimeRendering)
-		{
-			delete renderable;
-		}
-
 		if (material->isInstance())
 		{
 			delete material;

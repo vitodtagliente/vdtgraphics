@@ -3,10 +3,11 @@
 #pragma once
 
 #include "image.h"
+#include "graphic_resource.h"
 
 namespace graphics
 {
-	class Texture
+	class Texture : public GraphicResource<GraphicResourceType::Texture>
 	{
 	public:
 

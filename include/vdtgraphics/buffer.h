@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include "graphic_resource.h"
 
 namespace graphics
 {
@@ -67,7 +68,7 @@ namespace graphics
 		Static
 	};
 
-	class VertexBuffer
+	class VertexBuffer : public GraphicResource<GraphicResourceType::VertexBuffer>
 	{
 	public:
 
@@ -93,7 +94,7 @@ namespace graphics
 		std::size_t m_size;
 	};
 
-	class IndexBuffer
+	class IndexBuffer : public GraphicResource<GraphicResourceType::IndexBuffer>
 	{
 	public:
 

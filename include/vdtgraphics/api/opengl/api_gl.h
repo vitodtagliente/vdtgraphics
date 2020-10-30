@@ -14,6 +14,7 @@ namespace graphics
 		virtual ~API_GL();
 
 		virtual bool startup() override;
+		virtual void update() override;
 		virtual void shutdown() override;
 
 		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static) override;

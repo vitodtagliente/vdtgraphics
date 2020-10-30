@@ -30,18 +30,4 @@ namespace graphics
 		delete m_vertexBuffer;
 		delete m_indexBuffer;
 	}
-	
-	void Renderable::render(API* const api)
-	{
-		bind();
-		if (m_indexBuffer && m_indexBuffer->getSize() != 0)
-		{
-			api->drawIndexed(static_cast<unsigned int>(m_indexBuffer->getSize()));
-		}
-		else
-		{
-			api->draw(static_cast<unsigned int>(m_vertexBuffer->getSize()));
-		}
-		unbind();
-	}
 }

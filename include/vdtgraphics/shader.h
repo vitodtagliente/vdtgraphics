@@ -4,10 +4,11 @@
 
 #include <map>
 #include <string>
+#include "graphic_resource.h"
 
 namespace graphics
 {
-	class Shader
+	class Shader : public GraphicResource<GraphicResourceType::Shader>
 	{
 	public:
 
