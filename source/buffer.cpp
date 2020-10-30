@@ -7,16 +7,19 @@ namespace graphics
 		const std::string& name, 
 		const Type type, 
 		const unsigned int count, 
+		const std::size_t size,
 		const bool normalized)
 		: name(name)
 		, type(type)
 		, count(count)
+		, size(size)
 		, normalized(normalized)
 	{
 	}
 
 	BufferLayout::BufferLayout()
 		: m_elements()
+		, m_stride()
 	{
 
 	}
@@ -24,6 +27,7 @@ namespace graphics
 	void BufferLayout::push(const BufferElement& element)
 	{
 		m_elements.push_back(element);
+		m_stride += element.size;
 	}
 
 	void BufferLayout::clear()
@@ -43,7 +47,7 @@ namespace graphics
 	{
 	}
 
-	IndexBuffer::IndexBuffer(unsigned int* indices, const std::size_t count)
+	IndexBuffer::IndexBuffer(const unsigned int* indices, const std::size_t count)
 		: m_count(count)
 	{
 	}

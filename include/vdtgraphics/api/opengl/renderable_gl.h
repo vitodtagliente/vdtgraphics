@@ -10,7 +10,8 @@ namespace graphics
 	{
 	public:
 
-		RenderableGL(const Mesh& mesh);
+		RenderableGL(API* const api, const Mesh& mesh);
+		RenderableGL(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer);
 		virtual ~RenderableGL() override;
 
 		virtual void bind() override;
@@ -18,11 +19,8 @@ namespace graphics
 
 	private:
 
+		void initialize();
 		// vertex array object
 		unsigned int m_vao;
-		// vertex buffer object
-		unsigned int m_vbo;
-		// elements buffer object
-		unsigned int m_ebo;
 	};
 }

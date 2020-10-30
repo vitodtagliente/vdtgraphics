@@ -29,7 +29,7 @@ namespace graphics
 	public:
 		typedef unsigned int id_t;
 
-		IndexBufferGL(unsigned int* indices, const std::size_t count);
+		IndexBufferGL(const unsigned int* indices, const std::size_t count);
 		virtual ~IndexBufferGL() override;
 
 		virtual void bind() override;

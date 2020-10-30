@@ -43,7 +43,7 @@ namespace graphics
 		}
 	}
 	
-	IndexBufferGL::IndexBufferGL(unsigned int* indices, const std::size_t count)
+	IndexBufferGL::IndexBufferGL(const unsigned int* indices, const std::size_t count)
 		: IndexBuffer(indices, count)
 		, m_id()
 	{

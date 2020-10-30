@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "buffer.h"
 #include "mesh.h"
 
 namespace graphics
@@ -12,19 +13,23 @@ namespace graphics
 	{
 	public:
 
-		Renderable(const Mesh& mesh);
+		Renderable(API* const api, const Mesh& mesh);
+		Renderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer);
 		virtual ~Renderable();
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
+		inline VertexBuffer* const getVertexBuffer() const { return m_vertexBuffer; }
+		inline IndexBuffer* const getIndexBuffer() const { return m_indexBuffer; }
+
 		virtual void render(API* const api);
 
 		bool oneTimeRendering = false;
 
-	private:
+	protected:
 
-		unsigned int m_vertices;
-		unsigned int m_indices;
+		VertexBuffer* m_vertexBuffer;
+		IndexBuffer* m_indexBuffer;
 	};
 }

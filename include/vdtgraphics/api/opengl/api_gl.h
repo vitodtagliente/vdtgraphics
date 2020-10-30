@@ -16,7 +16,8 @@ namespace graphics
 		virtual bool startup() override;
 		virtual void shutdown() override;
 
-		virtual IndexBuffer* const createIndexBuffer(unsigned int* indices, const std::size_t count) override;
+		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t count) override;
+		virtual Renderable* const createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer) override;
 		virtual Renderable* const createRenderable(const Mesh& mesh) override;
 		virtual Renderer2D* const createRenderer2D() override;
 		virtual Renderer3D* const createRenderer3D() override;

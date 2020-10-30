@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <vdtmath/vector.h>
+#include "buffer.h"
 #include "color.h"
 
 using namespace math;

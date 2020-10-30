@@ -1,60 +1,30 @@
 #include <vdtgraphics/api/opengl/renderable_gl.h>
 
 #include <vector>
+#include <vdtgraphics/api.h>
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <vdtgraphics/api/opengl/buffer_gl.h>
 #include <vdtgraphics/mesh.h>
 
 namespace graphics
 {
-	RenderableGL::RenderableGL(const Mesh& mesh)
-		: Renderable(mesh)
+	RenderableGL::RenderableGL(API* const api, const Mesh& mesh)
+		: Renderable(api, mesh)
 		, m_vao()
-		, m_vbo()
-		, m_ebo()
 	{
-		// get mesh vertex data
-		const std::vector<float>& vertex_data = mesh.getData();
-		// generate the vertex array object
-		glGenVertexArrays(1, &m_vao);
-		glGenBuffers(1, &m_vbo);
-		glGenBuffers(1, &m_ebo);
+		initialize();
+	}
 
-		// bind buffers
-		bind();
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferData(GL_ARRAY_BUFFER
-			, sizeof(float) * vertex_data.size()
-			, &vertex_data.front()
-			, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER
-			, mesh.indices.size() * sizeof(unsigned int)
-			, &mesh.indices.front()
-			, GL_STATIC_DRAW);
-
-		// vertex positions
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		// color
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
-		// vertex texture coords
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7 * sizeof(float)));
-		glEnableVertexAttribArray(2);
-		// texture index
-		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(9 * sizeof(float)));
-		glEnableVertexAttribArray(3);
-
-		unbind();
+	RenderableGL::RenderableGL(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer)
+		: Renderable(vertexBuffer, indexBuffer)
+		, m_vao()
+	{
+		initialize();
 	}
 
 	RenderableGL::~RenderableGL()
 	{
 		glDeleteVertexArrays(1, &m_vao);
-		glDeleteBuffers(1, &m_vbo);
-		glDeleteBuffers(1, &m_ebo);
 	}
 
 	void RenderableGL::bind()
@@ -65,5 +35,42 @@ namespace graphics
 	void RenderableGL::unbind()
 	{
 		glBindVertexArray(0);
+	}
+
+	void RenderableGL::initialize()
+	{
+		glGenVertexArrays(1, &m_vao);
+		bind();
+
+		m_vertexBuffer->bind();
+		m_indexBuffer->bind();
+
+		unsigned int elementIndex = 0;
+		std::size_t elementSize = 0;
+		for (const BufferElement& element : m_vertexBuffer->layout)
+		{
+			GLenum type = GL_FLOAT;
+			switch (element.type)
+			{
+			case BufferElement::Type::Int: type = GL_INT; break;
+			case BufferElement::Type::Bool: type = GL_BOOL; break;
+			case BufferElement::Type::Float:
+			default:
+				type = GL_FLOAT; break;
+			}
+
+			glVertexAttribPointer(
+				elementIndex, 
+				element.count,
+				type,
+				element.normalized ? GL_TRUE : GL_FALSE, 
+				static_cast<GLsizei>(m_vertexBuffer->layout.getStride()), 
+				(void*)(elementSize)
+			);
+			elementSize += element.size;
+			glEnableVertexAttribArray(elementIndex++);
+		}
+
+		unbind();
 	}
 }

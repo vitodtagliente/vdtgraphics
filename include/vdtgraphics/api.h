@@ -61,7 +61,8 @@ namespace graphics
 		inline Type getType() const { return m_type; }
 		const ResourceLibrary<Material>& getMaterialLibrary() const { return m_materialLibrary; }
 
-		virtual IndexBuffer* const createIndexBuffer(unsigned int* indices, const std::size_t count) = 0;
+		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t count) = 0;
+		virtual Renderable* const createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer) = 0;
 		virtual Renderable* const createRenderable(const Mesh& mesh) = 0;
 		virtual Renderer2D* const createRenderer2D() = 0;
 		virtual Renderer3D* const createRenderer3D() = 0;

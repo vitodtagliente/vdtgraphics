@@ -24,6 +24,8 @@ namespace graphics
 		Type type;
 		// num of components
 		unsigned int count;
+		// the size of the buffer element
+		std::size_t size;
 		// normalized
 		bool normalized;
 
@@ -31,6 +33,7 @@ namespace graphics
 			const std::string& name,
 			const Type type,
 			const unsigned int count,
+			const std::size_t size,
 			const bool normalized = false
 		);
 	};
@@ -42,6 +45,7 @@ namespace graphics
 		BufferLayout();
 
 		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
+		inline const std::size_t getStride() const { return m_stride; }
 		void push(const BufferElement& element);
 		void clear();
 
@@ -54,6 +58,7 @@ namespace graphics
 
 		// buffer elements
 		std::vector<BufferElement> m_elements;
+		std::size_t m_stride;
 	};
 
 	class VertexBuffer
@@ -90,7 +95,7 @@ namespace graphics
 	class IndexBuffer
 	{
 	public:
-		IndexBuffer(unsigned int* indices, const std::size_t count);
+		IndexBuffer(const unsigned int* indices, const std::size_t count);
 		virtual ~IndexBuffer() = default;
 
 		virtual void bind() = 0;

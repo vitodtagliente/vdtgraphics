@@ -35,14 +35,19 @@ namespace graphics
 	{
 	}
 
-	IndexBuffer* const API_GL::createIndexBuffer(unsigned int* indices, const std::size_t count)
+	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int* indices, const std::size_t count)
 	{
 		return new IndexBufferGL(indices, count);
 	}
 
+	Renderable* const API_GL::createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer)
+	{
+		return new RenderableGL(vertexBuffer, indexBuffer);
+	}
+
 	Renderable* const API_GL::createRenderable(const Mesh& mesh)
 	{
-		return new RenderableGL(mesh);
+		return new RenderableGL(this, mesh);
 	}
 
 	Renderer2D* const API_GL::createRenderer2D()
