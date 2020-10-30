@@ -24,6 +24,9 @@ namespace graphics
 	class GraphicResource
 	{
 	public:
+
+		virtual ~GraphicResource();
+
 		static void* operator new(std::size_t size);
 	};
 
@@ -37,7 +40,8 @@ namespace graphics
 
 		inline const auto& getResource() const { return m_resources; }
 
-		void push(const GraphicResourceType type, void* ptr);
+		void insert(const GraphicResourceType type, void* ptr);
+		void erase(const GraphicResourceType type, void* ptr);
 		void refresh();
 		void clear();
 
@@ -52,12 +56,19 @@ namespace graphics
 		static ResourcePool s_instance;
 	};
 
+	template<GraphicResourceType T>
+	inline GraphicResource<T>::~GraphicResource()
+	{
+		ResourcePool& pool = ResourcePool::getInstance();
+		pool.erase(T, this);
+	}
+
 	template <GraphicResourceType T>
 	void* GraphicResource<T>::operator new(std::size_t size)
 	{
 		void* ptr = ::operator new(size);
 		ResourcePool& pool = ResourcePool::getInstance();
-		pool.push(T, ptr);
+		pool.insert(T, ptr);
 		return ptr;
 	}
 }

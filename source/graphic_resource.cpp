@@ -4,7 +4,7 @@ namespace graphics
 {
 	ResourcePool ResourcePool::s_instance{};
 	
-	void ResourcePool::push(const GraphicResourceType type, void* ptr)
+	void ResourcePool::insert(const GraphicResourceType type, void* ptr)
 	{
 		if (m_resources.find(type) == m_resources.end())
 		{
@@ -13,32 +13,29 @@ namespace graphics
 		m_resources[type].push_back(ptr);
 	}
 
-	void ResourcePool::refresh()
+	void ResourcePool::erase(const GraphicResourceType type, void* ptr)
 	{
-		for (auto& pair : m_resources)
+		if (m_resources.find(type) != m_resources.end())
 		{
-			std::vector<void*>& pool = pair.second;
-			for (auto it = pool.begin(); it != pool.end(); ++it)
+			std::vector<void*>& pool = m_resources[type];
+			const auto& it = std::find_if(pool.begin(), pool.end(), [ptr](const void* el) {
+				return el == ptr;
+			});
+			if (it != pool.end())
 			{
-				if (*it == nullptr)
-				{
-					pool.erase(it);
-				}
+				pool.erase(it);
 			}
 		}
 	}
 
+	void ResourcePool::refresh()
+	{
+
+	}
+
 	void ResourcePool::clear()
 	{
-		for (auto& pair : m_resources)
-		{
-			std::vector<void*>& pool = pair.second;
-			for (auto it = pool.begin(); it != pool.end(); ++it)
-			{
-				if (*it == nullptr) continue;
-				delete (*it);
-			}
-		}
+		m_resources.clear();
 	}
 	
 	ResourcePool& ResourcePool::getInstance()
