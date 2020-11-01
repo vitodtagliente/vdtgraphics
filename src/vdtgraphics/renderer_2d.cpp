@@ -97,6 +97,7 @@ namespace graphics
 		{
 			Renderable* const renderable = batch.renderable;
 			renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
+			renderable->getVertexBuffer()->set(Mesh::VertexData::BufferLayout);
 			renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();

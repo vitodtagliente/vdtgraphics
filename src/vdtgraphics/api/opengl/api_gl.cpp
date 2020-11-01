@@ -90,9 +90,9 @@ namespace graphics
 		return new TextureGL(image, options);
 	}
 
-	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const std::size_t size, const BufferType type)
+	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout)
 	{
-		return new VertexBufferGL(data, size, type);
+		return new VertexBufferGL(data, count, size, layout);
 	}
 
 	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t size)

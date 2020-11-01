@@ -2,6 +2,13 @@
 
 namespace graphics
 {
+	const BufferLayout Mesh::VertexData::BufferLayout{
+		BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3),
+		BufferElement("color", BufferElement::Type::Float, 4, sizeof(float) * 4),
+		BufferElement("texture_coords", BufferElement::Type::Float, 2, sizeof(float) * 2),
+		BufferElement("texture_index", BufferElement::Type::Float, 1, sizeof(float) * 1)
+	};
+
 	Mesh::Mesh()
 		: vertices()
 		, indices()

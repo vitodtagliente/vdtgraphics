@@ -10,15 +10,21 @@ namespace graphics
 		glGenBuffers(1, &m_id);
 		bind();
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+
+		registerLayout();
+
 		unbind();
 	}
 
-	VertexBufferGL::VertexBufferGL(const void* data, const std::size_t size, const BufferType type)
-		: VertexBuffer(data, size, type)
+	VertexBufferGL::VertexBufferGL(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout)
+		: VertexBuffer(data, count, size, layout)
 	{
 		glGenBuffers(1, &m_id);
 		bind();
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+
+		registerLayout();
+
 		unbind();
 	}
 
@@ -39,11 +45,46 @@ namespace graphics
 
 	void VertexBufferGL::set(const void* data, const std::size_t size)
 	{
-		if (m_type == BufferType::Dynamic)
+		bind();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		unbind();
+	}
+
+	void VertexBufferGL::set(const BufferLayout& layout)
+	{
+		VertexBuffer::set(layout);
+
+		bind();
+		registerLayout();
+		unbind();
+	}
+
+	void VertexBufferGL::registerLayout()
+	{
+		unsigned int elementIndex = 0;
+		std::size_t elementSize = 0;
+		for (const BufferElement& element : m_layout)
 		{
-			bind();
-			glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-			unbind();
+			GLenum type = GL_FLOAT;
+			switch (element.type)
+			{
+			case BufferElement::Type::Int: type = GL_INT; break;
+			case BufferElement::Type::Bool: type = GL_BOOL; break;
+			case BufferElement::Type::Float:
+			default:
+				type = GL_FLOAT; break;
+			}
+
+			glVertexAttribPointer(
+				elementIndex,
+				element.count,
+				type,
+				element.normalized ? GL_TRUE : GL_FALSE,
+				static_cast<GLsizei>(m_layout.getStride()),
+				(void*)(elementSize)
+			);
+			elementSize += element.size;
+			glEnableVertexAttribArray(elementIndex++);
 		}
 	}
 	

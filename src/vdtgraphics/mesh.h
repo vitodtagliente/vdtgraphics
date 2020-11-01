@@ -19,6 +19,8 @@ namespace graphics
 			Color color;
 			vector2 uv;
 			unsigned int texture;
+
+			static const BufferLayout BufferLayout;
 		};
 
 		Mesh();

@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cstddef>
+#include <initializer_list>
 #include <string>
 #include <vector>
 #include "graphic_resource.h"
@@ -44,6 +45,7 @@ namespace graphics
 	public:
 
 		BufferLayout();
+		BufferLayout(const std::initializer_list<BufferElement> list);
 
 		inline const std::vector<BufferElement>& getElements() const { return m_elements; }
 		inline const std::size_t getStride() const { return m_stride; }
@@ -73,23 +75,26 @@ namespace graphics
 	public:
 
 		VertexBuffer(const std::size_t size);
-		VertexBuffer(const void* data, const std::size_t size, const BufferType type = BufferType::Static);
+		VertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout);
 		virtual ~VertexBuffer() = default;
 
-		inline BufferType getType() const { return m_type; }
+		inline unsigned int getCount() const { return m_count; }
+		inline const BufferLayout& getLayout() const { return m_layout; }
 		inline std::size_t getSize() const { return m_size; }
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
+		virtual void set(const void* data, const unsigned int count, const std::size_t size);
 		virtual void set(const void* data, const std::size_t size) = 0;
-
-		BufferLayout layout;
+		virtual void set(const BufferLayout& layout);
 
 	protected:
 
-		// buffer type
-		BufferType m_type;
+		// layout
+		BufferLayout m_layout;
+		// count of vertices
+		unsigned int m_count;
 		// size
 		std::size_t m_size;
 	};

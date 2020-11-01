@@ -13,15 +13,18 @@ namespace graphics
 		typedef unsigned int id_t;
 
 		VertexBufferGL(const std::size_t size);
-		VertexBufferGL(const void* data, const std::size_t size, const BufferType type = BufferType::Static);
+		VertexBufferGL(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout);
 		virtual ~VertexBufferGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
 
-		virtual void set(const void* data, const std::size_t size) override;
+		virtual void set(const void* data, const std::size_t size) override; 
+		virtual void set(const BufferLayout& layout) override;
 
 	protected:
+
+		void registerLayout();
 
 		id_t m_id;
 	};
