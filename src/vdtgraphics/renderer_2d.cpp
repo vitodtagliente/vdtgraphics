@@ -96,7 +96,7 @@ namespace graphics
 		for (BatchData& batch : m_batches)
 		{
 			Renderable* const renderable = batch.renderable;
-			renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size());
+			renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
 			renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
@@ -118,13 +118,7 @@ namespace graphics
 		{
 			BatchData newBatch;
 			static const unsigned int MaxQuads = 1000;
-			VertexBuffer* vertexBuffer = m_api->createVertexBuffer(MaxQuads * 4);
-			vertexBuffer->layout.push(BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3));
-			vertexBuffer->layout.push(BufferElement("color", BufferElement::Type::Float, 4, sizeof(float) * 4));
-			vertexBuffer->layout.push(BufferElement("texture_coords", BufferElement::Type::Float, 2, sizeof(float) * 2));
-			vertexBuffer->layout.push(BufferElement("texture_index", BufferElement::Type::Float, 1, sizeof(float) * 1));
-			IndexBuffer* indexBuffer = m_api->createIndexBuffer(MaxQuads * 6);
-			newBatch.renderable = m_api->createRenderable(vertexBuffer, indexBuffer);
+			newBatch.renderable = m_api->createRenderable(MaxQuads * 4, MaxQuads * 6);
 			m_batches.push_back(newBatch);
 			m_batches[0].textures.push_back(texture);
 			return m_batches[0];

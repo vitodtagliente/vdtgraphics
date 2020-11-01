@@ -74,7 +74,7 @@ namespace graphics
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER
-			, size * sizeof(unsigned int)
+			, size 
 			, indices
 			, GL_STATIC_DRAW);
 
@@ -98,7 +98,12 @@ namespace graphics
 	
 	void IndexBufferGL::set(const unsigned int* indices, const std::size_t size)
 	{
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * sizeof(unsigned int), indices);
-		m_size = size;
+		if (m_type == BufferType::Dynamic)
+		{
+			bind();
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * sizeof(unsigned int), indices);
+			m_size = size;
+			unbind();
+		}
 	}
 }

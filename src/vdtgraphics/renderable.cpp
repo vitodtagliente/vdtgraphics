@@ -19,9 +19,9 @@ namespace graphics
 		m_vertexBuffer->layout.push(BufferElement("texture_index", BufferElement::Type::Float, 1, sizeof(float) * 1));
 	}
 
-	Renderable::Renderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer)
-		: m_vertexBuffer(vertexBuffer)
-		, m_indexBuffer(indexBuffer)
+	Renderable::Renderable(API* const api, const std::size_t vertices, const std::size_t indices)
+		: m_vertexBuffer()
+		, m_indexBuffer()
 	{
 	}
 

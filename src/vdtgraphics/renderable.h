@@ -15,7 +15,7 @@ namespace graphics
 	public:
 
 		Renderable(API* const api, const Mesh& mesh);
-		Renderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer);
+		Renderable(API* const api, const std::size_t vertices, const std::size_t indices);
 		virtual ~Renderable();
 
 		virtual void bind() = 0;

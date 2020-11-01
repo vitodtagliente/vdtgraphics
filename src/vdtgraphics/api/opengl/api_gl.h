@@ -19,7 +19,7 @@ namespace graphics
 
 		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static) override;
 		virtual IndexBuffer* const createIndexBuffer(const std::size_t size) override;
-		virtual Renderable* const createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer) override;
+		virtual Renderable* const createRenderable(const std::size_t vertices, const std::size_t indices) override;
 		virtual Renderable* const createRenderable(const Mesh& mesh) override;
 		virtual Renderer2D* const createRenderer2D() override;
 		virtual Renderer3D* const createRenderer3D() override;
