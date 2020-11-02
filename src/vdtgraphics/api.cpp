@@ -104,7 +104,7 @@ namespace graphics
 
 	void API::draw(IndexBuffer* const indexBuffer)
 	{
-		draw(PrimitiveType::Triangles, indexBuffer->getIndicesCount());
+		drawIndexed(PrimitiveType::Triangles, indexBuffer->getIndicesCount());
 	}
 	
 	void API::draw(Renderable* const renderable)

@@ -144,7 +144,8 @@ void init()
     ib = api->createIndexBuffer(6);
     ib->update(indices, 6);
 
-    quad = api->createRenderable(Quad{});
+    quad = api->createRenderable(vb1, ib); 
+    // quad = api->createRenderable(Quad{});
     spriteMat = api->getMaterialLibrary().get(Material::Default::Name::Texture);
     spriteMat->set(Material::Default::Property::Textures, std::vector<Texture*>{ batmanTexture });
     spriteMat->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
@@ -177,13 +178,14 @@ void render_loop()
     // renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     // renderer2d->drawCircle(Color::Green, {}, .4f);
 
-    vb1->bind();
-    ib->bind();
-    mtb->bind();
-    api->draw(vb1);
+    // vb1->bind();
+    // ib->bind();
+    // mtb->bind();
+    // api->draw(vb1);
 
+    mtb->bind();
     // spriteMat->bind();
-    // api->draw(quad);
+    api->draw(quad);
 
     // renderer2d->render();
     
