@@ -65,31 +65,25 @@ namespace graphics
 		std::size_t m_stride;
 	};
 
-	enum class BufferType
+	enum class BufferUsageMode
 	{
 		Dynamic,
-		Static
+		Static,
+		Stream
 	};
 
 	class VertexBuffer : public GraphicResource<GraphicResourceType::VertexBuffer>
 	{
 	public:
 
-		enum class UsageMode
-		{
-			Dynamic,
-			Static,
-			Stream
-		};
-
 		VertexBuffer(const std::size_t vertexSize, const unsigned int vertices)
 			: m_vertexSize(vertexSize)
-			, m_usage(UsageMode::Static)
-			, m_primitiveType(PrimitiveType::Points)
+			, m_usage(BufferUsageMode::Static)
+			, m_primitiveType(PrimitiveType::Triangles)
 			, m_vertices(vertices)
 			, m_layout()
 		{}
-		VertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const UsageMode usage, const PrimitiveType primitiveType)
+		VertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const BufferUsageMode usage, const PrimitiveType primitiveType)
 			: m_vertexSize(vertexSize)
 			, m_usage(usage)
 			, m_primitiveType(primitiveType)
@@ -106,7 +100,7 @@ namespace graphics
 		virtual void update(const BufferLayout& layout) { m_layout = layout; }
 
 		inline std::size_t getVertexSize() const { return m_vertexSize; }
-		inline UsageMode getUsage() const { return m_usage; }
+		inline BufferUsageMode getUsageMode() const { return m_usage; }
 		inline PrimitiveType getPrimitiveType() const { return m_primitiveType; }
 		inline unsigned int getVerticesCount() const { return m_vertices; }
 		inline const BufferLayout& getLayout() const { return m_layout; }
@@ -114,63 +108,39 @@ namespace graphics
 	protected:
 
 		std::size_t m_vertexSize;
-		UsageMode m_usage;
+		BufferUsageMode m_usage;
 		PrimitiveType m_primitiveType;
 		unsigned int m_vertices;
 		BufferLayout m_layout;
 	};
 
-	/*
-	class VertexBuffer : public GraphicResource<GraphicResourceType::VertexBuffer>
-	{
-	public:
-
-		VertexBuffer(const std::size_t size);
-		VertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout);
-		virtual ~VertexBuffer() = default;
-
-		inline unsigned int getCount() const { return m_count; }
-		inline const BufferLayout& getLayout() const { return m_layout; }
-		inline std::size_t getSize() const { return m_size; }
-
-		virtual void bind() = 0;
-		virtual void unbind() = 0;
-
-		virtual void set(const void* data, const unsigned int count, const std::size_t size);
-		virtual void set(const void* data, const std::size_t size) = 0;
-		virtual void set(const BufferLayout& layout);
-
-	protected:
-
-		// layout
-		BufferLayout m_layout;
-		// count of vertices
-		unsigned int m_count;
-		// size
-		std::size_t m_size;
-	};
-	*/
-
 	class IndexBuffer : public GraphicResource<GraphicResourceType::IndexBuffer>
 	{
 	public:
 
-		IndexBuffer(const std::size_t size);
-		IndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static);
+		IndexBuffer(const unsigned int indices)
+			: m_usage(BufferUsageMode::Static)
+			, m_indices(indices)
+		{}
+		IndexBuffer(const unsigned int indices, const BufferUsageMode usage) 
+			: m_usage(usage)
+			, m_indices(indices)
+		{}
 		virtual ~IndexBuffer() = default;
 
 		virtual void bind() = 0;
 		virtual void unbind() = 0;
 
-		inline BufferType getType() const { return m_type; }
-		inline std::size_t getSize() const { return m_size; }
+		inline BufferUsageMode getUsageMode() const { return m_usage; }
+		inline std::size_t getIndicesCount() const { return m_indices; }
 
-		virtual void set(const unsigned int* indices, const std::size_t size) = 0;
+		virtual void update(const void* data, const unsigned int indices) = 0;
+		virtual void update(const void* data, const unsigned int indices, const unsigned int offset) = 0;
 
 	protected:
 
 		// buffer type
-		BufferType m_type;
-		std::size_t m_size;
+		BufferUsageMode m_usage;
+		unsigned int m_indices;
 	};
 }

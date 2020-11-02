@@ -44,44 +44,4 @@ namespace graphics
 	{
 		m_elements.clear();
 	}
-
-	/*
-	VertexBuffer::VertexBuffer(const std::size_t size)
-		: m_layout()
-		, m_count()
-		, m_size(size)
-	{
-		m_layout.push(BufferElement("position", BufferElement::Type::Float, 0, sizeof(float) * 0));
-	}
-
-	VertexBuffer::VertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout)
-		: m_layout(layout)
-		, m_count(count)
-		, m_size(size)
-	{
-	}
-
-	void VertexBuffer::set(const void* data, const unsigned int count, const std::size_t size)
-	{
-		m_count = count;
-		set(data, size);
-	}
-
-	void VertexBuffer::set(const BufferLayout& layout)
-	{
-		m_layout = layout;
-	}
-	*/
-
-	IndexBuffer::IndexBuffer(const std::size_t size)
-		: m_type(BufferType::Dynamic)
-		, m_size(size)
-	{
-	}
-
-	IndexBuffer::IndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type)
-		: m_type(type)
-		, m_size(size)
-	{
-	}
 }

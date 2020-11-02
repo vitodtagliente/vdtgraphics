@@ -7,6 +7,8 @@
 
 namespace graphics
 {
+	GLenum getUsageModeGL(const BufferUsageMode usage);
+
 	class VertexBufferGL : public VertexBuffer
 	{
 	public:
@@ -14,8 +16,8 @@ namespace graphics
 		typedef unsigned int id_t;
 
 		VertexBufferGL(const std::size_t vertexSize, const unsigned int vertices);
-		VertexBufferGL(const std::size_t vertexSize, const unsigned int vertices, const UsageMode usage, const PrimitiveType primitiveType);
-		virtual ~VertexBufferGL();
+		VertexBufferGL(const std::size_t vertexSize, const unsigned int vertices, const BufferUsageMode usage, const PrimitiveType primitiveType);
+		virtual ~VertexBufferGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
@@ -29,10 +31,6 @@ namespace graphics
 		void activateLayout();
 
 		id_t m_id;
-
-	private:
-
-		static GLenum getUsageModeGL(const VertexBuffer::UsageMode usage);
 	};
 
 	class IndexBufferGL final : public IndexBuffer
@@ -41,16 +39,19 @@ namespace graphics
 
 		typedef unsigned int id_t;
 
-		IndexBufferGL(const std::size_t size);
-		IndexBufferGL(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static);
+		IndexBufferGL(const unsigned int indices);
+		IndexBufferGL(const unsigned int indices, const BufferUsageMode usage);
 		virtual ~IndexBufferGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
 
-		virtual void set(const unsigned int* indices, const std::size_t size) override;
+		virtual void update(const void* data, const unsigned int indices) override;
+		virtual void update(const void* data, const unsigned int indices, const unsigned int offset) override;
 
 	private:
+
+		static const std::size_t IndexSize;
 
 		id_t m_id;
 	};

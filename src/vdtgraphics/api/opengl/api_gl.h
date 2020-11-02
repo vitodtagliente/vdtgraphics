@@ -18,8 +18,8 @@ namespace graphics
 		virtual void update() override;
 		virtual void shutdown() override;
 
-		virtual IndexBuffer* const createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type = BufferType::Static) override;
-		virtual IndexBuffer* const createIndexBuffer(const std::size_t size) override;
+		virtual IndexBuffer* const createIndexBuffer(const unsigned int indices) override;
+		virtual IndexBuffer* const createIndexBuffer(const unsigned int indices, const BufferUsageMode usage) override;
 		virtual Renderable* const createRenderable(const std::size_t vertices, const std::size_t indices) override;
 		virtual Renderable* const createRenderable(const Mesh& mesh) override;
 		virtual Renderer2D* const createRenderer2D() override;
@@ -28,7 +28,7 @@ namespace graphics
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) override;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) override;
 		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices) override;
-		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType) override;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const BufferUsageMode usage, const PrimitiveType primitiveType) override;
 
 		virtual void enableAlpha(const bool enabled = true) override;
 		virtual void clear(const Color& color) override;

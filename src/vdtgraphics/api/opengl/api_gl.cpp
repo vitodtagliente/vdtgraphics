@@ -41,14 +41,14 @@ namespace graphics
 		API::shutdown();
 	}
 
-	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int* indices, const std::size_t size, const BufferType type)
+	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int indices)
 	{
-		return new IndexBufferGL(indices, size, type);
+		return new IndexBufferGL(indices);
 	}
 
-	IndexBuffer* const API_GL::createIndexBuffer(const std::size_t size)
+	IndexBuffer* const API_GL::createIndexBuffer(const unsigned int indices, const BufferUsageMode usage)
 	{
-		return new IndexBufferGL(size);
+		return new IndexBufferGL(indices, usage);
 	}
 
 	Renderable* const API_GL::createRenderable(const std::size_t vertices, const std::size_t indices)
@@ -95,7 +95,7 @@ namespace graphics
 		return new VertexBufferGL(vertexSize, vertices);
 	}
 
-	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType)
+	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const BufferUsageMode usage, const PrimitiveType primitiveType)
 	{
 		return new VertexBufferGL(vertexSize, vertices, usage, primitiveType);
 	}
