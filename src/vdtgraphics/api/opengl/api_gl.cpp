@@ -56,15 +56,10 @@ namespace graphics
 		return new RenderableGL(vertexBuffer, indexBuffer);
 	}
 
-	// Renderable* const API_GL::createRenderable(const std::size_t vertices, const std::size_t indices)
-	// {
-	// 	return new RenderableGL(this, vertices, indices);
-	// }
-	// 
-	// Renderable* const API_GL::createRenderable(const Mesh& mesh)
-	// {
-	// 	return new RenderableGL(this, mesh);
-	// }
+	Renderable* const API_GL::createRenderable(const Mesh& mesh)
+	{
+		return new RenderableGL(this, mesh);
+	}
 
 	Renderer2D* const API_GL::createRenderer2D()
 	{

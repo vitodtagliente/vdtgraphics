@@ -8,13 +8,14 @@
 
 namespace graphics
 {
+	class API;
+
 	class Renderable : public GraphicResource<GraphicResourceType::Renderable>
 	{
 	public:
 
 		Renderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer);
-		// Renderable(API* const api, const Mesh& mesh);
-		// Renderable(API* const api, const std::size_t vertices, const std::size_t indices);
+		Renderable(API* const api, const Mesh& mesh);
 		virtual ~Renderable();
 
 		virtual void bind() = 0;

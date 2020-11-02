@@ -144,7 +144,7 @@ void init()
     ib = api->createIndexBuffer(6);
     ib->update(indices, 6);
 
-    quad = api->createRenderable(vb1, ib);
+    quad = api->createRenderable(Quad{});
 
     // triangle
     float vertices[] = {
