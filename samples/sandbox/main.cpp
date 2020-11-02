@@ -159,9 +159,11 @@ void render_loop()
     // mtb->bind();
     // api->draw(vb1);
 
-    spriteMat->bind();
-    api->draw(quad);
+    // spriteMat->bind();
+    // api->draw(quad);
 
-    // renderer2d->render();
+    renderer2d->drawTexture(batmanTexture, { 1.0f, 1.0f });
+
+    renderer2d->render();
     
 }

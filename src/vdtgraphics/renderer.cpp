@@ -24,14 +24,8 @@ namespace graphics
 	{
 		for (RenderCommand& command : m_commandBuffer)
 		{
-			// bind the material
-			// (activate shaders properties)
 			command.material->bind();
-			// bind the data to render
-			Renderable* const renderable = command.renderable;
-			renderable->bind();
-			m_api->draw(renderable->getIndexBuffer());
-			renderable->unbind();
+			m_api->draw(command.renderable);
 
 			command.free();
 		}

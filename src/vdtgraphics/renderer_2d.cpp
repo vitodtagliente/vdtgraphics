@@ -95,11 +95,14 @@ namespace graphics
 	{
 		for (BatchData& batch : m_batches)
 		{
-			// Renderable* const renderable = batch.renderable;
-			// renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
-			// renderable->getVertexBuffer()->set(Mesh::VertexData::BufferLayout);
-			// renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
-			Renderable* renderable = nullptr; // m_api->createRenderable(batch.mesh);
+			Renderable* renderable = batch.renderable;
+			batch.vertexBuffer->update(&batch.mesh.vertices.front(), batch.mesh.vertices.size());
+			batch.indexBuffer->update(&batch.mesh.indices.front(), batch.mesh.indices.size());
+			if (renderable == nullptr)
+			{
+				renderable = m_api->createRenderable(batch.vertexBuffer, batch.indexBuffer);
+			}
+
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
 
@@ -119,11 +122,15 @@ namespace graphics
 		if (m_batches.empty())
 		{
 			BatchData newBatch;
-			static const unsigned int MaxQuads = 1000;
-			newBatch.renderable = nullptr; // m_api->createRenderable(MaxQuads * 4, MaxQuads * 6);
+			static const unsigned int MaxQuads = 1;
+			newBatch.vertexBuffer = m_api->createVertexBuffer(sizeof(Mesh::VertexData), MaxQuads * 4);
+			newBatch.vertexBuffer->update(Mesh::VertexData::BufferLayout);
+			newBatch.indexBuffer = m_api->createIndexBuffer(MaxQuads * 6);
+			newBatch.renderable = nullptr;
+			newBatch.textures.push_back(texture);
+
 			m_batches.push_back(newBatch);
-			m_batches[0].textures.push_back(texture);
-			return m_batches[0];
+			return m_batches.front();
 		}
 
 		// TODO

@@ -39,6 +39,8 @@ namespace graphics
 		struct BatchData
 		{
 			Renderable* renderable;
+			VertexBuffer* vertexBuffer;
+			IndexBuffer* indexBuffer;
 			Mesh mesh;
 			std::vector<Texture*> textures;
 		};
