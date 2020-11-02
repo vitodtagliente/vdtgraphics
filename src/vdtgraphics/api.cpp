@@ -96,4 +96,14 @@ namespace graphics
 		}
 		return true;
 	}
+	
+	void API::draw(VertexBuffer* const vertexBuffer)
+	{
+		draw(vertexBuffer->getPrimitiveType(), vertexBuffer->getVerticesCount());
+	}
+
+	void API::draw(IndexBuffer* const indexBuffer)
+	{
+		draw(PrimitiveType::Triangles, indexBuffer->getSize());
+	}
 }

@@ -124,7 +124,7 @@ void init()
      0.5f, -0.5f, 0.0f,
      0.0f,  0.5f, 0.0f
     };
-    vb = api->createVertexBuffer(sizeof(float) * 3, 3);
+    vb = api->createVertexBuffer(sizeof(float) * 3, 3, VertexBuffer::UsageMode::Dynamic, PrimitiveType::Triangles);
     vb->update(vertices, 3);
     vb->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
 
@@ -148,7 +148,7 @@ void render_loop()
 
     vb->bind();
     mtb->bind();
-    api->draw(3);
+    api->draw(vb);
 
     // renderer2d->render();
     

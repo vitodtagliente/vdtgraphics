@@ -116,14 +116,14 @@ namespace graphics
 		glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
-	void API_GL::draw(const unsigned int vertices)
+	void API_GL::draw(const PrimitiveType primitiveType, const unsigned int vertices)
 	{
-		glDrawArrays(GL_TRIANGLES, 0, vertices);
+		glDrawArrays(getPrimitiveTypeGL(primitiveType), 0, vertices);
 	}
 
-	void API_GL::drawIndexed(const unsigned int numIndexes)
+	void API_GL::drawIndexed(const PrimitiveType primitiveType, const unsigned int numIndexes)
 	{
-		glDrawElements(GL_TRIANGLES, numIndexes, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(getPrimitiveTypeGL(primitiveType), numIndexes, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void API_GL::setViewport(const int width, const int height)
@@ -136,6 +136,21 @@ namespace graphics
 		return 4;
 	}
 	
+	GLenum API_GL::getPrimitiveTypeGL(const PrimitiveType primitiveType)
+	{
+		switch (primitiveType)
+		{
+		case PrimitiveType::Points: return GL_POINTS;
+		case PrimitiveType::Lines: return GL_LINES;
+		case PrimitiveType::LineStrip: return GL_LINE_STRIP;
+		case PrimitiveType::TriangleFan: return GL_TRIANGLE_FAN;
+		case PrimitiveType::TriangleStrip: return GL_TRIANGLE_STRIP;
+		case PrimitiveType::Triangles:
+		default:
+			return GL_TRIANGLES;
+		}
+	}
+
 	const std::map<std::string, std::string>& API_GL::getDefaultShaderSources() const
 	{
 		static const std::map<std::string, std::string> sources = {

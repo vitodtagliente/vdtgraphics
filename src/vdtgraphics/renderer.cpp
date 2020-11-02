@@ -30,7 +30,7 @@ namespace graphics
 			// bind the data to render
 			Renderable* const renderable = command.renderable;
 			renderable->bind();
-			m_api->drawIndexed(static_cast<unsigned int>(renderable->getIndexBuffer()->getSize()));
+			m_api->draw(renderable->getIndexBuffer());
 			renderable->unbind();
 
 			command.free();

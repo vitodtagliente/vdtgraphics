@@ -3,6 +3,7 @@
 #pragma once
 
 #include <vdtgraphics/api.h>
+#include "opengl.h"
 
 namespace graphics
 {
@@ -31,12 +32,14 @@ namespace graphics
 
 		virtual void enableAlpha(const bool enabled = true) override;
 		virtual void clear(const Color& color) override;
-		virtual void draw(const unsigned int vertices = 3) override;
-		virtual void drawIndexed(const unsigned int numIndexes) override;
+		virtual void draw(const PrimitiveType primitiveType, const unsigned int vertices = 3) override;
+		virtual void drawIndexed(const PrimitiveType primitiveType, const unsigned int numIndexes) override;
 		virtual void setViewport(const int width, const int height) override;
 		virtual unsigned int getTextureUnits() const override;
 
 	private:
+
+		static GLenum getPrimitiveTypeGL(const PrimitiveType primitiveType);
 
 		virtual const std::map<std::string, std::string>& getDefaultShaderSources() const override;
 	};

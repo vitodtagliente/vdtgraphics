@@ -10,6 +10,7 @@
 #include "buffer.h"
 #include "material.h"
 #include "mesh.h"
+#include "primitive_type.h"
 #include "renderable.h"
 #include "renderer_2d.h"
 #include "renderer_3d.h"
@@ -75,8 +76,10 @@ namespace graphics
 		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType) = 0;
 
 		virtual void clear(const Color& color) = 0;
-		virtual void draw(const unsigned int vertices = 3) = 0;
-		virtual void drawIndexed(const unsigned int numIndexes) = 0;
+		virtual void draw(VertexBuffer* const vertexBuffer);
+		virtual void draw(IndexBuffer* const indexBuffer);
+		virtual void draw(const PrimitiveType primitiveType, const unsigned int vertices = 3) = 0;
+		virtual void drawIndexed(const PrimitiveType primitiveType, const unsigned int numIndexes) = 0;
 		virtual void enableAlpha(const bool enabled = true) = 0;
 		virtual void setViewport(const int width, const int height) = 0;
 		virtual unsigned int getTextureUnits() const = 0;
