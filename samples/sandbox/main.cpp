@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vdtmath/math.h>
 #include <vdtgraphics/meshes/quad.h>
+#include <vdtgraphics/api/opengl/opengl.h>
 
 using namespace std;
 using namespace graphics;
@@ -120,45 +121,21 @@ Material* mtb, *spriteMat;
 Renderable* quad, *triangle;
 
 void init()
-{
-    // quad
-    float quad_vertices[] = {
-        // first triangle
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f,  0.5f, 0.0f,  // top left 
-        // second triangle
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left
-    };
-    vb1 = api->createVertexBuffer(sizeof(float) * 3, 6);
-    vb1->update(quad_vertices, 6);
-    vb1->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
-
-    unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-    };
-
-    ib = api->createIndexBuffer(6);
-    ib->update(indices, 6);
-
-    quad = api->createRenderable(vb1, ib); 
-    // quad = api->createRenderable(Quad{});
+{ 
+    quad = api->createRenderable(Quad{});
     spriteMat = api->getMaterialLibrary().get(Material::Default::Name::Texture);
     spriteMat->set(Material::Default::Property::Textures, std::vector<Texture*>{ batmanTexture });
     spriteMat->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
-
-    // triangle
-    float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
-    };
-    vb = api->createVertexBuffer(sizeof(float) * 3, 3);
-    vb->update(vertices, 3);
-    vb->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
+    // 
+    // // triangle
+    // float vertices[] = {
+    // -0.5f, -0.5f, 0.0f,
+    //  0.5f, -0.5f, 0.0f,
+    //  0.0f,  0.5f, 0.0f
+    // };
+    // vb = api->createVertexBuffer(sizeof(float) * 3, 3);
+    // vb->update(vertices, 3);
+    // vb->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
 
     mtb = api->getMaterialLibrary().get(Material::Default::Name::Position);
 }
@@ -179,12 +156,10 @@ void render_loop()
     // renderer2d->drawCircle(Color::Green, {}, .4f);
 
     // vb1->bind();
-    // ib->bind();
     // mtb->bind();
     // api->draw(vb1);
 
-    mtb->bind();
-    // spriteMat->bind();
+    spriteMat->bind();
     api->draw(quad);
 
     // renderer2d->render();

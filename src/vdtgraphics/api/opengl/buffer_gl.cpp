@@ -146,10 +146,10 @@ namespace graphics
 		bind();
 		if (indices > m_indices)
 		{
-			glBufferData(GL_ARRAY_BUFFER, IndexSize * indices, nullptr, getUsageModeGL(m_usage));
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexSize * indices, nullptr, getUsageModeGL(m_usage));
 			m_indices = indices;
 		}
-		glBufferSubData(GL_ARRAY_BUFFER, IndexSize * offset, IndexSize * indices, data);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, IndexSize * offset, IndexSize * indices, data);
 		unbind();
 	}
 }
