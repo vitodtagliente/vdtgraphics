@@ -17,7 +17,7 @@ namespace graphics
 		, m_indexBuffer()
 	{
 		const std::vector<float>& vertices = mesh.getData();
-		m_vertexBuffer = api->createVertexBuffer(sizeof(Mesh::VertexData), static_cast<unsigned int>(mesh.vertices.size()));
+		m_vertexBuffer = api->createVertexBuffer(sizeof(float) * 10, static_cast<unsigned int>(mesh.vertices.size()));
 		m_vertexBuffer->update(Mesh::VertexData::BufferLayout);
 		m_vertexBuffer->update(&mesh.vertices.front(), static_cast<unsigned int>(mesh.vertices.size()));
 		m_indexBuffer = api->createIndexBuffer(static_cast<unsigned int>(mesh.indices.size()));

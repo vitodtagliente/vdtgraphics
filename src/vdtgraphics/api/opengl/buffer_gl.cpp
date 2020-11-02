@@ -58,7 +58,7 @@ namespace graphics
 	void VertexBufferGL::update(const void* data, const unsigned int vertices, const unsigned int offset)
 	{
 		bind();
-		if (vertices >= m_vertices)
+		if (vertices > m_vertices)
 		{
 			glBufferData(GL_ARRAY_BUFFER, m_vertexSize * vertices, nullptr, getUsageModeGL(m_usage));
 			m_vertices = vertices;
@@ -144,7 +144,7 @@ namespace graphics
 	void IndexBufferGL::update(const void* data, const unsigned int indices, const unsigned int offset)
 	{
 		bind();
-		if (indices >= m_indices)
+		if (indices > m_indices)
 		{
 			glBufferData(GL_ARRAY_BUFFER, IndexSize * indices, nullptr, getUsageModeGL(m_usage));
 			m_indices = indices;
