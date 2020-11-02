@@ -9,18 +9,26 @@
 
 namespace graphics
 {
-	RenderableGL::RenderableGL(API* const api, const Mesh& mesh)
-		: Renderable(api, mesh)
-		, m_vao()
-	{
-		initialize(api, mesh.vertices.size(), mesh.indices.size());
-	}
+	// RenderableGL::RenderableGL(API* const api, const Mesh& mesh)
+	// 	: Renderable(api, mesh)
+	// 	, m_vao()
+	// {
+	// 	initialize(api, mesh.vertices.size(), mesh.indices.size());
+	// }
+	// 
+	// RenderableGL::RenderableGL(API* const api, const std::size_t vertices, const std::size_t indices)
+	// 	: Renderable(api, vertices, indices)
+	// 	, m_vao()
+	// {
+	// 	initialize(api, vertices, indices);
+	// }
 
-	RenderableGL::RenderableGL(API* const api, const std::size_t vertices, const std::size_t indices)
-		: Renderable(api, vertices, indices)
+	RenderableGL::RenderableGL(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer)
+		: Renderable(vertexBuffer, indexBuffer)
 		, m_vao()
 	{
-		initialize(api, vertices, indices);
+		glGenVertexArrays(1, &m_vao);
+		update();
 	}
 
 	RenderableGL::~RenderableGL()
@@ -38,6 +46,24 @@ namespace graphics
 		glBindVertexArray(0);
 	}
 
+	void RenderableGL::update()
+	{
+		bind();
+
+		if (m_vertexBuffer != nullptr)
+		{
+			m_vertexBuffer->bind();
+		}
+
+		if (m_indexBuffer != nullptr)
+		{
+			m_indexBuffer->bind();
+		}
+
+		unbind();
+	}
+
+	/*
 	void RenderableGL::initialize(API* const api, const std::size_t vertices, const std::size_t indices)
 	{
 		glGenVertexArrays(1, &m_vao);
@@ -57,4 +83,5 @@ namespace graphics
 
 		unbind();
 	}
+	*/
 }

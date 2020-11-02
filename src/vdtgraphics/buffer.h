@@ -132,7 +132,7 @@ namespace graphics
 		virtual void unbind() = 0;
 
 		inline BufferUsageMode getUsageMode() const { return m_usage; }
-		inline std::size_t getIndicesCount() const { return m_indices; }
+		inline unsigned int getIndicesCount() const { return m_indices; }
 
 		virtual void update(const void* data, const unsigned int indices) = 0;
 		virtual void update(const void* data, const unsigned int indices, const unsigned int offset) = 0;

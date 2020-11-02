@@ -106,4 +106,21 @@ namespace graphics
 	{
 		draw(PrimitiveType::Triangles, indexBuffer->getIndicesCount());
 	}
+	
+	void API::draw(Renderable* const renderable)
+	{
+		if (renderable)
+		{
+			renderable->bind();
+			if (renderable->getIndexBuffer())
+			{
+				draw(renderable->getIndexBuffer());
+			}
+			else
+			{
+				draw(renderable->getVertexBuffer());
+			}
+			renderable->unbind();
+		}
+	}
 }

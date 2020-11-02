@@ -65,8 +65,9 @@ namespace graphics
 
 		virtual IndexBuffer* const createIndexBuffer(const unsigned int indices) = 0;
 		virtual IndexBuffer* const createIndexBuffer(const unsigned int indices, const BufferUsageMode usage) = 0;
-		virtual Renderable* const createRenderable(const std::size_t vertices, const std::size_t indices) = 0;
-		virtual Renderable* const createRenderable(const Mesh& mesh) = 0;
+		virtual Renderable* const createRenderable(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer) = 0;
+		// virtual Renderable* const createRenderable(const std::size_t vertices, const std::size_t indices) = 0;
+		// virtual Renderable* const createRenderable(const Mesh& mesh) = 0;
 		virtual Renderer2D* const createRenderer2D() = 0;
 		virtual Renderer3D* const createRenderer3D() = 0;
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) = 0;
@@ -78,6 +79,7 @@ namespace graphics
 		virtual void clear(const Color& color) = 0;
 		virtual void draw(VertexBuffer* const vertexBuffer);
 		virtual void draw(IndexBuffer* const indexBuffer);
+		virtual void draw(Renderable* const renderable);
 		virtual void draw(const PrimitiveType primitiveType, const unsigned int vertices = 3) = 0;
 		virtual void drawIndexed(const PrimitiveType primitiveType, const unsigned int numIndexes) = 0;
 		virtual void enableAlpha(const bool enabled = true) = 0;

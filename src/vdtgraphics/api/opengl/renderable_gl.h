@@ -10,16 +10,19 @@ namespace graphics
 	{
 	public:
 
-		RenderableGL(API* const api, const Mesh& mesh);
-		RenderableGL(API* const api, const std::size_t vertices, const std::size_t indices);
+		RenderableGL(VertexBuffer* const vertexBuffer, IndexBuffer* const indexBuffer);
+		// RenderableGL(API* const api, const Mesh& mesh);
+		// RenderableGL(API* const api, const std::size_t vertices, const std::size_t indices);
 		virtual ~RenderableGL() override;
 
 		virtual void bind() override;
 		virtual void unbind() override;
+		
+		virtual void update() override;
 
 	private:
 
-		void initialize(API* const api, const std::size_t vertices, const std::size_t indices);
+		// void initialize(API* const api, const std::size_t vertices, const std::size_t indices);
 		// vertex array object
 		unsigned int m_vao;
 	};

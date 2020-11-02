@@ -114,11 +114,39 @@ int main(void)
     return 0;
 }
 
-VertexBuffer* vb;
+VertexBuffer* vb, * vb1;
+IndexBuffer* ib;
 Material* mtb;
+Renderable* quad, *triangle;
 
 void init()
 {
+    // quad
+    float quad_vertices[] = {
+        // first triangle
+         0.5f,  0.5f, 0.0f,  // top right
+         0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f,  0.5f, 0.0f,  // top left 
+        // second triangle
+         0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f   // top left
+    };
+    vb1 = api->createVertexBuffer(sizeof(float) * 3, 6);
+    vb1->update(quad_vertices, 6);
+    vb1->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
+
+    unsigned int indices[] = {  // note that we start from 0!
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+    };
+
+    ib = api->createIndexBuffer(6);
+    ib->update(indices, 6);
+
+    quad = api->createRenderable(vb1, ib);
+
+    // triangle
     float vertices[] = {
     -0.5f, -0.5f, 0.0f,
      0.5f, -0.5f, 0.0f,
@@ -146,9 +174,13 @@ void render_loop()
     // renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     // renderer2d->drawCircle(Color::Green, {}, .4f);
 
-    vb->bind();
+    // vb1->bind();
+    // ib->bind();
+    // mtb->bind();
+    // api->draw(vb1);
+
     mtb->bind();
-    api->draw(vb);
+    api->draw(quad);
 
     // renderer2d->render();
     

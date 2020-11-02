@@ -99,7 +99,7 @@ namespace graphics
 			// renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
 			// renderable->getVertexBuffer()->set(Mesh::VertexData::BufferLayout);
 			// renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
-			Renderable* renderable = m_api->createRenderable(batch.mesh);
+			Renderable* renderable = nullptr; // m_api->createRenderable(batch.mesh);
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
 
@@ -120,7 +120,7 @@ namespace graphics
 		{
 			BatchData newBatch;
 			static const unsigned int MaxQuads = 1000;
-			newBatch.renderable = m_api->createRenderable(MaxQuads * 4, MaxQuads * 6);
+			newBatch.renderable = nullptr; // m_api->createRenderable(MaxQuads * 4, MaxQuads * 6);
 			m_batches.push_back(newBatch);
 			m_batches[0].textures.push_back(texture);
 			return m_batches[0];
