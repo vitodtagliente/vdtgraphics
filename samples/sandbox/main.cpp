@@ -10,6 +10,7 @@ using namespace std;
 using namespace graphics;
 using namespace math;
 
+void init();
 void render_loop();
 API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
@@ -83,6 +84,8 @@ int main(void)
     wallImg.flipVertically();
     wallTexture = api->createTexture(wallImg);
 
+    init();
+
     /* Loop until the user closes the window */
     bool run = true;
     while (!glfwWindowShouldClose(window) && run)
@@ -111,21 +114,42 @@ int main(void)
     return 0;
 }
 
+VertexBuffer* vb;
+Material* mtb;
+
+void init()
+{
+    float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+     0.0f,  0.5f, 0.0f
+    };
+    vb = api->createVertexBuffer(sizeof(float) * 3, 3);
+    vb->update(vertices, 3);
+    vb->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
+
+    mtb = api->getMaterialLibrary().get(Material::Default::Name::Position);
+}
+
 void render_loop()
 {
     renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
 
-    for (int i = 0; i < 50; ++i)
-    {
-        renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-        renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    }
+    // for (int i = 0; i < 50; ++i)
+    // {
+    //     renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    //     renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    // }
     // renderer2d->drawTexture(batmanTexture, { 1.0f, 1.0f });
     // renderer2d->drawTexture(wallTexture, { -1.0f, 1.0f });
     // renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
     // renderer2d->drawCircle(Color::Green, {}, .4f);
 
-    renderer2d->render();
+    vb->bind();
+    mtb->bind();
+    api->draw(3);
+
+    // renderer2d->render();
     
 }

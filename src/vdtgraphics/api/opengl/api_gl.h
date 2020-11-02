@@ -26,8 +26,8 @@ namespace graphics
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) override;
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) override;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) override;
-		virtual VertexBuffer* const createVertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout) override;
-		virtual VertexBuffer* const createVertexBuffer(const std::size_t size) override;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices) override;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType) override;
 
 		virtual void enableAlpha(const bool enabled = true) override;
 		virtual void clear(const Color& color) override;

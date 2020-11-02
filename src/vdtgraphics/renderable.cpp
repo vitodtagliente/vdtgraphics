@@ -10,8 +10,8 @@ namespace graphics
 		, m_indexBuffer()
 	{
 		const std::vector<float>& vertices = mesh.getData();
-		m_vertexBuffer = api->createVertexBuffer(&vertices.front(), vertices.size(), sizeof(float) * vertices.size(), Mesh::VertexData::BufferLayout);
-		m_indexBuffer = api->createIndexBuffer(&mesh.indices.front(), mesh.indices.size());
+		// m_vertexBuffer = api->createVertexBuffer(&vertices.front(), vertices.size(), sizeof(float) * vertices.size(), Mesh::VertexData::BufferLayout);
+		// m_indexBuffer = api->createIndexBuffer(&mesh.indices.front(), mesh.indices.size());
 	}
 
 	Renderable::Renderable(API* const api, const std::size_t vertices, const std::size_t indices)

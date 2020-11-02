@@ -80,7 +80,7 @@ namespace graphics
 			Material* const materialInstance = material->createInstance();
 			materialInstance->set(Material::Default::Property::Color, color);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, transform);
-			//push(m_circle, materialInstance, transform);
+			// push(m_circle, materialInstance, transform);
 		}
 	}
 
@@ -95,10 +95,11 @@ namespace graphics
 	{
 		for (BatchData& batch : m_batches)
 		{
-			Renderable* const renderable = batch.renderable;
-			renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
-			renderable->getVertexBuffer()->set(Mesh::VertexData::BufferLayout);
-			renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
+			// Renderable* const renderable = batch.renderable;
+			// renderable->getVertexBuffer()->set(&batch.mesh.vertices.front(), batch.mesh.vertices.size() * sizeof(float));
+			// renderable->getVertexBuffer()->set(Mesh::VertexData::BufferLayout);
+			// renderable->getIndexBuffer()->set(&batch.mesh.indices.front(), batch.mesh.indices.size());
+			Renderable* renderable = m_api->createRenderable(batch.mesh);
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
 

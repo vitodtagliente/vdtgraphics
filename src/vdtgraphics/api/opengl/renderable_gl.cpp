@@ -45,7 +45,7 @@ namespace graphics
 
 		if (m_vertexBuffer == nullptr)
 		{
-			m_vertexBuffer = api->createVertexBuffer(vertices * sizeof(float));
+			m_vertexBuffer = api->createVertexBuffer(vertices * sizeof(float), vertices);
 		}
 		m_vertexBuffer->bind();
 		

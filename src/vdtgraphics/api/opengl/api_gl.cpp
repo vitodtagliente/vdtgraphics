@@ -90,14 +90,14 @@ namespace graphics
 		return new TextureGL(image, options);
 	}
 
-	VertexBuffer* const API_GL::createVertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout& layout)
+	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices)
 	{
-		return new VertexBufferGL(data, count, size, layout);
+		return new VertexBufferGL(vertexSize, vertices);
 	}
 
-	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t size)
+	VertexBuffer* const API_GL::createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType)
 	{
-		return new VertexBufferGL(size);
+		return new VertexBufferGL(vertexSize, vertices, usage, primitiveType);
 	}
 
 	void API_GL::enableAlpha(const bool enabled)
@@ -139,6 +139,30 @@ namespace graphics
 	const std::map<std::string, std::string>& API_GL::getDefaultShaderSources() const
 	{
 		static const std::map<std::string, std::string> sources = {
+
+		{ Material::Default::Name::Position, R"(
+			#shader vertex
+
+			#version 330 core
+
+			layout (location = 0) in vec3 aPos;
+
+			void main()
+			{
+				gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+			}
+
+			#shader fragment
+
+			#version 330 core
+
+			out vec4 FragColor;
+
+			void main()
+			{
+				FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+			} 	
+		)" },
 
 		{ Material::Default::Name::Color, R"(
 			#shader vertex

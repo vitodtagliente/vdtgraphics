@@ -45,6 +45,7 @@ namespace graphics
 		m_elements.clear();
 	}
 
+	/*
 	VertexBuffer::VertexBuffer(const std::size_t size)
 		: m_layout()
 		, m_count()
@@ -70,6 +71,7 @@ namespace graphics
 	{
 		m_layout = layout;
 	}
+	*/
 
 	IndexBuffer::IndexBuffer(const std::size_t size)
 		: m_type(BufferType::Dynamic)

@@ -71,8 +71,8 @@ namespace graphics
 		virtual Shader* const createShader(const Shader::Type type, const std::string& source) = 0;
 		virtual ShaderProgram* const createShaderProgram(const std::initializer_list<Shader*>& shaders) = 0;
 		virtual Texture* const createTexture(const Image& image, const Texture::Options& options = Texture::Options{}) = 0;
-		virtual VertexBuffer* const createVertexBuffer(const void* data, const unsigned int count, const std::size_t size, const BufferLayout & layout) = 0;
-		virtual VertexBuffer* const createVertexBuffer(const std::size_t size) = 0;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices) = 0;
+		virtual VertexBuffer* const createVertexBuffer(const std::size_t vertexSize, const unsigned int vertices, const VertexBuffer::UsageMode usage, const PrimitiveType primitiveType) = 0;
 
 		virtual void clear(const Color& color) = 0;
 		virtual void draw(const unsigned int vertices = 3) = 0;
