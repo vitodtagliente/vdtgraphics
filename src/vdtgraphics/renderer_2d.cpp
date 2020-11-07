@@ -120,9 +120,9 @@ namespace graphics
 		{
 			BatchData newBatch;
 			static const unsigned int MaxQuads = 1;
-			VertexBuffer* const vb = m_api->createVertexBuffer(sizeof(Mesh::VertexData), MaxQuads * 4);
+			VertexBuffer* const vb = m_api->createVertexBuffer(sizeof(Mesh::VertexData), MaxQuads * 4, BufferUsageMode::Dynamic, PrimitiveType::Triangles);
 			vb->update(Mesh::VertexData::BufferLayout);
-			IndexBuffer* const ib = m_api->createIndexBuffer(MaxQuads * 6);
+			IndexBuffer* const ib = m_api->createIndexBuffer(MaxQuads * 6, BufferUsageMode::Dynamic);
 			newBatch.renderable = m_api->createRenderable(vb, ib);
 			newBatch.textures.push_back(texture);
 

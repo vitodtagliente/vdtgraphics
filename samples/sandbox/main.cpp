@@ -7,9 +7,9 @@
 #include <vdtgraphics/meshes/quad.h>
 #include <vdtgraphics/api/opengl/opengl.h>
 #include <imgui.h>
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD 
-#include <examples/imgui_impl_glfw.h>
-#include <examples/imgui_impl_opengl3.h>
+// #define IMGUI_IMPL_OPENGL_LOADER_GLAD 
+// #include <examples/imgui_impl_glfw.h>
+// #include <examples/imgui_impl_opengl3.h>
 
 using namespace std;
 using namespace graphics;
@@ -71,11 +71,17 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-    // load GL
-    //gladLoadGL();
 
     api = API::Factory::get();
     api->startup();
+
+    // imgui init
+    // ImGui::CreateContext();
+    // ImGui::StyleColorsDark();
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // ImGui_ImplGlfw_InitForOpenGL(window, true);
+    // ImGui_ImplOpenGL3_Init("#version 330 core");
+
     api->enableAlpha(true);
     renderer2d = api->createRenderer2D();
 
@@ -121,6 +127,10 @@ int main(void)
 
     batmanImg.free();
 
+    // ImGui_ImplOpenGL3_Shutdown();
+    // ImGui_ImplGlfw_Shutdown();
+    // ImGui::DestroyContext();
+
     api->shutdown();
     glfwTerminate();
     return 0;
@@ -133,6 +143,14 @@ void init()
 
 void render_loop()
 {
+    // ImGui_ImplOpenGL3_NewFrame();
+    // ImGui_ImplGlfw_NewFrame();
+    // ImGui::NewFrame();
+    // 
+    // ImGui::Begin("Performance Viewer");
+    // ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    // ImGui::End();
+
     renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
     for (int i = 0; i < 50; ++i)
@@ -143,4 +161,6 @@ void render_loop()
 
     renderer2d->render();
     
+    // ImGui::Render();
+    // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
