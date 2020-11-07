@@ -115,29 +115,27 @@ int main(void)
     return 0;
 }
 
-VertexBuffer* vb, * vb1;
-IndexBuffer* ib;
-Material* mtb, *spriteMat;
-Renderable* quad, *triangle;
+Material* spriteMat;
+Renderable* quad;
 
 void init()
 { 
-    quad = api->createRenderable(Quad{});
+    static Quad s_quad{};
+    const std::vector<float>& vertices = s_quad.getData();
+
+    VertexBuffer* vb = api->createVertexBuffer(sizeof(Mesh::VertexData), 4);
+    vb->update(Mesh::VertexData::BufferLayout);
+    IndexBuffer* ib = api->createIndexBuffer(6);
+
+    //quad = api->createRenderable(Quad{});
+    quad = api->createRenderable(vb, ib);
+
     spriteMat = api->getMaterialLibrary().get(Material::Default::Name::Texture);
     spriteMat->set(Material::Default::Property::Textures, std::vector<Texture*>{ batmanTexture });
     spriteMat->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
-    // 
-    // // triangle
-    // float vertices[] = {
-    // -0.5f, -0.5f, 0.0f,
-    //  0.5f, -0.5f, 0.0f,
-    //  0.0f,  0.5f, 0.0f
-    // };
-    // vb = api->createVertexBuffer(sizeof(float) * 3, 3);
-    // vb->update(vertices, 3);
-    // vb->update({ BufferElement("position", BufferElement::Type::Float, 3, sizeof(float) * 3) });
 
-    mtb = api->getMaterialLibrary().get(Material::Default::Name::Position);
+    vb->update(&vertices.front(), s_quad.vertices.size());
+    ib->update(&s_quad.indices.front(), s_quad.indices.size());
 }
 
 void render_loop()
@@ -147,7 +145,7 @@ void render_loop()
 
     // for (int i = 0; i < 50; ++i)
     // {
-    //     renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    //     // renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
     //     renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
     // }
     // renderer2d->drawTexture(batmanTexture, { 1.0f, 1.0f });
@@ -162,7 +160,7 @@ void render_loop()
     // spriteMat->bind();
     // api->draw(quad);
 
-    renderer2d->drawTexture(batmanTexture, { 1.0f, 1.0f });
+    renderer2d->drawTexture(wallTexture, { 0.0f, 0.0f });
 
     renderer2d->render();
     
