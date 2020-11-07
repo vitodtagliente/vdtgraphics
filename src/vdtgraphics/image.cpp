@@ -18,34 +18,20 @@ namespace graphics
 
 	Image::Image(const Color& color, const unsigned int width, const unsigned int height)
 		: m_pixels()
-		, m_width()
-		, m_height()
+		, m_width(width)
+		, m_height(height)
 		, m_channels(4)
 
 	{
-		if (width && height)
+		const std::size_t size = static_cast<std::size_t>(width) * height * m_channels;
+		m_pixels.resize(size);
+
+		for (std::size_t i = 0; i < size; i += m_channels)
 		{
-			// Create a new pixel buffer first for exception safety's sake
-			std::vector<unsigned char> newPixels(static_cast<std::size_t>(width) * height * 4);
-
-			unsigned char r = static_cast<unsigned char>(color.getRed() * 255);
-			unsigned char g = static_cast<unsigned char>(color.getGreen() * 255);
-			unsigned char b = static_cast<unsigned char>(color.getBlue() * 255);
-			unsigned char a = static_cast<unsigned char>(color.getAlpha() * 255);
-
-			// Fill it with the specified color
-			unsigned char* ptr = &newPixels[0];
-			unsigned char* end = ptr + newPixels.size();
-			while (ptr < end)
-			{
-				*ptr++ = r;
-				*ptr++ = g;
-				*ptr++ = b;
-				*ptr++ = a;
-			}
-
-			// Commit the new pixel buffer
-			m_pixels.swap(newPixels);
+			m_pixels[i + 0] = static_cast<unsigned char>(color.getRed() * 255);
+			m_pixels[i + 1] = static_cast<unsigned char>(color.getGreen() * 255);
+			m_pixels[i + 2] = static_cast<unsigned char>(color.getBlue() * 255);
+			m_pixels[i + 3] = static_cast<unsigned char>(color.getAlpha() * 255);
 		}
 	}
 

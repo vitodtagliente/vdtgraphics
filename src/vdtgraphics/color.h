@@ -39,6 +39,8 @@ namespace graphics
 
 		std::string toString() const;
 
+		static Color random();
+
 		static const Color White;
 		static const Color Black;
 		static const Color Red;

@@ -4,10 +4,10 @@
 namespace graphics
 {
 	Color::Color()
-		: m_red()
-		, m_green()
-		, m_blue()
-		, m_alpha()
+		: m_red(1.0f)
+		, m_green(1.0f)
+		, m_blue(1.0f)
+		, m_alpha(1.0f)
 	{
 	}
 
@@ -106,13 +106,23 @@ namespace graphics
 			", a: " + std::to_string(m_alpha) + " }";
 	}
 
-	const Color Color::White(1.0f, 1.0f, 1.0f);
-	const Color Color::Black(0.0f, 0.0f, 0.0f);
-	const Color Color::Red(1.0f, 0.0f, 0.0f);
-	const Color Color::Green(0.0f, 1.0f, 0.0f);
-	const Color Color::Blue(0.0f, 0.0f, 1.0f);
-	const Color Color::Cyan(0.0f, 1.0f, 1.0f);
-	const Color Color::Yellow(1.0f, 1.0f, 0.0f);
-	const Color Color::Magenta(1.0f, 0.0f, 1.0f);
+	Color Color::random()
+	{
+		const auto RandomFloat = [](float min, float max)
+		{
+			float r = (float)rand() / (float)RAND_MAX;
+			return min + r * (max - min);
+		};
+		return Color(RandomFloat(0.0f, 1.0f), RandomFloat(0.0f, 1.0f), RandomFloat(0.0f, 1.0f));
+	}
+
+	const Color Color::White(1.0f, 1.0f, 1.0f, 1.0f);
+	const Color Color::Black(0.0f, 0.0f, 0.0f, 1.0f);
+	const Color Color::Red(1.0f, 0.0f, 0.0f, 1.0f);
+	const Color Color::Green(0.0f, 1.0f, 0.0f, 1.0f);
+	const Color Color::Blue(0.0f, 0.0f, 1.0f, 1.0f);
+	const Color Color::Cyan(0.0f, 1.0f, 1.0f, 1.0f);
+	const Color Color::Yellow(1.0f, 1.0f, 0.0f, 1.0f);
+	const Color Color::Magenta(1.0f, 0.0f, 1.0f, 1.0f);
 	const Color Color::Transparent(0.0f, 0.0f, 0.0f, 0.0f);
 }
