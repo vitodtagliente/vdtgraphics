@@ -102,7 +102,7 @@ GLAPI int gladLoadGLES2Loader(GLADloadproc);
 GLAPI int gladLoadGLES1Loader(GLADloadproc);
 
 #include <stddef.h>
-#include "khrplatform.h"
+#include <KHR/khrplatform.h>
 #ifndef GLEXT_64_TYPES_DEFINED
 /* This code block is duplicated in glxext.h, so must be protected */
 #define GLEXT_64_TYPES_DEFINED

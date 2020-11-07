@@ -25,14 +25,21 @@ foreach(_source IN ITEMS ${PROJECT_SOURCES})
     source_group("${_group_path}" FILES "${_source}")
 endforeach()
 
+file(GLOB VENDORS_SOURCES 
+	vendor/glad/src/glad.c
+)
+source_group("Vendors" FILES ${VENDORS_SOURCES})
+
 add_library(
     ${PROJECT_NAME} 
 	STATIC
+	${VENDORS_SOURCES}
     ${PROJECT_SOURCES}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
 	src/
+    vendor/glad/include/
 )
 
 if(NOT TARGET glfw)

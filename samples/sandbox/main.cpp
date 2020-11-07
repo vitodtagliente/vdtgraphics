@@ -6,6 +6,10 @@
 #include <vdtmath/math.h>
 #include <vdtgraphics/meshes/quad.h>
 #include <vdtgraphics/api/opengl/opengl.h>
+#include <imgui.h>
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD 
+#include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
 
 using namespace std;
 using namespace graphics;
@@ -86,6 +90,13 @@ int main(void)
     wallTexture = api->createTexture(wallImg);
 
     init();
+
+    glfwSetFramebufferSizeCallback(window, 
+        [](GLFWwindow*, int width, int height) 
+        {
+            glViewport(0, 0, width, height);
+        }
+    );
 
     /* Loop until the user closes the window */
     bool run = true;

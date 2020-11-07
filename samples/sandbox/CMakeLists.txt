@@ -7,18 +7,28 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(
     . 
+	../../vendor/imgui
 )
 
 file(GLOB PROJECT_HEADERS "*.h") 
 file(GLOB PROJECT_SOURCES "*.cpp")
+file(GLOB VENDORS_SOURCES 
+	../../vendor/imgui/examples/imgui_impl_glfw.cpp
+	../../vendor/imgui/examples/imgui_impl_opengl3.cpp
+	../../vendor/imgui/imgui.cpp
+	../../vendor/imgui/imgui_draw.cpp
+	../../vendor/imgui/imgui_widgets.cpp
+) 
 
 source_group("Headers" FILES ${PROJECT_HEADERS})
 source_group("Sources" FILES ${PROJECT_SOURCES})
+source_group("Vendors" FILES ${VENDORS_SOURCES})
 
 add_executable(
     ${PROJECT_NAME} 
     ${PROJECT_HEADERS}
     ${PROJECT_SOURCES} 
+    ${VENDORS_SOURCES}
 )
 
 target_link_libraries(
