@@ -2,11 +2,13 @@
 
 #include <vdtgraphics/api.h>
 #include <vdtgraphics/buffer.h>
-#include <vdtgraphics/renderable.h>
+#include <vdtgraphics/image.h>
 #include <vdtgraphics/material.h>
 #include <vdtgraphics/mesh.h>
 #include <vdtgraphics/meshes/circle.h>
 #include <vdtgraphics/meshes/quad.h>
+#include <vdtgraphics/renderable.h>
+#include <vdtgraphics/texture.h>
 
 namespace graphics
 {
@@ -14,7 +16,10 @@ namespace graphics
 		: Renderer(api)
 		, m_textureUnits(api->getTextureUnits())
 		, m_batches()
+		, m_whiteTexture()
 	{
+		Image whiteImage(Color::White, 1, 1);
+		m_whiteTexture = api->createTexture(whiteImage);
 	}
 
 	Renderer2D::~Renderer2D()
@@ -23,14 +28,14 @@ namespace graphics
 		{
 			delete batch.renderable;
 		}
+		delete m_whiteTexture;
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position)
 	{
-		drawRect(
-			color,
-			matrix4::translate(to_vec3(position))
-		);
+		unsigned int textureIndex;
+		BatchData& batch = findCandidateBatch(m_whiteTexture, textureIndex);
+		addQuad(batch, position, color, textureIndex);
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position, const vector2& scale)
@@ -149,13 +154,13 @@ namespace graphics
 	{
 		const unsigned int start_index = static_cast<unsigned int>(batch.mesh.vertices.size());
 		//  top right
-		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, color, { 1.0f, 1.0f }, textureIndex });
 		// bottom right
-		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0, 0.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, color, { 1.0, 0.0f }, textureIndex });
 		// bottom left
-		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 0.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, color, { 0.0, 0.0f }, textureIndex });
 		// top left
-		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0, 1.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, color, { 0.0, 1.0f }, textureIndex });
 
 		batch.mesh.indices.push_back(start_index + 0);
 		batch.mesh.indices.push_back(start_index + 1);

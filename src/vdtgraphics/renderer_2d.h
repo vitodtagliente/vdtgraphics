@@ -48,5 +48,6 @@ namespace graphics
 
 		unsigned int m_textureUnits;
 		std::vector<BatchData> m_batches;
+		Texture* m_whiteTexture;
 	};
 }

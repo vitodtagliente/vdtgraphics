@@ -159,6 +159,8 @@ void render_loop()
         renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
     }
 
+    renderer2d->drawRect(Color::Green, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+
     renderer2d->render();
     
     // ImGui::Render();
