@@ -115,52 +115,20 @@ int main(void)
     return 0;
 }
 
-Material* spriteMat;
-Renderable* quad;
-
 void init()
 { 
-    static Quad s_quad{};
-    const std::vector<float>& vertices = s_quad.getData();
-
-    VertexBuffer* vb = api->createVertexBuffer(sizeof(Mesh::VertexData), 4);
-    vb->update(Mesh::VertexData::BufferLayout);
-    IndexBuffer* ib = api->createIndexBuffer(6);
-
-    //quad = api->createRenderable(Quad{});
-    quad = api->createRenderable(vb, ib);
-
-    spriteMat = api->getMaterialLibrary().get(Material::Default::Name::Texture);
-    spriteMat->set(Material::Default::Property::Textures, std::vector<Texture*>{ batmanTexture });
-    spriteMat->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
-
-    vb->update(&vertices.front(), s_quad.vertices.size());
-    ib->update(&s_quad.indices.front(), s_quad.indices.size());
+    
 }
 
 void render_loop()
 {
     renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
-
-    // for (int i = 0; i < 50; ++i)
-    // {
-    //     // renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    //     renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    // }
-    // renderer2d->drawTexture(batmanTexture, { 1.0f, 1.0f });
-    // renderer2d->drawTexture(wallTexture, { -1.0f, 1.0f });
-    // renderer2d->drawRect(Color::Red, { -.3f, -.3f }, { .2f, .4f });
-    // renderer2d->drawCircle(Color::Green, {}, .4f);
-
-    // vb1->bind();
-    // mtb->bind();
-    // api->draw(vb1);
-
-    // spriteMat->bind();
-    // api->draw(quad);
-
-    renderer2d->drawTexture(wallTexture, { 0.0f, 0.0f });
+    for (int i = 0; i < 50; ++i)
+    {
+        renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+        renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    }
 
     renderer2d->render();
     

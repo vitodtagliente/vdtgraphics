@@ -21,6 +21,13 @@ namespace graphics
 	{
 	public:
 
+		struct Stats
+		{
+			unsigned int drawCalls;
+
+			void clear();
+		};
+
 		// dependency injection
 		Renderer(API* const api);
 		virtual ~Renderer() = default;
@@ -34,11 +41,15 @@ namespace graphics
 
 		void clear(const Color& color);
 
+		inline const Stats& getStats() const { return m_stats; }
+
 	protected:
 
 		// graphics API
 		API* m_api;
 		// command buffer
 		CommandBuffer m_commandBuffer;
+		// stats
+		Stats m_stats;
 	};
 }

@@ -8,6 +8,7 @@ namespace graphics
 	Renderer::Renderer(API* const api)
 		: m_api(api)
 		, m_commandBuffer()
+		, m_stats()
 	{
 	}
 
@@ -22,18 +23,28 @@ namespace graphics
 
 	void Renderer::render()
 	{
+		m_stats.clear();
+
 		for (RenderCommand& command : m_commandBuffer)
 		{
 			command.material->bind();
 			m_api->draw(command.renderable);
 
 			command.free();
+
+			++m_stats.drawCalls;
 		}
+
 		m_commandBuffer.clear();
 	}
 
 	void Renderer::clear(const Color& color)
 	{
 		m_api->clear(color);
+	}
+	
+	void Renderer::Stats::clear()
+	{
+		drawCalls = 0;
 	}
 }

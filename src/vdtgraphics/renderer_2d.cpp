@@ -97,8 +97,8 @@ namespace graphics
 		{
 			Renderable* renderable = batch.renderable;
 			const std::vector<float>& vertices = batch.mesh.getData();
-			renderable->getVertexBuffer()->update(&vertices.front(), batch.mesh.vertices.size());
-			renderable->getIndexBuffer()->update(&batch.mesh.indices.front(), batch.mesh.indices.size());
+			renderable->getVertexBuffer()->update(&vertices.front(), static_cast<unsigned int>(batch.mesh.vertices.size()));
+			renderable->getIndexBuffer()->update(&batch.mesh.indices.front(), static_cast<unsigned int>(batch.mesh.indices.size()));
 
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
@@ -140,7 +140,7 @@ namespace graphics
 			}
 		}
 
-		textureIndex = batch.textures.size();
+		textureIndex = static_cast<unsigned int>(batch.textures.size());
 		batch.textures.push_back(texture);
 		return batch;
 	}
