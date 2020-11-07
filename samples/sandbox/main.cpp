@@ -47,6 +47,9 @@ void showFPS(GLFWwindow* pWindow)
 
         nbFrames = 0;
         lastTime = currentTime;
+
+        const Renderer::Stats& stats = renderer2d->getStats();
+        cout << "DrawCalls: " << stats.drawCalls << endl;
     }
 }
 
@@ -153,7 +156,7 @@ void render_loop()
 
     renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 200; ++i)
     {
         renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
         renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
