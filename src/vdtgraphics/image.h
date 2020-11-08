@@ -22,6 +22,7 @@ namespace graphics
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
 		inline unsigned int getChannels() const { return m_channels; }
+		inline const std::string& getAssetName() const { return m_assetName; }
 
 		Image& operator=(const Image& image);
 
@@ -42,5 +43,7 @@ namespace graphics
 		unsigned int m_height;
 		// num of components
 		unsigned int m_channels;
+		// assetname
+		std::string m_assetName;
 	};
 }

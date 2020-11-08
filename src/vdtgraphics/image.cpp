@@ -13,6 +13,7 @@ namespace graphics
 		, m_width()
 		, m_height()
 		, m_channels(4)
+		, m_assetName()
 	{
 	}
 
@@ -21,6 +22,7 @@ namespace graphics
 		, m_width(width)
 		, m_height(height)
 		, m_channels(4)
+		, m_assetName()
 
 	{
 		const std::size_t size = static_cast<std::size_t>(width) * height * m_channels;
@@ -40,6 +42,7 @@ namespace graphics
 		, m_width(width)
 		, m_height(height)
 		, m_channels(channels)
+		, m_assetName()
 	{
 		m_pixels.resize(static_cast<std::size_t>(width) * height * channels);
 		std::memcpy(&m_pixels[0], data, m_pixels.size());
@@ -50,6 +53,7 @@ namespace graphics
 		, m_width(image.m_width)
 		, m_height(image.m_height)
 		, m_channels(image.m_channels)
+		, m_assetName()
 	{
 	}
 
@@ -64,6 +68,7 @@ namespace graphics
 		m_width = image.m_width;
 		m_height = image.m_height;
 		m_channels = image.m_channels;
+		m_assetName = image.m_assetName;
 
 		return *this;
 	}
@@ -86,6 +91,7 @@ namespace graphics
 			image.m_width = width;
 			image.m_height = height;
 			image.m_channels = channels;
+			image.m_assetName = filename;
 
 			stbi_image_free(data);
 

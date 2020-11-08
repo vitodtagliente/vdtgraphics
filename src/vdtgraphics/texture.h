@@ -37,6 +37,7 @@ namespace graphics
 
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
+		inline const std::string& getAssetName() const { return m_assetName; }
 
 		virtual void bind() = 0;
 		virtual void bind(const unsigned int slot) = 0;
@@ -62,5 +63,7 @@ namespace graphics
 		id_t m_id;
 		// texture size
 		unsigned int m_width, m_height;
+		// asset name
+		std::string m_assetName;
 	};
 }

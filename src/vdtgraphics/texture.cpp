@@ -13,6 +13,7 @@ namespace graphics
 		: m_id(INVALID_ID)
 		, m_width(image.getWidth())
 		, m_height(image.getHeight())
+		, m_assetName(image.getAssetName())
 	{
 
 	}

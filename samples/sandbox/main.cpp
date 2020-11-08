@@ -19,7 +19,7 @@ void init();
 void render_loop();
 API* api = nullptr;
 Renderer2D* renderer2d = nullptr;
-Texture* batmanTexture = nullptr, * wallTexture = nullptr;
+Texture* batmanTexture = nullptr, * wallTexture = nullptr, * catTexture = nullptr;
 
 float RandomFloat(float min, float max)
 {
@@ -89,14 +89,19 @@ int main(void)
     renderer2d = api->createRenderer2D();
 
     Image batmanImg;
-    Image::load("batman_logo.png", batmanImg);
+    Image::load("../../../assets/batman_logo.png", batmanImg);
     batmanImg.flipVertically();
     batmanTexture = api->createTexture(batmanImg);
 
     Image wallImg;
-    Image::load("texture_atlas.png", wallImg);
+    Image::load("../../../assets/texture_atlas.png", wallImg);
     wallImg.flipVertically();
     wallTexture = api->createTexture(wallImg);
+
+    Image catImg;
+    Image::load("../../../assets/cat.gif", catImg);
+    catImg.flipVertically();
+    catTexture = api->createTexture(catImg);
 
     init();
 
