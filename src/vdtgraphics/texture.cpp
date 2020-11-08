@@ -2,6 +2,8 @@
 
 namespace graphics
 {	
+	const Texture::Coords Texture::Coords::Default{};
+
 	Texture::Options::Options()
 		: wrapS(0)
 		, wrapT(0)

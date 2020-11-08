@@ -35,7 +35,7 @@ namespace graphics
 	{
 		unsigned int textureIndex;
 		BatchData& batch = findCandidateBatch(m_whiteTexture, textureIndex);
-		addQuad(batch, position, color, Texture::Coords{}, textureIndex);
+		addQuad(batch, position, color, Texture::Coords::Default, textureIndex);
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position, const vector2& scale)
@@ -93,7 +93,7 @@ namespace graphics
 	{
 		unsigned int textureIndex;
 		BatchData& batch = findCandidateBatch(texture, textureIndex);
-		addQuad(batch, position, Color::White, Texture::Coords{}, textureIndex);
+		addQuad(batch, position, Color::White, Texture::Coords::Default, textureIndex);
 	}
 
 	void Renderer2D::drawTexture(Texture* const texture, const Texture::Coords& texCoords, const vector2& position)

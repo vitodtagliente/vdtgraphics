@@ -39,6 +39,8 @@ namespace graphics
 			const vector2& getMin() const { return m_min; }
 			const vector2& getMax() const { return m_max; }
 
+			static const Coords Default;
+
 		private:
 			vector2 m_min;
 			vector2 m_max;
