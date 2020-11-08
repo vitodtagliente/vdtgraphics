@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "mesh.h"
 #include "renderer.h"
 #include <vdtmath/vector2.h>
 #include <vdtmath/matrix4.h>
-#include "mesh.h"
 
 namespace graphics
 {

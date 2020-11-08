@@ -156,7 +156,7 @@ void render_loop()
 
     renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
 
-    for (int i = 0; i < 200; ++i)
+    for (int i = 0; i < 20; ++i)
     {
         renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
         renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });

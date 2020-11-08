@@ -207,7 +207,7 @@ namespace graphics
 			}			
 		)" },
 
-		{ Material::Default::Name::Texture, R"(
+		{ Material::Default::Name::Spritebatch, R"(
 			#shader vertex
 
 			#version 330 core

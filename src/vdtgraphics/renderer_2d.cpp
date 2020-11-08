@@ -108,7 +108,7 @@ namespace graphics
 			batch.mesh.vertices.clear();
 			batch.mesh.indices.clear();
 
-			Material* materialInstance = m_api->getMaterialLibrary().get(Material::Default::Name::Texture)->createInstance();
+			Material* materialInstance = m_api->getMaterialLibrary().get(Material::Default::Name::Spritebatch)->createInstance();
 			materialInstance->set(Material::Default::Property::Textures, batch.textures);
 			materialInstance->set(Material::Default::Property::ModelViewProjectionMatrix, math::matrix4::identity);
 

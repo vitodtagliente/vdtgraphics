@@ -97,7 +97,7 @@ namespace graphics
 			{
 				static const std::string Position;
 				static const std::string Color;
-				static const std::string Texture;
+				static const std::string Spritebatch;
 				static const std::string CroppedTexture;
 			};
 

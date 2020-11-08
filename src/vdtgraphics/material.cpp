@@ -7,7 +7,7 @@ namespace graphics
 {
 	const std::string Material::Default::Name::Position = "position";
 	const std::string Material::Default::Name::Color = "color";
-	const std::string Material::Default::Name::Texture = "texture";
+	const std::string Material::Default::Name::Spritebatch = "texture";
 	const std::string Material::Default::Name::CroppedTexture = "cropped_texture";
 
 	const std::string Material::Default::Property::ModelViewProjectionMatrix = "u_ModelViewProjectionMatrix";
