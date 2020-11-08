@@ -4,6 +4,9 @@
 
 #include "image.h"
 #include "graphic_resource.h"
+#include <vdtmath/vector2.h>
+
+using namespace math;
 
 namespace graphics
 {
@@ -25,6 +28,20 @@ namespace graphics
 			unsigned int filterMin;
 			// Filtering mode if texture pixels > screen pixels
 			unsigned int filterMax;
+		};
+
+		class Coords
+		{
+		public:
+			Coords();
+			Coords(const vector2& min, const vector2& max);
+
+			const vector2& getMin() const { return m_min; }
+			const vector2& getMax() const { return m_max; }
+
+		private:
+			vector2 m_min;
+			vector2 m_max;
 		};
 
 		Texture(const Image& image, const Options& options = Options{});

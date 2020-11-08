@@ -29,16 +29,17 @@ float RandomFloat(float min, float max)
 
 int nbFrames = 0;
 double lastTime = 0;
+double deltaTime = 0;
 void showFPS(GLFWwindow* pWindow)
 {
     // Measure speed
     double currentTime = glfwGetTime();
-    double delta = currentTime - lastTime;
+    deltaTime = currentTime - lastTime;
     nbFrames++;
-    if (delta >= 1.0) { // If last cout was more than 1 sec ago
+    if (deltaTime >= 1.0) { // If last cout was more than 1 sec ago
         cout << 1000.0 / double(nbFrames) << endl;
 
-        int fps = double(nbFrames) / delta;
+        int fps = double(nbFrames) / deltaTime;
 
         std::stringstream ss;
         ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS]";
@@ -149,8 +150,22 @@ void init()
     
 }
 
+int i = 0;
+float AnimationTime = 60.0f;
+float time = AnimationTime;
 void render_loop()
 {
+    time -= deltaTime;
+    if (time <= 0.0f)
+    {
+        i++;
+        time = AnimationTime;
+        if (i > 4)
+        {
+            i = 1;
+        }
+    }
+
     // ImGui_ImplOpenGL3_NewFrame();
     // ImGui_ImplGlfw_NewFrame();
     // ImGui::NewFrame();
@@ -159,14 +174,18 @@ void render_loop()
     // ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     // ImGui::End();
 
-    renderer2d->clear(Color(0.1f, 0.0f, 0.1, 1.0f));
+    renderer2d->clear(Color(0.0f, 0.0f, 0.2, 1.0f));
 
-    for (int i = 0; i < 20; ++i)
-    {
-        renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-        renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-        renderer2d->drawRect(Color::random(), { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    }
+    // for (int i = 0; i < 20; ++i)
+    // {
+    //     renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    //     renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    //     renderer2d->drawRect(Color::random(), { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
+    // }
+
+    float start = i * 0.20f;
+    Texture::Coords coords({start, 0.0f}, { 0.20f, 1.0f });
+    renderer2d->drawTexture(catTexture, coords, vector2::zero);
 
     renderer2d->render();
     

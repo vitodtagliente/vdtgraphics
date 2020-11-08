@@ -4,8 +4,10 @@
 
 #include "mesh.h"
 #include "renderer.h"
-#include <vdtmath/vector2.h>
+#include "texture.h"
 #include <vdtmath/matrix4.h>
+#include <vdtmath/rectangle.h>
+#include <vdtmath/vector2.h>
 
 namespace graphics
 {
@@ -31,6 +33,7 @@ namespace graphics
 		void drawCircle(const Color& color, const vector2& position, const float radius);
 
 		void drawTexture(Texture* const texture, const vector2& position);
+		void drawTexture(Texture* const texture, const Texture::Coords& texCoords, const vector2& position);
 
 		virtual void render() override;
 
@@ -44,7 +47,7 @@ namespace graphics
 		};
 
 		BatchData& findCandidateBatch(Texture* const texture, unsigned int& textureIndex);
-		void addQuad(BatchData& batch, const vector2& position, const Color& color, const unsigned int textureIndex);
+		void addQuad(BatchData& batch, const vector2& position, const Color& color, const Texture::Coords& texCoords, const unsigned int textureIndex);
 
 		unsigned int m_textureUnits;
 		std::vector<BatchData> m_batches;

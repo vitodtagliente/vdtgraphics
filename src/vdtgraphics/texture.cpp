@@ -22,4 +22,16 @@ namespace graphics
 	{
 
 	}
+
+	Texture::Coords::Coords()
+		: m_min()
+		, m_max(1.0f, 1.0f)
+	{
+	}
+
+	Texture::Coords::Coords(const vector2& min, const vector2& max)
+		: m_min(std::max(0.0f, min.x), std::max(0.0f, min.y))
+		, m_max(std::min(1.0f, max.x), std::min(1.0f, max.y))
+	{
+	}
 }

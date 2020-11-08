@@ -35,7 +35,7 @@ namespace graphics
 	{
 		unsigned int textureIndex;
 		BatchData& batch = findCandidateBatch(m_whiteTexture, textureIndex);
-		addQuad(batch, position, color, textureIndex);
+		addQuad(batch, position, color, Texture::Coords{}, textureIndex);
 	}
 
 	void Renderer2D::drawRect(const Color& color, const vector2& position, const vector2& scale)
@@ -93,7 +93,14 @@ namespace graphics
 	{
 		unsigned int textureIndex;
 		BatchData& batch = findCandidateBatch(texture, textureIndex);
-		addQuad(batch, position, Color::White, textureIndex);
+		addQuad(batch, position, Color::White, Texture::Coords{}, textureIndex);
+	}
+
+	void Renderer2D::drawTexture(Texture* const texture, const Texture::Coords& texCoords, const vector2& position)
+	{
+		unsigned int textureIndex;
+		BatchData& batch = findCandidateBatch(texture, textureIndex);
+		addQuad(batch, position, Color::White, texCoords, textureIndex);
 	}
 
 	void Renderer2D::render()
@@ -150,17 +157,19 @@ namespace graphics
 		return batch;
 	}
 
-	void Renderer2D::addQuad(BatchData& batch, const vector2& position, const Color& color, const unsigned int textureIndex)
+	void Renderer2D::addQuad(BatchData& batch, const vector2& position, const Color& color, const Texture::Coords& texCoords, const unsigned int textureIndex)
 	{
 		const unsigned int start_index = static_cast<unsigned int>(batch.mesh.vertices.size());
+
+		const vector2& max = texCoords.getMin() + texCoords.getMax();
 		//  top right
-		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, color, { 1.0f, 1.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y + 1.0f, 0.0f }, color, max, textureIndex });
 		// bottom right
-		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, color, { 1.0, 0.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x + 1.0f, position.y - 1.0f, 0.0f }, color, { max.x, texCoords.getMin().y }, textureIndex });
 		// bottom left
-		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, color, { 0.0, 0.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y - 1.0f, 0.0f }, color, texCoords.getMin(), textureIndex });
 		// top left
-		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, color, { 0.0, 1.0f }, textureIndex });
+		batch.mesh.vertices.push_back({ { position.x - 1.0f, position.y + 1.0f, 0.0f }, color, { texCoords.getMin().x, max.y }, textureIndex });
 
 		batch.mesh.indices.push_back(start_index + 0);
 		batch.mesh.indices.push_back(start_index + 1);
