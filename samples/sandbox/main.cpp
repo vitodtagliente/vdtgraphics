@@ -152,14 +152,14 @@ void init()
 
 int i = 0;
 float AnimationTime = 60.0f;
-float time = AnimationTime;
+float t = AnimationTime;
 void render_loop()
 {
-    time -= deltaTime;
-    if (time <= 0.0f)
+    t -= deltaTime;
+    if (t <= 0.0f)
     {
         i++;
-        time = AnimationTime;
+        t = AnimationTime;
         if (i > 4)
         {
             i = 1;
