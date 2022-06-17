@@ -1,58 +1,64 @@
 /// Copyright (c) Vito Domenico Tagliente
 #pragma once
 
+#include <string>
 #include <vector>
-#include <vdtmath/matrix4.h>
 
-#include <awesome/core/singleton.h>
+#include <vdtmath/vector3.h>
 
 #include "color.h"
-#include "gizmos.h"
+#include "polygon_batch.h"
+#include "shader_library.h"
 #include "sprite_batch.h"
-#include "texture_rect.h"
 
 namespace graphics
 {
-	class Command;
-	class Context;
-	class Texture;
+	class ShaderProgram;
 
-	class Renderer : public Singleton<Renderer>
+	class Renderer
 	{
 	public:
-
-		struct Stats
+		struct Settings
 		{
-			Stats();
-
-			int drawCalls;
+			size_t polygonBatchSize{ 2000 };
+			size_t spriteBatchSize{ 2000 };
 		};
 
-		Renderer();
+		enum class StyleType
+		{
+			fill,
+			stroke
+		};
+
+		Renderer(int width, int height, const Settings& settings = {});
 
 		void begin();
 		void flush();
-		void clear();
 
-		void setProjection(const math::mat4& matrix);
-		void setView(const math::mat4& matrix);
-		const math::mat4& getProjection() const;
-		const math::mat4& getView() const;
-		const math::mat4& getViewProjectionMatrix() const;
+		void setClearColor(const Color& color);
+		const Color& getClearColor() const { return m_clearColor; }
 
-		void drawSprite(Texture* const texture, const math::mat4& matrix, const TextureRect& rect = {}, const Color& color = Color::White);
+		void setViewport(int width, int height);
 
-		Color backgroundColor;
+		void setStyle(StyleType style);
+		StyleType getStyle() const { return m_style; }
 
-		inline Gizmos& getGizmos() { return m_gizmos; }
-		inline const Stats& getStats() const { return m_stats; }
+		void drawCircle(const math::vec3& position, float radius, const Color& color);
+		void drawLine(const math::vec3& p1, const Color& c1, const math::vec3& p2, const Color& c2);
+		void drawPoint(const math::vec3& position, const Color& color);
+		void drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points);
+		void drawRect(const math::vec3& position, float width, float height, const Color& color);
+
 
 	private:
-		Context& m_context;
-		Gizmos m_gizmos;
-		SpriteBatch m_spriteBatch;
-		std::vector<Command*> m_commands;
-		Stats m_stats;
+		ShaderProgram* const createProgram(const std::string& name);
 
+		int m_width, m_height;
+		Color m_clearColor;
+		PolygonBatch m_fillPolygonBatch;
+		ShaderLibrary m_shaderLibrary;
+		SpriteBatch m_spriteBatch;
+		PolygonBatch m_strokePolygonBatch;
+		StyleType m_style;
 	};
 }

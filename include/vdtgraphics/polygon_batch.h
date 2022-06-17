@@ -8,12 +8,10 @@
 
 namespace graphics
 {
-#define DEFAULT_GIZMOS_BATCH_SIZE 2000
-
-	class GizmosBatch
+	class PolygonBatch
 	{
 	public:
-		GizmosBatch(size_t batchSize = DEFAULT_GIZMOS_BATCH_SIZE);
+		PolygonBatch(size_t batchSize);
 
 		void batch(const math::vec3& position, const Color& color);
 		void flush(class Context* const context);
@@ -23,7 +21,7 @@ namespace graphics
 		class Batch
 		{
 		public:
-			Batch(size_t size = DEFAULT_GIZMOS_BATCH_SIZE);
+			Batch(size_t size);
 
 			inline bool empty() const { return count == 0; }
 			inline bool full() const { return count >= size; }

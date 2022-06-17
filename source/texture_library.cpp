@@ -1,4 +1,4 @@
-#include "texture_library.h"
+#include <vdtgraphics/texture_library.h>
 
 #include <awesome/asset/asset_library.h>
 #include <awesome/asset/image_asset.h>
