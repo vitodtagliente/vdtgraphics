@@ -18,8 +18,8 @@ void render_loop();
 
 float RandomFloat(float min, float max)
 {
-    float r = (float)rand() / (float)RAND_MAX;
-    return min + r * (max - min);
+	float r = (float)rand() / (float)RAND_MAX;
+	return min + r * (max - min);
 }
 
 int nbFrames = 0;
@@ -27,114 +27,134 @@ double lastTime = 0;
 double deltaTime = 0;
 void showFPS(GLFWwindow* pWindow)
 {
-    // Measure speed
-    double currentTime = glfwGetTime();
-    deltaTime = currentTime - lastTime;
-    nbFrames++;
-    if (deltaTime >= 1.0) { // If last cout was more than 1 sec ago
-        // cout << 1000.0 / double(nbFrames) << endl;
+	// Measure speed
+	double currentTime = glfwGetTime();
+	deltaTime = currentTime - lastTime;
+	nbFrames++;
+	if (deltaTime >= 1.0) { // If last cout was more than 1 sec ago
+		// cout << 1000.0 / double(nbFrames) << endl;
 
-        int fps = double(nbFrames) / deltaTime;
+		int fps = double(nbFrames) / deltaTime;
 
-        std::stringstream ss;
-        ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS]";
+		std::stringstream ss;
+		ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS]";
 
-        glfwSetWindowTitle(pWindow, ss.str().c_str());
+		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
-        nbFrames = 0;
-        lastTime = currentTime;
-    }
+		nbFrames = 0;
+		lastTime = currentTime;
+	}
 }
 
 Renderer* renderer = nullptr;
 
 int main(void)
 {
-    GLFWwindow* window;
+	GLFWwindow* window;
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+	/* Initialize the library */
+	if (!glfwInit())
+		return -1;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
+	/* Create a windowed mode window and its OpenGL context */
+	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+	/* Make the window's context current */
+	glfwMakeContextCurrent(window);
 
-    renderer = new Renderer(640, 480);
-    renderer->init();
+	renderer = new Renderer(640, 480);
+	renderer->init();
 
-    // imgui init
-    // ImGui::CreateContext();
-    // ImGui::StyleColorsDark();
-    // ImGuiIO& io = ImGui::GetIO(); (void)io;
-    // ImGui_ImplGlfw_InitForOpenGL(window, true);
-    // ImGui_ImplOpenGL3_Init("#version 330 core");
+	// imgui init
+	// ImGui::CreateContext();
+	// ImGui::StyleColorsDark();
+	// ImGuiIO& io = ImGui::GetIO(); (void)io;
+	// ImGui_ImplGlfw_InitForOpenGL(window, true);
+	// ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    init();
+	init();
 
-    glfwSetFramebufferSizeCallback(window, 
-        [](GLFWwindow*, int width, int height) 
-        {
-            glViewport(0, 0, width, height);
-        }
-    );
+	glfwSetFramebufferSizeCallback(window,
+		[](GLFWwindow*, int width, int height)
+		{
+			glViewport(0, 0, width, height);
+		}
+	);
 
-    /* Loop until the user closes the window */
-    bool run = true;
-    while (!glfwWindowShouldClose(window) && run)
-    {
-        // display the FPS
-        showFPS(window);
+	/* Loop until the user closes the window */
+	bool run = true;
+	while (!glfwWindowShouldClose(window) && run)
+	{
+		// display the FPS
+		showFPS(window);
 
-        // render logic
-        render_loop();
+		// render logic
+		render_loop();
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
 
-    // ImGui_ImplOpenGL3_Shutdown();
-    // ImGui_ImplGlfw_Shutdown();
-    // ImGui::DestroyContext();
+	// ImGui_ImplOpenGL3_Shutdown();
+	// ImGui_ImplGlfw_Shutdown();
+	// ImGui::DestroyContext();
 
-    glfwTerminate();
-    return 0;
+	glfwTerminate();
+	return 0;
 }
 
 void init()
-{ 
-    renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
+{
+	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 }
 
 void render_loop()
 {
-    // ImGui_ImplOpenGL3_NewFrame();
-    // ImGui_ImplGlfw_NewFrame();
-    // ImGui::NewFrame();
-    // 
-    // ImGui::Begin("Performance Viewer");
-    // ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    // ImGui::End();
+	// ImGui_ImplOpenGL3_NewFrame();
+	// ImGui_ImplGlfw_NewFrame();
+	// ImGui::NewFrame();
+	// 
+	// ImGui::Begin("Performance Viewer");
+	// ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	// ImGui::End();
 
-    renderer->begin();
+	renderer->begin();
 
-    renderer->drawLine(math::vec3(-1.f, 0.f, 0.f), Color::Red, math::vec3(1.f, 0.f, 0.f), Color::Green);
+	for (int i = 0; i < 100; ++i)
+	{
+		const float angle = math::random(0.f, 360.f);
 
-    renderer->flush();
-    
-    // ImGui::Render();
-    // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		renderer->drawLine(math::vec3(-1.f, 0.f, 0.f), Color::Red, math::vec3(1.f, 0.f, 0.f), Color::Green);
+	}
+
+	static const int accuracy = 100;
+	static const float radius = 1.f;
+	const float step = (2 * math::pi) / accuracy;
+	float angle = 0.0f;
+	for (int i = 0; i < accuracy; ++i)
+	{
+		renderer->drawLine(
+			math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
+			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f)),
+			math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
+			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
+		);
+		angle += step;
+	}
+
+	renderer->flush();
+
+	// ImGui::Render();
+	// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
