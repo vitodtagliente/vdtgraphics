@@ -26,13 +26,11 @@ namespace graphics
 
 	PolygonBatch::PolygonBatch(const size_t batchSize)
 		: m_batchSize(batchSize)
-		, m_batchIndex()
 		, m_batches()
+		, m_batchIterator(m_batches.begin())
 	{
-		for (int i = 0; i < 10; ++i)
-		{
-			m_batches.push_back(Batch(batchSize));
-		}
+		// start with one batch at least
+		m_batches.push_back(Batch(batchSize));
 	}
 
 	void PolygonBatch::batch(const math::vec3& position, const Color& color)
@@ -40,30 +38,32 @@ namespace graphics
 		findNextBatch().batch(position, color);
 	}
 
-	void PolygonBatch::flush(Context* const context)
+	void PolygonBatch::flush(const std::function<void(const std::vector<float>& data)>& handler)
 	{
 		for (auto it = m_batches.begin(); it != m_batches.end(); ++it)
 		{
 			if (it->empty()) continue;
 
-			context->drawLines(it->data);
+			handler(it->data);
 			it->clear();
 		}
-		m_batchIndex = 0;
+		m_batchIterator = m_batches.begin();
 	}
 
 	PolygonBatch::Batch& PolygonBatch::findNextBatch()
 	{
-		if (!m_batches[m_batchIndex].full())
+		if (!m_batchIterator->full())
 		{
-			return m_batches[m_batchIndex];
+			return *m_batchIterator;
 		}
 
-		++m_batchIndex;
-		if (m_batchIndex >= m_batches.size())
+		++m_batchIterator;
+		if (m_batchIterator == m_batches.end())
 		{
 			m_batches.push_back(Batch(m_batchSize));
+			m_batchIterator = m_batches.end();
+			--m_batchIterator;
 		}
-		return m_batches[m_batchIndex];
+		return *m_batchIterator;
 	}
 }

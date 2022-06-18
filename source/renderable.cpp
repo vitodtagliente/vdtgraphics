@@ -1,9 +1,9 @@
-#include "renderable.h"
+#include <vdtgraphics/renderable.h>
+
+#include <vdtgraphics/index_buffer.h>
+#include <vdtgraphics/vertex_buffer.h>
 
 #include <glad/glad.h>
-
-#include "index_buffer.h"
-#include "vertex_buffer.h"
 
 namespace graphics
 {

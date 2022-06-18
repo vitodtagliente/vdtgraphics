@@ -1,6 +1,8 @@
 /// Copyright (c) Vito Domenico Tagliente
 #pragma once
 
+#include <functional>
+#include <list>
 #include <vector>
 #include <vdtmath/vector3.h>
 
@@ -14,7 +16,7 @@ namespace graphics
 		PolygonBatch(size_t batchSize);
 
 		void batch(const math::vec3& position, const Color& color);
-		void flush(class Context* const context);
+		void flush(const std::function<void(const std::vector<float>& data)>& handler);
 
 	private:
 
@@ -37,7 +39,7 @@ namespace graphics
 		Batch& findNextBatch();
 
 		size_t m_batchSize;
-		size_t m_batchIndex;
-		std::vector<Batch> m_batches;
+		std::list<Batch> m_batches;
+		std::list<Batch>::iterator m_batchIterator;
 	};
 }
