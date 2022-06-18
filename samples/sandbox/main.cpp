@@ -25,6 +25,8 @@ float RandomFloat(float min, float max)
 int nbFrames = 0;
 double lastTime = 0;
 double deltaTime = 0;
+int drawCalls = 0;
+
 void showFPS(GLFWwindow* pWindow)
 {
 	// Measure speed
@@ -37,7 +39,7 @@ void showFPS(GLFWwindow* pWindow)
 		int fps = double(nbFrames) / deltaTime;
 
 		std::stringstream ss;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS]";
+		ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS] DrawCalls[" << drawCalls << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
@@ -131,14 +133,7 @@ void render_loop()
 
 	renderer->begin();
 
-	for (int i = 0; i < 100; ++i)
-	{
-		const float angle = math::random(0.f, 360.f);
-
-		renderer->drawLine(math::vec3(-1.f, 0.f, 0.f), Color::Red, math::vec3(1.f, 0.f, 0.f), Color::Green);
-	}
-
-	static const int accuracy = 100;
+	static const int accuracy = 1000;
 	static const float radius = 1.f;
 	const float step = (2 * math::pi) / accuracy;
 	float angle = 0.0f;
@@ -153,7 +148,7 @@ void render_loop()
 		angle += step;
 	}
 
-	renderer->flush();
+	drawCalls = renderer->flush();
 
 	// ImGui::Render();
 	// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

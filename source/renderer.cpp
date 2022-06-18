@@ -132,15 +132,17 @@ namespace graphics
 
 	}
 
-	void Renderer::flush()
+	int Renderer::flush()
 	{
-		if (!m_initialized) return;
+		if (!m_initialized) return 0;
+
+		int drawCalls = 0;
 
 		glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
 		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		m_fillPolygonBatch.flush([this](const std::vector<float>& data) -> void
+		m_fillPolygonBatch.flush([this, &drawCalls](const std::vector<float>& data) -> void
 			{
 				m_polygonRenderable->bind();
 
@@ -154,9 +156,13 @@ namespace graphics
 				const int primitiveType = GL_LINES;
 				const int offset = 0;
 				const int count = static_cast<int>(data.size() / 7);
+
+				++drawCalls;
 				glDrawArrays(primitiveType, offset, count);
 			}
 		);
+
+		return drawCalls;
 	}
 
 	void Renderer::setClearColor(const Color& color)

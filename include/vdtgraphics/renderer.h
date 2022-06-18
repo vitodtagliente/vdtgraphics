@@ -38,7 +38,7 @@ namespace graphics
 		void init();
 
 		void begin();
-		void flush();
+		int flush();
 
 		void setClearColor(const Color& color);
 		const Color& getClearColor() const { return m_clearColor; }
