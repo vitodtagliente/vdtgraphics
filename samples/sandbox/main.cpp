@@ -1,11 +1,9 @@
 #include <iostream>
-#include <vdtgraphics/api/opengl/opengl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vdtgraphics/graphics.h>
 #include <sstream>
 #include <vdtmath/math.h>
-#include <vdtgraphics/meshes/quad.h>
-#include <vdtgraphics/api/opengl/opengl.h>
 #include <imgui.h>
 // #define IMGUI_IMPL_OPENGL_LOADER_GLAD 
 // #include <examples/imgui_impl_glfw.h>
@@ -17,9 +15,6 @@ using namespace math;
 
 void init();
 void render_loop();
-API* api = nullptr;
-Renderer2D* renderer2d = nullptr;
-Texture* batmanTexture = nullptr, * wallTexture = nullptr, * catTexture = nullptr;
 
 float RandomFloat(float min, float max)
 {
@@ -48,11 +43,10 @@ void showFPS(GLFWwindow* pWindow)
 
         nbFrames = 0;
         lastTime = currentTime;
-
-        const Renderer::Stats& stats = renderer2d->getStats();
-        cout << "DrawCalls: " << stats.drawCalls << endl;
     }
 }
+
+Renderer* renderer = nullptr;
 
 int main(void)
 {
@@ -76,8 +70,8 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    api = API::Factory::get();
-    api->startup();
+    renderer = new Renderer(640, 480);
+    renderer->init();
 
     // imgui init
     // ImGui::CreateContext();
@@ -85,24 +79,6 @@ int main(void)
     // ImGuiIO& io = ImGui::GetIO(); (void)io;
     // ImGui_ImplGlfw_InitForOpenGL(window, true);
     // ImGui_ImplOpenGL3_Init("#version 330 core");
-
-    api->enableAlpha(true);
-    renderer2d = api->createRenderer2D();
-
-    Image batmanImg;
-    Image::load("../../../assets/batman_logo.png", batmanImg);
-    batmanImg.flipVertically();
-    batmanTexture = api->createTexture(batmanImg);
-
-    Image wallImg;
-    Image::load("../../../assets/texture_atlas.png", wallImg);
-    wallImg.flipVertically();
-    wallTexture = api->createTexture(wallImg);
-
-    Image catImg;
-    Image::load("../../../assets/cat.gif", catImg);
-    catImg.flipVertically();
-    catTexture = api->createTexture(catImg);
 
     init();
 
@@ -120,10 +96,6 @@ int main(void)
         // display the FPS
         showFPS(window);
 
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-        api->update();
-
         // render logic
         render_loop();
 
@@ -134,38 +106,21 @@ int main(void)
         glfwPollEvents();
     }
 
-    batmanImg.free();
-
     // ImGui_ImplOpenGL3_Shutdown();
     // ImGui_ImplGlfw_Shutdown();
     // ImGui::DestroyContext();
 
-    api->shutdown();
     glfwTerminate();
     return 0;
 }
 
 void init()
 { 
-    
+    renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 }
 
-int i = 0;
-float AnimationTime = 60.0f;
-float t = AnimationTime;
 void render_loop()
 {
-    t -= deltaTime;
-    if (t <= 0.0f)
-    {
-        i++;
-        t = AnimationTime;
-        if (i > 4)
-        {
-            i = 1;
-        }
-    }
-
     // ImGui_ImplOpenGL3_NewFrame();
     // ImGui_ImplGlfw_NewFrame();
     // ImGui::NewFrame();
@@ -174,20 +129,9 @@ void render_loop()
     // ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     // ImGui::End();
 
-    renderer2d->clear(Color(0.0f, 0.0f, 0.2, 1.0f));
+    renderer->begin();
 
-    // for (int i = 0; i < 20; ++i)
-    // {
-    //     renderer2d->drawTexture(batmanTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    //     renderer2d->drawTexture(wallTexture, { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    //     renderer2d->drawRect(Color::random(), { RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f) });
-    // }
-
-    float start = i * 0.20f;
-    Texture::Coords coords({start, 0.0f}, { 0.20f, 1.0f });
-    renderer2d->drawTexture(catTexture, coords, vector2::zero);
-
-    renderer2d->render();
+    renderer->flush();
     
     // ImGui::Render();
     // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

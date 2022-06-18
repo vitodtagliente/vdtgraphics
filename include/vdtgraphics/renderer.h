@@ -1,6 +1,7 @@
 /// Copyright (c) Vito Domenico Tagliente
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -61,7 +62,7 @@ namespace graphics
 
 
 	private:
-		ShaderProgram* const createProgram(const std::string& name);
+		std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
 
 		int m_width;
 		int m_height;
@@ -78,12 +79,12 @@ namespace graphics
 		math::mat4 m_viewMatrix;
 		math::mat4 m_viewProjectionMatrix;
 		// Renderables
-		Renderable m_polygonRenderable;
-		Renderable m_spriteBatchRenderable;
+		std::unique_ptr<Renderable> m_polygonRenderable;
+		std::unique_ptr<Renderable> m_spriteBatchRenderable;
 		// Programs
-		ShaderProgram* m_colorProgram;
-		ShaderProgram* m_polygonProgram;
-		ShaderProgram* m_spritebatchProgram;
-		ShaderProgram* m_textureProgram;
+		std::unique_ptr<ShaderProgram> m_colorProgram;
+		std::unique_ptr<ShaderProgram> m_polygonProgram;
+		std::unique_ptr<ShaderProgram> m_spritebatchProgram;
+		std::unique_ptr<ShaderProgram> m_textureProgram;
 	};
 }
