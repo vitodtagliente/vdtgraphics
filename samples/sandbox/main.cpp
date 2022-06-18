@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -121,6 +122,23 @@ void init()
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 }
 
+std::chrono::steady_clock::time_point startTime;
+void statsBegin()
+{
+	startTime = std::chrono::steady_clock::now();
+}
+
+void statsEnd(const std::string& context, const bool refresh = false)
+{
+	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
+	std::cout << "Elapsed Time = " << std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() << "[µs]" << " context[" << context << "]" << std::endl;
+
+	if (refresh)
+	{
+		statsBegin();
+	}
+}
+
 void render_loop()
 {
 	// ImGui_ImplOpenGL3_NewFrame();
@@ -132,6 +150,8 @@ void render_loop()
 	// ImGui::End();
 
 	renderer->begin();
+
+	statsBegin();
 
 	static const int accuracy = 1000;
 	static const float radius = 1.f;
@@ -148,7 +168,13 @@ void render_loop()
 		angle += step;
 	}
 
+	statsEnd("batch_data", true);
+
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
 	drawCalls = renderer->flush();
+
+	statsEnd("flush");
 
 	// ImGui::Render();
 	// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
