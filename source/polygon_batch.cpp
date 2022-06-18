@@ -27,10 +27,11 @@ namespace graphics
 	PolygonBatch::PolygonBatch(const size_t batchSize)
 		: m_batchSize(batchSize)
 		, m_batches()
-		, m_batchIterator(m_batches.begin())
+		, m_batchIterator()
 	{
 		// start with one batch at least
 		m_batches.push_back(Batch(batchSize));
+		m_batchIterator = m_batches.begin();
 	}
 
 	void PolygonBatch::batch(const math::vec3& position, const Color& color)

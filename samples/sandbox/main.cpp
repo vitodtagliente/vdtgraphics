@@ -32,7 +32,7 @@ void showFPS(GLFWwindow* pWindow)
     deltaTime = currentTime - lastTime;
     nbFrames++;
     if (deltaTime >= 1.0) { // If last cout was more than 1 sec ago
-        cout << 1000.0 / double(nbFrames) << endl;
+        // cout << 1000.0 / double(nbFrames) << endl;
 
         int fps = double(nbFrames) / deltaTime;
 
@@ -130,6 +130,8 @@ void render_loop()
     // ImGui::End();
 
     renderer->begin();
+
+    renderer->drawLine(math::vec3(-1.f, 0.f, 0.f), Color::Red, math::vec3(1.f, 0.f, 0.f), Color::Green);
 
     renderer->flush();
     
