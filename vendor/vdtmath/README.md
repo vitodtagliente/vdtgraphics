@@ -1,2 +1,0 @@
-# vdtmath
- C++ math library
