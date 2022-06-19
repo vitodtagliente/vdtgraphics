@@ -5,13 +5,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <imgui.h>
 
 #include <vdtgraphics/graphics.h>
 #include <vdtmath/math.h>
-// #define IMGUI_IMPL_OPENGL_LOADER_GLAD 
-// #include <examples/imgui_impl_glfw.h>
-// #include <examples/imgui_impl_opengl3.h>
 
 using namespace std;
 using namespace graphics;
@@ -79,13 +75,6 @@ int main(void)
 	renderer = std::make_unique< Renderer>(640, 480);
 	renderer->init();
 
-	// imgui init
-	// ImGui::CreateContext();
-	// ImGui::StyleColorsDark();
-	// ImGuiIO& io = ImGui::GetIO(); (void)io;
-	// ImGui_ImplGlfw_InitForOpenGL(window, true);
-	// ImGui_ImplOpenGL3_Init("#version 330 core");
-
 	init();
 
 	glfwSetFramebufferSizeCallback(window,
@@ -111,10 +100,6 @@ int main(void)
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
-
-	// ImGui_ImplOpenGL3_Shutdown();
-	// ImGui_ImplGlfw_Shutdown();
-	// ImGui::DestroyContext();
 
 	glfwTerminate();
 	return 0;
@@ -180,20 +165,9 @@ void testCase2()
 
 void render_loop()
 {
-	// ImGui_ImplOpenGL3_NewFrame();
-	// ImGui_ImplGlfw_NewFrame();
-	// ImGui::NewFrame();
-	// 
-	// ImGui::Begin("Performance Viewer");
-	// ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	// ImGui::End();
-
 	renderer->begin();
 
 	testCase1();
 
 	drawCalls = renderer->flush();
-
-	// ImGui::Render();
-	// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
