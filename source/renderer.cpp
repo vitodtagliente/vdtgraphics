@@ -1,6 +1,7 @@
 #include <vdtgraphics/renderer.h>
 
 #include <vdtgraphics/index_buffer.h>
+#include <vdtgraphics/renderable.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_program.h>
 #include <vdtgraphics/texture.h>
