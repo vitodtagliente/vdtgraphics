@@ -128,6 +128,8 @@ void init()
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 	batmanImg = Image::load("../../../assets/batman_logo.png");
 	batmanTexture = std::make_unique<Texture>(batmanImg);
+
+	renderer->setProjectionMatrix(math::matrix4::orthographic(-1.f, 1.f, -1.f, 1.f, -30.f, 1000.f));
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -147,20 +149,8 @@ void statsEnd(const std::string& context, const bool refresh = false)
 	}
 }
 
-void render_loop()
+void testCase1()
 {
-	// ImGui_ImplOpenGL3_NewFrame();
-	// ImGui_ImplGlfw_NewFrame();
-	// ImGui::NewFrame();
-	// 
-	// ImGui::Begin("Performance Viewer");
-	// ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	// ImGui::End();
-
-	renderer->begin();
-
-	statsBegin();
-
 	static const int accuracy = 100;
 	static const float radius = 1.f;
 	const float step = (2 * math::pi) / accuracy;
@@ -176,19 +166,33 @@ void render_loop()
 	}
 
 	renderer->drawRect(math::vec3::zero, 1.f, 1.f, Color::Magenta);
-	renderer->drawRect(math::vec3(.4f, .3f, 0.f), .5f, .5f, Color::Green);
+	renderer->drawRect(math::vec3(.4f, .3f, 2.1f), .5f, .5f, Color::Green);
 
 	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
 
-	renderer->drawTexture(batmanTexture.get(), math::matrix4::identity);
+	renderer->drawTexture(batmanTexture.get(), math::vec3(.3f, .3f, -1.f));
+}
 
-	statsEnd("batch_data", true);
+void testCase2()
+{
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+}
+
+void render_loop()
+{
+	// ImGui_ImplOpenGL3_NewFrame();
+	// ImGui_ImplGlfw_NewFrame();
+	// ImGui::NewFrame();
+	// 
+	// ImGui::Begin("Performance Viewer");
+	// ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	// ImGui::End();
+
+	renderer->begin();
+
+	testCase1();
 
 	drawCalls = renderer->flush();
-
-	statsEnd("flush");
 
 	// ImGui::Render();
 	// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

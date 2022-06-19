@@ -59,6 +59,10 @@ namespace graphics
 		void drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points);
 		void drawRect(const math::vec3& position, float width, float height, const Color& color);
 		void drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect = {}, const Color& color = Color::White);
+		void drawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect = {}, const Color& color = Color::White);
+		void drawTexture(Texture* const texture, const math::vec3& position, float rotation, const TextureRect& rect = {}, const Color& color = Color::White);
+		void drawTexture(Texture* const texture, const math::vec3& position, const math::vec3& scale, const TextureRect& rect = {}, const Color& color = Color::White);
+		void drawTexture(Texture* const texture, const math::vec3& position, float rotation, const math::vec3& scale, const TextureRect& rect = {}, const Color& color = Color::White);
 
 	private:
 		std::unique_ptr<ShaderProgram> createProgram(const std::string& name);

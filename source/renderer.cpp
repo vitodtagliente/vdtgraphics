@@ -119,6 +119,8 @@ namespace graphics
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+		glEnable(GL_DEPTH_TEST);
 
 		m_initialized = true;
 	}
@@ -130,8 +132,6 @@ namespace graphics
 		if (!m_initialized) return;
 
 		glViewport(0, 0, m_width, m_height);
-
-
 	}
 
 	int Renderer::flush()
@@ -141,9 +141,8 @@ namespace graphics
 		int drawCalls = 0;
 
 		glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
-		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
 		m_spriteBatch.flush([this, &drawCalls](Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors) -> void
 			{
 				const size_t instances = transforms.size() / 16;
@@ -236,11 +235,13 @@ namespace graphics
 	void Renderer::setProjectionMatrix(const math::matrix4& m)
 	{
 		m_projectionMatrix = m;
+		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
 	void Renderer::setViewMatrix(const math::matrix4& m)
 	{
 		m_viewMatrix = m;
+		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
 	void Renderer::setStyle(const StyleType style)
@@ -249,7 +250,7 @@ namespace graphics
 	}
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
-	{		
+	{
 		const float accuracy = 100.f * radius;
 		const float step = (2 * math::pi) / accuracy;
 		float angle = 0.0f;
@@ -312,12 +313,32 @@ namespace graphics
 			m_strokePolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
 			m_strokePolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
 			m_strokePolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
-		}		
+		}
 	}
 
 	void Renderer::drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, matrix, rect, color);
+	}
+
+	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect, const Color& color)
+	{
+		m_spriteBatch.batch(texture, math::matrix4::translate(position), rect, color);
+	}
+
+	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const TextureRect& rect, const Color& color)
+	{
+		m_spriteBatch.batch(texture, math::matrix4::translate(position) * math::matrix4::rotate_z(rotation), rect, color);
+	}
+
+	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const math::vec3& scale, const TextureRect& rect, const Color& color)
+	{
+		m_spriteBatch.batch(texture, math::matrix4::scale(scale) * math::matrix4::translate(position), rect, color);
+	}
+
+	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const math::vec3& scale, const TextureRect& rect, const Color& color)
+	{
+		m_spriteBatch.batch(texture, math::matrix4::scale(scale) * math::matrix4::rotate_z(rotation) * math::matrix4::translate(position), rect, color);
 	}
 
 	std::unique_ptr<ShaderProgram> Renderer::createProgram(const std::string& name)
