@@ -1,11 +1,14 @@
 #include <chrono>
 #include <iostream>
+#include <memory>
+#include <sstream>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <vdtgraphics/graphics.h>
-#include <sstream>
-#include <vdtmath/math.h>
 #include <imgui.h>
+
+#include <vdtgraphics/graphics.h>
+#include <vdtmath/math.h>
 // #define IMGUI_IMPL_OPENGL_LOADER_GLAD 
 // #include <examples/imgui_impl_glfw.h>
 // #include <examples/imgui_impl_opengl3.h>
@@ -49,7 +52,7 @@ void showFPS(GLFWwindow* pWindow)
 	}
 }
 
-Renderer* renderer = nullptr;
+std::unique_ptr< Renderer> renderer;
 
 int main(void)
 {
@@ -73,7 +76,7 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	renderer = new Renderer(640, 480);
+	renderer = std::make_unique< Renderer>(640, 480);
 	renderer->init();
 
 	// imgui init
@@ -117,9 +120,14 @@ int main(void)
 	return 0;
 }
 
+Image batmanImg;
+std::unique_ptr<Texture> batmanTexture;
+
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
+	batmanImg = Image::load("../../../assets/batman_logo.png");
+	batmanTexture = std::make_unique<Texture>(batmanImg);
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -159,11 +167,11 @@ void render_loop()
 	float angle = 0.0f;
 	for (int i = 0; i < accuracy; ++i)
 	{
-		// renderer->drawLine(
-		// 	math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
-		// 	math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
-		// 	Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
-		// );
+		renderer->drawLine(
+			math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
+			math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
+			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
+		);
 		angle += step;
 	}
 
@@ -171,7 +179,9 @@ void render_loop()
 	renderer->drawRect(math::vec3(.4f, .3f, 0.f), .5f, .5f, Color::Green);
 
 	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
-	
+
+	renderer->drawTexture(batmanTexture.get(), math::matrix4::identity);
+
 	statsEnd("batch_data", true);
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();

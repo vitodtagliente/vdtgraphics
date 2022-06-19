@@ -4,6 +4,7 @@
 #include "blend_state.h"
 #include "buffer.h"
 #include "color.h"
+#include "image.h"
 #include "index_buffer.h"
 #include "polygon_batch.h"
 #include "renderable.h"

@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "image.h"
+
 namespace graphics
 {
 	class Texture
@@ -24,6 +26,7 @@ namespace graphics
 
 		Texture(const unsigned char* const data, unsigned int width, unsigned int height,
 			unsigned int channels, const Options& options = Options{});
+		Texture(const Image& image, const Options& options = Options{});
 		~Texture();
 
 		inline unsigned int id() const { return m_id; }

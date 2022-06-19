@@ -45,6 +45,11 @@ namespace graphics
 		}
 	}
 
+	Texture::Texture(const Image& image, const Options& options)
+		: Texture(image.data.get(), image.width, image.height, image.channels, options)
+	{
+	}
+
 	Texture::~Texture()
 	{
 		free();

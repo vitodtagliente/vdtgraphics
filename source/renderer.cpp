@@ -333,6 +333,4 @@ namespace graphics
 		}
 		return nullptr;
 	}
-
-
 }
