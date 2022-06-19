@@ -55,8 +55,7 @@ namespace graphics
 		StyleType getStyle() const { return m_style; }
 
 		void drawCircle(const math::vec3& position, float radius, const Color& color);
-		void drawLine(const math::vec3& p1, const Color& c1, const math::vec3& p2, const Color& c2);
-		void drawPoint(const math::vec3& position, const Color& color);
+		void drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color);
 		void drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points);
 		void drawRect(const math::vec3& position, float width, float height, const Color& color);
 

@@ -153,6 +153,26 @@ namespace graphics
 				m_polygonProgram->bind();
 				m_polygonProgram->set("u_matrix", m_viewProjectionMatrix);
 
+				const int primitiveType = GL_TRIANGLES;
+				const int offset = 0;
+				const int count = static_cast<int>(data.size() / 7);
+
+				++drawCalls;
+				glDrawArrays(primitiveType, offset, count);
+			}
+		);
+
+		m_strokePolygonBatch.flush([this, &drawCalls](const std::vector<float>& data) -> void
+			{
+				m_polygonRenderable->bind();
+
+				VertexBuffer* vertexBuffer = m_polygonRenderable->findVertexBuffer(Renderable::names::MainBuffer);
+				vertexBuffer->bind();
+				vertexBuffer->fillData((void*)&data[0], data.size() * sizeof(float));
+
+				m_polygonProgram->bind();
+				m_polygonProgram->set("u_matrix", m_viewProjectionMatrix);
+
 				const int primitiveType = GL_LINES;
 				const int offset = 0;
 				const int count = static_cast<int>(data.size() / 7);
@@ -192,65 +212,70 @@ namespace graphics
 	}
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
-	{
-		if (m_style == StyleType::fill)
+	{		
+		const float accuracy = 100.f * radius;
+		const float step = (2 * math::pi) / accuracy;
+		float angle = 0.0f;
+		for (int i = 0; i < accuracy; ++i)
 		{
-
-		}
-		else
-		{
-
-		}
-	}
-
-	void Renderer::drawLine(const math::vec3& p1, const Color& c1, const math::vec3& p2, const Color& c2)
-	{
-		if (m_style == StyleType::fill)
-		{
-			m_fillPolygonBatch.batch(p1, c1);
-			m_fillPolygonBatch.batch(p2, c2);
-		}
-		else
-		{
-			m_strokePolygonBatch.batch(p1, c1);
-			m_strokePolygonBatch.batch(p2, c2);
+			if (m_style == StyleType::fill)
+			{
+				m_fillPolygonBatch.batch(position.x, color);
+				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0.f), color);
+				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(angle + step), radius * std::cos(angle + step), 0.f), color);
+			}
+			else
+			{
+				m_strokePolygonBatch.batch(position + math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0.f), color);
+				m_strokePolygonBatch.batch(position + math::vec3(radius * std::sin(angle + step), radius * std::cos(angle + step), 0.f), color);
+			}
+			angle += step;
 		}
 	}
 
-	void Renderer::drawPoint(const math::vec3& position, const Color& color)
+	void Renderer::drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color)
 	{
-		if (m_style == StyleType::fill)
-		{
-
-		}
-		else
-		{
-
-		}
+		m_strokePolygonBatch.batch(point1, color);
+		m_strokePolygonBatch.batch(point2, color);
 	}
 
 	void Renderer::drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points)
 	{
-		if (m_style == StyleType::fill)
-		{
+		PolygonBatch& batch = m_style == StyleType::fill
+			? m_fillPolygonBatch
+			: m_strokePolygonBatch;
 
-		}
-		else
+		for (const std::pair<math::vec3, Color>& pair : points)
 		{
-
+			batch.batch(pair.first, pair.second);
 		}
 	}
 
 	void Renderer::drawRect(const math::vec3& position, float width, float height, const Color& color)
 	{
+		const float w = width / 2;
+		const float h = height / 2;
+
 		if (m_style == StyleType::fill)
 		{
-
+			m_fillPolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
+			m_fillPolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);
+			m_fillPolygonBatch.batch(position + math::vec3(-w, -h, 0.f), color);
+			m_fillPolygonBatch.batch(position + math::vec3(-w, -h, 0.f), color);
+			m_fillPolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
+			m_fillPolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
 		}
 		else
 		{
-
-		}
+			m_strokePolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(-w, -h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(-w, -h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
+			m_strokePolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
+		}		
 	}
 
 	std::unique_ptr<ShaderProgram> Renderer::createProgram(const std::string& name)
@@ -262,7 +287,7 @@ namespace graphics
 		{
 			Shader vs(Shader::Type::Vertex, sources.find(Shader::Type::Vertex)->second);
 			Shader fs(Shader::Type::Fragment, sources.find(Shader::Type::Fragment)->second);
-			return std::make_unique<ShaderProgram>(std::initializer_list<Shader*>{ &vs, &fs });
+			return std::make_unique<ShaderProgram>(std::initializer_list<Shader*>{ &vs, & fs });
 		}
 		return nullptr;
 	}

@@ -153,21 +153,25 @@ void render_loop()
 
 	statsBegin();
 
-	static const int accuracy = 1000;
+	static const int accuracy = 100;
 	static const float radius = 1.f;
 	const float step = (2 * math::pi) / accuracy;
 	float angle = 0.0f;
 	for (int i = 0; i < accuracy; ++i)
 	{
-		renderer->drawLine(
-			math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
-			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f)),
-			math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
-			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
-		);
+		// renderer->drawLine(
+		// 	math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
+		// 	math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
+		// 	Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
+		// );
 		angle += step;
 	}
 
+	renderer->drawRect(math::vec3::zero, 1.f, 1.f, Color::Magenta);
+	renderer->drawRect(math::vec3(.4f, .3f, 0.f), .5f, .5f, Color::Green);
+
+	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
+	
 	statsEnd("batch_data", true);
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
