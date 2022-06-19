@@ -1,4 +1,3 @@
-#include <chrono>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -105,33 +104,16 @@ int main(void)
 	return 0;
 }
 
-Image batmanImg;
-std::unique_ptr<Texture> batmanTexture;
+Image potetoeImg;
+std::unique_ptr<Texture> potatoeTexture;
 
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
-	batmanImg = Image::load("../../../assets/batman_logo.png");
-	batmanTexture = std::make_unique<Texture>(batmanImg);
+	potetoeImg = Image::load("../../../assets/potatoe.png");
+	potatoeTexture = std::make_unique<Texture>(potetoeImg);
 
 	renderer->setProjectionMatrix(math::matrix4::orthographic(-1.f, 1.f, -1.f, 1.f, -30.f, 1000.f));
-}
-
-std::chrono::steady_clock::time_point startTime;
-void statsBegin()
-{
-	startTime = std::chrono::steady_clock::now();
-}
-
-void statsEnd(const std::string& context, const bool refresh = false)
-{
-	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
-	std::cout << "Elapsed Time = " << std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() << "[µs]" << " context[" << context << "]" << std::endl;
-
-	if (refresh)
-	{
-		statsBegin();
-	}
 }
 
 void testCase1()
@@ -155,19 +137,41 @@ void testCase1()
 
 	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
 
-	renderer->drawTexture(batmanTexture.get(), math::vec3(.3f, .3f, -1.f));
+	renderer->drawTexture(potatoeTexture.get(), math::vec3(.3f, .3f, -1.f), math::vec3(1.f, 1.f, 1.f));
 }
 
 void testCase2()
 {
+	static std::vector<math::transform> s_entities;
 
+	if (s_entities.empty())
+	{
+		for (int i = 0; i < 2000; ++i)
+		{
+			const float size = math::random(.2f, .4f);
+			math::transform transform;
+
+			transform.position.x = math::random(-.9f, .9f);
+			transform.position.y = math::random(-.9f, .9f);
+
+			transform.scale.x = transform.scale.y = size;
+			transform.update();
+
+			s_entities.push_back(transform);
+		}
+	}
+
+	for (int i = 0; i < s_entities.size(); ++i)
+	{
+		renderer->drawTexture(potatoeTexture.get(), s_entities[i].matrix(), {}, Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f)));
+	}
 }
 
 void render_loop()
 {
 	renderer->begin();
 
-	testCase1();
+	testCase2();
 
 	drawCalls = renderer->flush();
 }
