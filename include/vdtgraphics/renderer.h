@@ -12,7 +12,7 @@
 #include "polygon_batch.h"
 #include "renderable.h"
 #include "shader_library.h"
-// #include "sprite_batch.h"
+#include "sprite_batch.h"
 
 namespace graphics
 {
@@ -58,7 +58,7 @@ namespace graphics
 		void drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color);
 		void drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points);
 		void drawRect(const math::vec3& position, float width, float height, const Color& color);
-
+		void drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect = {}, const Color& color = Color::White);
 
 	private:
 		std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
@@ -71,7 +71,7 @@ namespace graphics
 		StyleType m_style;
 		// Batches
 		PolygonBatch m_fillPolygonBatch;
-		// SpriteBatch m_spriteBatch;
+		SpriteBatch m_spriteBatch;
 		PolygonBatch m_strokePolygonBatch;
 		// Matrices
 		math::mat4 m_projectionMatrix;

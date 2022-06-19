@@ -1,12 +1,13 @@
-#include "sprite_batch.h"
+#include <vdtgraphics/sprite_batch.h>
 
-#include "context.h"
+#include <vdtgraphics/texture.h>
 
 namespace graphics
 {
 #define TRANSFORM_COMPONENTS 16
 #define RECT_COMPONENTS 4
 #define COLOR_COMPONENTS 4
+#define DEFAULT_BATCHES 20
 
 	SpriteBatch::Batch::Data::Data(const size_t size)
 		: transforms()
@@ -48,8 +49,7 @@ namespace graphics
 		: m_batchSize(batchSize)
 		, m_batches()
 	{
-		// 20 texture slot by default
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0; i < DEFAULT_BATCHES; ++i)
 		{
 			m_batches.push_back(Batch(batchSize));
 		}
@@ -64,11 +64,13 @@ namespace graphics
 		}
 	}
 
-	void SpriteBatch::flush(Context* context)
+	void SpriteBatch::flush(const std::function<void(Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors)>& handler)
 	{
 		for (auto& batch : m_batches)
 		{
-			context->drawSprites(batch.texture, batch.data.transforms, batch.data.rects, batch.data.colors);
+			if (batch.data.transforms.empty()) continue;
+
+			handler(batch.texture, batch.data.transforms, batch.data.rects, batch.data.colors);
 			batch.clear();
 		}
 	}

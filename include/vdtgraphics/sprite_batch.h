@@ -1,26 +1,27 @@
 /// Copyright (c) Vito Domenico Tagliente
 #pragma once
 
+#include <functional>
+#include <list>
 #include <vector>
 
 #include <vdtmath/vector3.h>
 #include <vdtmath/matrix4.h>
 
 #include "color.h"
-#include "texture.h"
 #include "texture_rect.h"
 
 namespace graphics
 {
-#define DEFAULT_SPRITE_BATCH_SIZE 2000
+	class Texture;
 
 	class SpriteBatch
 	{
 	public:
-		SpriteBatch(size_t batchSize = DEFAULT_SPRITE_BATCH_SIZE);
+		SpriteBatch(size_t batchSize);
 
 		void batch(Texture* const texture, const math::mat4& matrix, const TextureRect& rect, const Color& color);
-		void flush(class Context* context);
+		void flush(const std::function<void(Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors)>& handler);
 
 	private:
 
@@ -54,6 +55,6 @@ namespace graphics
 		Batch& findNextBatch(Texture* const texture);
 
 		size_t m_batchSize;
-		std::vector<Batch> m_batches;
+		std::list<Batch> m_batches;
 	};
 }

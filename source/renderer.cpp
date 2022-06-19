@@ -3,6 +3,7 @@
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_program.h>
+#include <vdtgraphics/texture.h>
 #include <vdtgraphics/vertex_buffer.h>
 
 #include <initializer_list>
@@ -20,7 +21,7 @@ namespace graphics
 		, m_shaderLibrary()
 		, m_style(StyleType::fill)
 		, m_fillPolygonBatch(settings.polygonBatchSize)
-		// , m_spriteBatch(settings.spriteBatchSize)
+		, m_spriteBatch(settings.spriteBatchSize)
 		, m_strokePolygonBatch(settings.polygonBatchSize)
 		, m_projectionMatrix(math::mat4::identity)
 		, m_viewMatrix(math::mat4::identity)
@@ -141,6 +142,41 @@ namespace graphics
 		glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
 		// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		m_spriteBatch.flush([this, &drawCalls](Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors) -> void
+			{
+				const size_t instances = transforms.size() / 16;
+				if (instances != rects.size() / 4) return;
+
+				m_spriteBatchRenderable->bind();
+
+				VertexBuffer& cropBuffer = *m_spriteBatchRenderable->findVertexBuffer("cropsBuffer");
+				cropBuffer.bind();
+				cropBuffer.fillData((void*)&rects[0], rects.size() * sizeof(float));
+
+				VertexBuffer& colorBuffer = *m_spriteBatchRenderable->findVertexBuffer("colorsBuffer");
+				colorBuffer.bind();
+				colorBuffer.fillData((void*)&colors[0], colors.size() * sizeof(float));
+
+				VertexBuffer& transformBuffer = *m_spriteBatchRenderable->findVertexBuffer("transformsBuffer");
+				transformBuffer.bind();
+				transformBuffer.fillData((void*)&transforms[0], transforms.size() * sizeof(float));
+
+				m_spritebatchProgram->bind();
+				texture->bind(0);
+				m_spritebatchProgram->set("u_texture", 0);
+				m_spritebatchProgram->set("u_matrix", m_viewProjectionMatrix);
+
+				const int primitiveType = GL_TRIANGLES;
+				const int offset = 0;
+				const int count = 6;
+				const int numInstances = static_cast<int>(instances);
+				const int indexType = GL_UNSIGNED_INT;
+
+				++drawCalls;
+				glDrawElementsInstanced(primitiveType, count, indexType, offset, numInstances);
+			}
+		);
 
 		m_fillPolygonBatch.flush([this, &drawCalls](const std::vector<float>& data) -> void
 			{
@@ -276,6 +312,11 @@ namespace graphics
 			m_strokePolygonBatch.batch(position + math::vec3(w, -h, 0.f), color);
 			m_strokePolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
 		}		
+	}
+
+	void Renderer::drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect, const Color& color)
+	{
+		m_spriteBatch.batch(texture, matrix, rect, color);
 	}
 
 	std::unique_ptr<ShaderProgram> Renderer::createProgram(const std::string& name)
