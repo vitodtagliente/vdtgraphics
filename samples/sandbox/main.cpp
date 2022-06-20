@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -79,7 +80,7 @@ int main(void)
 	glfwSetFramebufferSizeCallback(window,
 		[](GLFWwindow*, int width, int height)
 		{
-			glViewport(0, 0, width, height);
+			renderer->setViewport(width, height);
 		}
 	);
 
@@ -110,10 +111,27 @@ std::unique_ptr<Texture> potatoeTexture;
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
-	potetoeImg = Image::load("../../../assets/potatoe.png");
+	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
 
 	renderer->setProjectionMatrix(math::matrix4::orthographic(-1.f, 1.f, -1.f, 1.f, -30.f, 1000.f));
+}
+
+std::chrono::steady_clock::time_point startTime;
+void statsBegin()
+{
+	startTime = std::chrono::steady_clock::now();
+}
+
+void statsEnd(const std::string& context, const bool refresh = false)
+{
+	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
+	std::cout << "Elapsed Time = " << std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() << "[µs]" << " context[" << context << "]" << std::endl;
+
+	if (refresh)
+	{
+		statsBegin();
+	}
 }
 
 void testCase1()
@@ -142,29 +160,58 @@ void testCase1()
 
 void testCase2()
 {
-	static std::vector<math::transform> s_entities;
+	struct Entity
+	{
+		math::transform transform;
+		bool rotate;
+		float rotateSpeed;
+		TextureRect rect;
+	};
+
+	static std::vector<Entity> s_entities;
+
+	statsBegin();
 
 	if (s_entities.empty())
 	{
 		for (int i = 0; i < 2000; ++i)
 		{
+			Entity entity;
+
 			const float size = math::random(.05f, .2f);
-			math::transform transform;
 
-			transform.position.x = math::random(-.9f, .9f);
-			transform.position.y = math::random(-.9f, .9f);
+			entity.transform.position.x = math::random(-.9f, .9f);
+			entity.transform.position.y = math::random(-.9f, .9f);
+			entity.transform.rotation.z = math::random(0.f, 360.f);
+			entity.transform.scale.x = entity.transform.scale.y = size;
+			entity.transform.update();
 
-			transform.scale.x = transform.scale.y = size;
-			transform.update();
+			entity.rotate = math::random(0, 1) == 1;
+			if (entity.rotate)
+			{
+				entity.rotateSpeed = math::random(.2f, .8f);
+			}
 
-			s_entities.push_back(transform);
+			const float s = 1.f / 11;
+			entity.rect = TextureRect(s * 9, s * math::random(1, 5), s, s);
+
+			s_entities.push_back(entity);
 		}
+
+		statsEnd("generate data", true);
 	}
 
-	for (int i = 0; i < s_entities.size(); ++i)
+	for (Entity& entity : s_entities)
 	{
-		renderer->drawTexture(potatoeTexture.get(), s_entities[i].matrix());
+		if (entity.rotate)
+		{
+			entity.transform.rotation.z += entity.rotateSpeed;
+			entity.transform.update();
+		}
+		renderer->drawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
 	}
+
+	statsEnd("draw textures");
 }
 
 void render_loop()
