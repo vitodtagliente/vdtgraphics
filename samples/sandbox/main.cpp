@@ -155,7 +155,8 @@ void testCase1()
 
 	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
 
-	renderer->drawTexture(potatoeTexture.get(), math::vec3(.3f, .3f, -1.f), math::vec3(1.f, 1.f, 1.f));
+	const float s = 1.f / 11;
+	renderer->drawTexture(potatoeTexture.get(), math::vec3(.3f, .3f, 2.f), TextureRect(s * 9, s * 1, s, s));
 }
 
 void testCase2()

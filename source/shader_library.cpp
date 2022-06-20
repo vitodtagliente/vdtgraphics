@@ -131,7 +131,7 @@ namespace graphics
 			void main() {
 				// outColor = texture(u_texture, clamp(v_texcoord * v_crop.zw + v_crop.xy, vec2(0, 0), vec2(1, 1)));
 				outColor = texture(u_texture, v_texcoord * v_crop.zw + v_crop.xy) * v_color;
-				if (outColor.a == 0.0) discard;
+				if (outColor.a < 0.5) discard;
 				// outColor = v_color;
 			}
 		)"
