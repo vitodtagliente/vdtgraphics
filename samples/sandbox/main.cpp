@@ -148,7 +148,7 @@ void testCase2()
 	{
 		for (int i = 0; i < 2000; ++i)
 		{
-			const float size = math::random(.2f, .4f);
+			const float size = math::random(.05f, .2f);
 			math::transform transform;
 
 			transform.position.x = math::random(-.9f, .9f);
@@ -163,7 +163,7 @@ void testCase2()
 
 	for (int i = 0; i < s_entities.size(); ++i)
 	{
-		renderer->drawTexture(potatoeTexture.get(), s_entities[i].matrix(), {}, Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f)));
+		renderer->drawTexture(potatoeTexture.get(), s_entities[i].matrix());
 	}
 }
 
