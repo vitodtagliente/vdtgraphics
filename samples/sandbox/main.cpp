@@ -49,6 +49,7 @@ void showFPS(GLFWwindow* pWindow)
 }
 
 std::unique_ptr< Renderer> renderer;
+math::vec3 mouse;
 
 int main(void)
 {
@@ -81,6 +82,14 @@ int main(void)
 		[](GLFWwindow*, int width, int height)
 		{
 			renderer->setViewport(width, height);
+		}
+	);
+
+	glfwSetCursorPosCallback(window, 
+		[](GLFWwindow* window, double xpos, double ypos)
+		{
+			mouse.x = (float)xpos;
+			mouse.y = (float)ypos;
 		}
 	);
 
@@ -175,7 +184,7 @@ void testCase2()
 
 	if (s_entities.empty())
 	{
-		for (int i = 0; i < 2000; ++i)
+		for (int i = 0; i < 1000; ++i)
 		{
 			Entity entity;
 
@@ -183,8 +192,12 @@ void testCase2()
 
 			entity.transform.position.x = math::random(-.9f, .9f);
 			entity.transform.position.y = math::random(-.9f, .9f);
+			entity.transform.position.z = 0.0f;
+
 			entity.transform.rotation.z = math::random(0.f, 360.f);
+
 			entity.transform.scale.x = entity.transform.scale.y = size;
+
 			entity.transform.update();
 
 			entity.rotate = math::random(0, 1) == 1;
@@ -215,11 +228,23 @@ void testCase2()
 	statsEnd("draw textures");
 }
 
+void testCase3()
+{
+	renderer->setStyle(Renderer::StyleType::fill);
+	auto worldCoords = renderer->screenToWorldCoords({ mouse.x, mouse.y });
+	worldCoords.z = 30.f;
+	cout << worldCoords.x << ", " << worldCoords.y;
+	renderer->drawRect(worldCoords, .05f, .05f, Color::Cyan);
+
+	renderer->setViewMatrix(math::matrix4::translate({ .3f, .0f, .0f }));
+}
+
 void render_loop()
 {
 	renderer->begin();
 
 	testCase2();
+	testCase3();
 
 	drawCalls = renderer->flush();
 }

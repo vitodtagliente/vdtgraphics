@@ -141,7 +141,7 @@ namespace graphics
 
 		glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		m_spriteBatch.flush([this, &drawCalls](Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors) -> void
 			{
 				const size_t instances = transforms.size() / 16;
@@ -246,6 +246,22 @@ namespace graphics
 	void Renderer::setStyle(const StyleType style)
 	{
 		m_style = style;
+	}
+
+	math::vec3 Renderer::screenToWorldCoords(const math::vec2& screenCoords) const
+	{
+		math::vec4 normalizedScreenCoords(
+			(screenCoords.x / static_cast<float>(m_width) - 0.5f) * 2.0f, // [-1,1]
+			-(screenCoords.y / static_cast<float>(m_height) - 0.5f) * 2.0f, // [-1,1]
+			0.f, // The near plane maps to Z=-1 in Normalized Device Coordinates
+			0.f
+		);
+
+		bool isInvertible = false;
+		const math::vec4 viewCoords = m_projectionMatrix.inverse(isInvertible) * normalizedScreenCoords;
+		const math::vec4 worldCoords = m_viewMatrix.inverse(isInvertible) * math::vec4(viewCoords.x, viewCoords.y, .0f, .0f);
+		
+		return math::vec3(worldCoords.x, worldCoords.y, worldCoords.z);
 	}
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
