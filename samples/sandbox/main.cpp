@@ -230,8 +230,6 @@ void testCase2()
 
 void testCase3()
 {
-	renderer->setViewMatrix(math::matrix4::translate({ .3f, .1f, .0f }));
-
 	renderer->setStyle(Renderer::StyleType::fill);
 	auto worldCoords = renderer->screenToWorldCoords({ mouse.x, mouse.y });
 	worldCoords.z = 30.0f;
