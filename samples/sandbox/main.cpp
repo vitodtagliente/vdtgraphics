@@ -230,13 +230,13 @@ void testCase2()
 
 void testCase3()
 {
+	renderer->setViewMatrix(math::matrix4::translate({ .3f, .1f, .0f }));
+
 	renderer->setStyle(Renderer::StyleType::fill);
 	auto worldCoords = renderer->screenToWorldCoords({ mouse.x, mouse.y });
-	worldCoords.z = 30.f;
+	worldCoords.z = 30.0f;
 	cout << worldCoords.x << ", " << worldCoords.y;
 	renderer->drawRect(worldCoords, .05f, .05f, Color::Cyan);
-
-	renderer->setViewMatrix(math::matrix4::translate({ .3f, .0f, .0f }));
 }
 
 void render_loop()

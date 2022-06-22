@@ -253,15 +253,21 @@ namespace graphics
 		math::vec4 normalizedScreenCoords(
 			(screenCoords.x / static_cast<float>(m_width) - 0.5f) * 2.0f, // [-1,1]
 			-(screenCoords.y / static_cast<float>(m_height) - 0.5f) * 2.0f, // [-1,1]
-			0.f, // The near plane maps to Z=-1 in Normalized Device Coordinates
-			0.f
+			.0f, // The near plane maps to Z=-1 in Normalized Device Coordinates
+			1.0f
 		);
 
+		// bool isInvertible = false;
+		// const math::vec4 viewCoords = m_viewProjectionMatrix.inverse(isInvertible) * normalizedScreenCoords;
+		// const math::vec4 worldCoords = m_viewMatrix * math::vec4(viewCoords.x, viewCoords.y, .0f, 1.0f);
+		// 
+		// return math::vec3(worldCoords.x, worldCoords.y, worldCoords.z);
+
 		bool isInvertible = false;
-		const math::vec4 viewCoords = m_projectionMatrix.inverse(isInvertible) * normalizedScreenCoords;
-		const math::vec4 worldCoords = m_viewMatrix.inverse(isInvertible) * math::vec4(viewCoords.x, viewCoords.y, .0f, .0f);
-		
-		return math::vec3(worldCoords.x, worldCoords.y, worldCoords.z);
+		const math::mat4 matrix = m_viewProjectionMatrix.inverse(isInvertible);
+		const math::vec4 worldCoords = m_viewProjectionMatrix * normalizedScreenCoords;
+
+		return math::vec3(worldCoords.x - m_viewMatrix.m30, worldCoords.y - m_viewMatrix.m31, worldCoords.z);
 	}
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
