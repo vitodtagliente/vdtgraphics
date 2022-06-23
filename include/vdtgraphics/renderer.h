@@ -10,14 +10,13 @@
 
 #include "color.h"
 #include "polygon_batch.h"
+#include "renderable.h"
 #include "shader_library.h"
+#include "shader_program.h"
 #include "sprite_batch.h"
 
 namespace graphics
 {
-	class Renderable;
-	class ShaderProgram;
-
 	class Renderer
 	{
 	public:
