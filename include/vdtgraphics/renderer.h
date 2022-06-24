@@ -53,8 +53,6 @@ namespace graphics
 		void setStyle(StyleType style);
 		StyleType getStyle() const { return m_style; }
 
-		math::vec3 screenToWorldCoords(const math::vec2& screenCoords) const;
-
 		void drawCircle(const math::vec3& position, float radius, const Color& color);
 		void drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color);
 		void drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points);

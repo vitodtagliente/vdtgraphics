@@ -89,7 +89,7 @@ int main(void)
 		}
 	);
 
-	glfwSetCursorPosCallback(window, 
+	glfwSetCursorPosCallback(window,
 		[](GLFWwindow* window, double xpos, double ypos)
 		{
 			mouse.x = (float)xpos;
@@ -238,11 +238,9 @@ void testCase2()
 void testCase3()
 {
 	renderer->setStyle(Renderer::StyleType::fill);
-	auto worldCoords = renderer->screenToWorldCoords({ mouse.x, mouse.y });
-	// worldCoords.x *= 64.f;
-	// worldCoords.y *= 64.f;
-	worldCoords.z = 30.0f;
-	cout << worldCoords.x << ", " << worldCoords.y;
+	auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
+	worldCoords.z = 1.0f;
+	cout << worldCoords.x << ", " << worldCoords.y << endl;
 	renderer->drawRect(worldCoords, .5f, .5f, Color::Cyan);
 }
 
@@ -252,7 +250,7 @@ void render_loop()
 	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
 	camera.update();
 	renderer->setViewMatrix(camera.getViewMatrix());
-	
+
 	renderer->begin();
 
 	testCase2();

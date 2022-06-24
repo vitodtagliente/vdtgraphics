@@ -14,6 +14,8 @@ namespace graphics
 		virtual math::matrix4 getViewMatrix() const override;
 		virtual math::matrix4 getProjectionMatrix(int screenWidth, int screenHeight) const override;
 
+		virtual math::vec3 screenToWorldCoords(const math::vec2& screenCoords, int screenWidth, int screenHeight) const override;
+
 		float nearPlane;
 		float farPlane;
 		bool pixelPerfect;
