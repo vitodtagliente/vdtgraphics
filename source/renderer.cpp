@@ -250,28 +250,34 @@ namespace graphics
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
 	{
-		const float accuracy = 100.f * radius;
-		const float step = (2 * math::pi) / accuracy;
-		float angle = 0.0f;
-		for (int i = 0; i < accuracy; ++i)
+		static const unsigned int s_triangles = 20; // number of triangles
+		static const float s_twoPi = 2.0f * math::pi;
+		static const float s_delta = s_twoPi / s_triangles;
+
+		for (int i = 0; i < s_triangles; ++i)
 		{
+			const float angle = i * s_delta;
+			const float nextAngle = (i + 1) * s_delta;
+
 			if (m_polygonStyle == PolygonStyle::fill)
 			{
-				m_fillPolygonBatch.batch(position.x, color);
+				m_fillPolygonBatch.reserve(3);
+				m_fillPolygonBatch.batch(position, color);
 				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0.f), color);
-				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(angle + step), radius * std::cos(angle + step), 0.f), color);
+				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(nextAngle), radius * std::cos(nextAngle), 0.f), color);
 			}
 			else
 			{
+				m_strokePolygonBatch.reserve(2);
 				m_strokePolygonBatch.batch(position + math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0.f), color);
-				m_strokePolygonBatch.batch(position + math::vec3(radius * std::sin(angle + step), radius * std::cos(angle + step), 0.f), color);
+				m_strokePolygonBatch.batch(position + math::vec3(radius * std::sin(nextAngle), radius * std::cos(nextAngle), 0.f), color);
 			}
-			angle += step;
 		}
 	}
 
 	void Renderer::drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color)
 	{
+		m_strokePolygonBatch.reserve(2);
 		m_strokePolygonBatch.batch(point1, color);
 		m_strokePolygonBatch.batch(point2, color);
 	}
@@ -295,6 +301,7 @@ namespace graphics
 
 		if (m_polygonStyle == PolygonStyle::fill)
 		{
+			m_fillPolygonBatch.reserve(6);
 			m_fillPolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
 			m_fillPolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);
 			m_fillPolygonBatch.batch(position + math::vec3(-w, -h, 0.f), color);
@@ -304,6 +311,7 @@ namespace graphics
 		}
 		else
 		{
+			m_strokePolygonBatch.reserve(8);
 			m_strokePolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
 			m_strokePolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);
 			m_strokePolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);

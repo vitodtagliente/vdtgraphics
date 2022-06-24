@@ -34,6 +34,20 @@ namespace graphics
 		m_batchIterator = m_batches.begin();
 	}
 
+	void PolygonBatch::reserve(const size_t vertices)
+	{
+		if (m_batchIterator->count + vertices > m_batchIterator->size)
+		{
+			++m_batchIterator;
+			if (m_batchIterator == m_batches.end())
+			{
+				m_batches.push_back(Batch(m_batchSize));
+				m_batchIterator = m_batches.end();
+				--m_batchIterator;
+			}
+		}
+	}
+
 	void PolygonBatch::batch(const math::vec3& position, const Color& color)
 	{
 		findNextBatch().batch(position, color);

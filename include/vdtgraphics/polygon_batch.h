@@ -28,6 +28,7 @@ namespace graphics
 	public:
 		PolygonBatch(size_t batchSize);
 
+		void reserve(size_t vertices);
 		void batch(const math::vec3& position, const Color& color);
 		void flush(const std::function<void(const std::vector<float>& data)>& handler);
 

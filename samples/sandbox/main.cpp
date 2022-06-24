@@ -35,7 +35,7 @@ void showFPS(GLFWwindow* pWindow)
 
 	s_timer -= deltaTime;
 	++s_frames;
-	if (s_timer <= 0.0) 
+	if (s_timer <= 0.0)
 	{
 		std::stringstream ss;
 		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << drawCalls << "]";
@@ -141,7 +141,7 @@ void init()
 	particles.particleSizeRange = { .2f, .6f };
 	particles.spawnAmountRange = { 1,5 };
 	particles.particleSpeedRange = { 1.f, 3.f };
-	particles.particlePolygonType = PolygonType::rect;
+	particles.particlePolygonType = PolygonType::circle;
 	particles.particlePolygonStyle = PolygonStyle::fill;
 	// particles.particleTexture = potatoeTexture;
 	// const float s = 1.f / 11;
@@ -277,6 +277,6 @@ void render_loop()
 
 	testCase2();
 	testCase3();
-	
+
 	drawCalls = renderer->flush();
 }
