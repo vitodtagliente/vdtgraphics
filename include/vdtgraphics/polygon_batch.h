@@ -10,6 +10,19 @@
 
 namespace graphics
 {
+	enum class PolygonType
+	{
+		circle,
+		line,
+		rect
+	};
+
+	enum class PolygonStyle
+	{
+		fill,
+		stroke
+	};
+
 	class PolygonBatch
 	{
 	public:

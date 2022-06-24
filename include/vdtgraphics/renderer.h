@@ -26,12 +26,6 @@ namespace graphics
 			size_t spriteBatchSize{ 2000 };
 		};
 
-		enum class StyleType
-		{
-			fill,
-			stroke
-		};
-
 		Renderer(int width, int height, const Settings& settings = {});
 
 		void init();
@@ -50,8 +44,8 @@ namespace graphics
 		const math::matrix4& getViewMatrix() const { return m_viewMatrix; }
 		const math::matrix4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
-		void setStyle(StyleType style);
-		StyleType getStyle() const { return m_style; }
+		void setPolygonStyle(PolygonStyle style);
+		PolygonStyle getPolygonStyle() const { return m_polygonStyle; }
 
 		void drawCircle(const math::vec3& position, float radius, const Color& color);
 		void drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color);
@@ -71,7 +65,7 @@ namespace graphics
 		bool m_initialized;
 		Color m_clearColor;
 		ShaderLibrary m_shaderLibrary;
-		StyleType m_style;
+		PolygonStyle m_polygonStyle;
 		// Batches
 		PolygonBatch m_fillPolygonBatch;
 		SpriteBatch m_spriteBatch;

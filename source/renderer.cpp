@@ -20,7 +20,7 @@ namespace graphics
 		, m_initialized(false)
 		, m_clearColor(Color::Black)
 		, m_shaderLibrary()
-		, m_style(StyleType::fill)
+		, m_polygonStyle(PolygonStyle::fill)
 		, m_fillPolygonBatch(settings.polygonBatchSize)
 		, m_spriteBatch(settings.spriteBatchSize)
 		, m_strokePolygonBatch(settings.polygonBatchSize)
@@ -243,9 +243,9 @@ namespace graphics
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void Renderer::setStyle(const StyleType style)
+	void Renderer::setPolygonStyle(PolygonStyle style)
 	{
-		m_style = style;
+		m_polygonStyle = style;
 	}
 
 	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
@@ -255,7 +255,7 @@ namespace graphics
 		float angle = 0.0f;
 		for (int i = 0; i < accuracy; ++i)
 		{
-			if (m_style == StyleType::fill)
+			if (m_polygonStyle == PolygonStyle::fill)
 			{
 				m_fillPolygonBatch.batch(position.x, color);
 				m_fillPolygonBatch.batch(position + math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0.f), color);
@@ -278,7 +278,7 @@ namespace graphics
 
 	void Renderer::drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points)
 	{
-		PolygonBatch& batch = m_style == StyleType::fill
+		PolygonBatch& batch = m_polygonStyle == PolygonStyle::fill
 			? m_fillPolygonBatch
 			: m_strokePolygonBatch;
 
@@ -293,7 +293,7 @@ namespace graphics
 		const float w = width / 2;
 		const float h = height / 2;
 
-		if (m_style == StyleType::fill)
+		if (m_polygonStyle == PolygonStyle::fill)
 		{
 			m_fillPolygonBatch.batch(position + math::vec3(w, h, 0.f), color);
 			m_fillPolygonBatch.batch(position + math::vec3(-w, h, 0.f), color);

@@ -34,6 +34,9 @@ namespace graphics
 		bool operator== (const Color& color) const;
 		bool operator!= (const Color& color) const;
 
+		static Color random();
+		static Color random(const Color& color1, const Color& color2);
+
 		static const Color White;
 		static const Color Black;
 		static const Color Red;

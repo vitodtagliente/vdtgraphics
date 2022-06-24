@@ -8,6 +8,7 @@
 #include "image.h"
 #include "index_buffer.h"
 #include "orthographic_camera.h"
+#include "particle_system.h"
 #include "polygon_batch.h"
 #include "renderable.h"
 #include "renderer.h"

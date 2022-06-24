@@ -22,8 +22,7 @@ float RandomFloat(float min, float max)
 	return min + r * (max - min);
 }
 
-int nbFrames = 0;
-double lastTime = 0;
+double lastTick = 0;
 double deltaTime = 0;
 int drawCalls = 0;
 
@@ -31,22 +30,20 @@ math::vector2_t<int> screenSize(640, 480);
 
 void showFPS(GLFWwindow* pWindow)
 {
-	// Measure speed
-	double currentTime = glfwGetTime();
-	deltaTime = currentTime - lastTime;
-	nbFrames++;
-	if (deltaTime >= 1.0) { // If last cout was more than 1 sec ago
-		// cout << 1000.0 / double(nbFrames) << endl;
+	static int s_frames = 0;
+	static double s_timer = 1.0;
 
-		int fps = double(nbFrames) / deltaTime;
-
+	s_timer -= deltaTime;
+	++s_frames;
+	if (s_timer <= 0.0) 
+	{
 		std::stringstream ss;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << fps << " FPS] DrawCalls[" << drawCalls << "]";
+		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << drawCalls << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
-		nbFrames = 0;
-		lastTime = currentTime;
+		s_frames = 0;
+		s_timer = 1.0;
 	}
 }
 
@@ -101,6 +98,13 @@ int main(void)
 	bool run = true;
 	while (!glfwWindowShouldClose(window) && run)
 	{
+		// delta time
+		{
+			double currentTime = glfwGetTime();
+			deltaTime = currentTime - lastTick;
+			lastTick = currentTime;
+		}
+
 		// display the FPS
 		showFPS(window);
 
@@ -119,14 +123,29 @@ int main(void)
 }
 
 Image potetoeImg;
-std::unique_ptr<Texture> potatoeTexture;
+TexturePtr potatoeTexture;
 OrthographicCamera camera;
+ParticleSystem particles;
 
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
+
+	particles.duration = 60.f;
+	particles.spawnTime = .1f;
+	particles.maxParticles = 100;
+	particles.particleColorRange = { Color::Blue, Color::White };
+	particles.particleLifetimeRange = { 1.f, 2.f };
+	particles.particleSizeRange = { .2f, .6f };
+	particles.spawnAmountRange = { 1,5 };
+	particles.particleSpeedRange = { 1.f, 3.f };
+	particles.particlePolygonType = PolygonType::rect;
+	particles.particlePolygonStyle = PolygonStyle::fill;
+	// particles.particleTexture = potatoeTexture;
+	// const float s = 1.f / 11;
+	// particles.particleTextureRect = { s * 9, s * 1, s, s };
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -208,7 +227,7 @@ void testCase2()
 			entity.rotate = math::random(0, 1) == 1;
 			if (entity.rotate)
 			{
-				entity.rotateSpeed = math::random(.2f, .8f);
+				entity.rotateSpeed = math::random(10.f, 30.f);
 			}
 
 			const float s = 1.f / 11;
@@ -224,7 +243,7 @@ void testCase2()
 	{
 		if (entity.rotate)
 		{
-			entity.transform.rotation.z += entity.rotateSpeed;
+			entity.transform.rotation.z += entity.rotateSpeed * deltaTime;
 			entity.transform.update();
 		}
 		renderer->drawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
@@ -237,11 +256,14 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	renderer->setStyle(Renderer::StyleType::fill);
+	renderer->setPolygonStyle(PolygonStyle::fill);
 	auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
 	worldCoords.z = 1.0f;
-	cout << worldCoords.x << ", " << worldCoords.y << endl;
-	renderer->drawRect(worldCoords, .5f, .5f, Color::Cyan);
+
+	particles.position = worldCoords;
+	particles.play();
+	particles.update((float)deltaTime);
+	particles.render(*renderer);
 }
 
 void render_loop()
@@ -255,6 +277,6 @@ void render_loop()
 
 	testCase2();
 	testCase3();
-
+	
 	drawCalls = renderer->flush();
 }

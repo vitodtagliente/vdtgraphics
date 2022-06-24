@@ -38,6 +38,26 @@ namespace graphics
 		return red != color.red || green != color.green || blue != color.blue || alpha != color.alpha;
 	}
 
+	Color Color::random()
+	{
+		return Color(
+			math::random(0.f, 1.f),
+			math::random(0.f, 1.f),
+			math::random(0.f, 1.f),
+			math::random(0.f, 1.f)
+		);
+	}
+
+	Color Color::random(const Color& color1, const Color& color2)
+	{
+		return Color(
+			math::random(color1.red, color2.red),
+			math::random(color1.green, color2.green),
+			math::random(color1.blue, color2.blue),
+			math::random(color1.alpha, color2.alpha)
+		);
+	}
+
 	const Color Color::White(1.0f, 1.0f, 1.0f);
 	const Color Color::Black(0.0f, 0.0f, 0.0f);
 	const Color Color::Red(1.0f, 0.0f, 0.0f);
