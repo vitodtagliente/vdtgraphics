@@ -15,4 +15,3 @@
 - Filters
 
 ![image info](./doc/preview.gif)
-![image info](./doc/particles.gif)
