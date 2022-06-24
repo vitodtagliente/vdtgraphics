@@ -3,9 +3,11 @@
 
 #include "blend_state.h"
 #include "buffer.h"
+#include "camera.h"
 #include "color.h"
 #include "image.h"
 #include "index_buffer.h"
+#include "orthographic_camera.h"
 #include "polygon_batch.h"
 #include "renderable.h"
 #include "renderer.h"

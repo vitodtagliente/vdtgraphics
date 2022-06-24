@@ -27,6 +27,8 @@ double lastTime = 0;
 double deltaTime = 0;
 int drawCalls = 0;
 
+math::vector2_t<int> screenSize(640, 480);
+
 void showFPS(GLFWwindow* pWindow)
 {
 	// Measure speed
@@ -63,7 +65,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(screenSize.x, screenSize.y, "Hello World", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -81,6 +83,8 @@ int main(void)
 	glfwSetFramebufferSizeCallback(window,
 		[](GLFWwindow*, int width, int height)
 		{
+			screenSize.x = width;
+			screenSize.y = height;
 			renderer->setViewport(width, height);
 		}
 	);
@@ -116,14 +120,13 @@ int main(void)
 
 Image potetoeImg;
 std::unique_ptr<Texture> potatoeTexture;
+OrthographicCamera camera;
 
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
-
-	renderer->setProjectionMatrix(math::matrix4::orthographic(-1.f, 1.f, -1.f, 1.f, -30.f, 1000.f));
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -143,6 +146,7 @@ void statsEnd(const std::string& context, const bool refresh = false)
 	}
 }
 
+// Draw lines
 void testCase1()
 {
 	static const int accuracy = 100;
@@ -168,6 +172,7 @@ void testCase1()
 	renderer->drawTexture(potatoeTexture.get(), math::vec3(.3f, .3f, 2.f), TextureRect(s * 9, s * 1, s, s));
 }
 
+// Draw different entities
 void testCase2()
 {
 	struct Entity
@@ -188,10 +193,10 @@ void testCase2()
 		{
 			Entity entity;
 
-			const float size = math::random(.05f, .2f);
+			const float size = math::random(1.f, 1.f);
 
-			entity.transform.position.x = math::random(-.9f, .9f);
-			entity.transform.position.y = math::random(-.9f, .9f);
+			entity.transform.position.x = math::random(-9.f, 9.f);
+			entity.transform.position.y = math::random(-9.f, 9.f);
 			entity.transform.position.z = 0.0f;
 
 			entity.transform.rotation.z = math::random(0.f, 360.f);
@@ -228,17 +233,26 @@ void testCase2()
 	statsEnd("draw textures");
 }
 
+// Screen (input) coords to World coords
+// draw a rectangle on mouse position
 void testCase3()
 {
 	renderer->setStyle(Renderer::StyleType::fill);
 	auto worldCoords = renderer->screenToWorldCoords({ mouse.x, mouse.y });
+	// worldCoords.x *= 64.f;
+	// worldCoords.y *= 64.f;
 	worldCoords.z = 30.0f;
 	cout << worldCoords.x << ", " << worldCoords.y;
-	renderer->drawRect(worldCoords, .05f, .05f, Color::Cyan);
+	renderer->drawRect(worldCoords, .5f, .5f, Color::Cyan);
 }
 
 void render_loop()
 {
+	camera.pixelPerfect = true;
+	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
+	camera.update();
+	renderer->setViewMatrix(camera.getViewMatrix());
+	
 	renderer->begin();
 
 	testCase2();
