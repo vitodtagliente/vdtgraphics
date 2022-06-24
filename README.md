@@ -9,9 +9,10 @@
  - Shapes batching
  - Sprites rendering
  - Sprites batching
+ - Particles
 
 ### WIP
-- Particles
 - Filters
 
 ![image info](./doc/preview.gif)
+![image info](./doc/particles.gif)
