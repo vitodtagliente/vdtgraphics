@@ -136,7 +136,7 @@ void init()
 	particles.duration = 60.f;
 	particles.spawnTime = .1f;
 	particles.maxParticles = 100;
-	particles.particleColorRange = { Color::Blue, Color::White };
+	particles.particleColorRange = { Color::Cyan, Color::Blue };
 	particles.particleLifetimeRange = { 1.f, 2.f };
 	particles.particleSizeRange = { .2f, .6f };
 	particles.spawnAmountRange = { 1,5 };

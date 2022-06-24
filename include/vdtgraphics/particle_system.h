@@ -23,6 +23,7 @@ namespace graphics
 			float lifetime;
 			float speed;
 			Color color;
+			float resizeRatio;
 		};
 
 		ParticleSystem();

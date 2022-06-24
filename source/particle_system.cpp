@@ -14,7 +14,7 @@ namespace graphics
 		, particleLifetimeRange(.0f, 1.f)
 		, particleSizeRange(1.f, 1.f)
 		, particleResizeWithTime(true)
-		, particleResizeRange(.1f, .1f)
+		, particleResizeRange(.1f, 1.f)
 		, particleSpeedRange(1.f, 1.f)
 		, particleTexture()
 		, particlePolygonType(PolygonType::circle)
@@ -61,6 +61,10 @@ namespace graphics
 			}
 
 			particle.transform.position += particle.direction * particle.speed * deltaTime;
+			if (particle.resizeRatio != 0.0f)
+			{
+				particle.transform.scale -= particle.resizeRatio *  deltaTime;
+			}
 			particle.transform.update();
 			++it;
 		}
@@ -124,6 +128,9 @@ namespace graphics
 			? math::vec3(math::random(-1.f, 1.f), math::random(-1.f, 1.f), 0.f)
 			: direction;
 		particle.lifetime = math::random(particleLifetimeRange.first, particleLifetimeRange.second);
+		particle.resizeRatio = particleResizeWithTime
+			? 1.0f / (particle.lifetime / math::random(particleResizeRange.first, particleResizeRange.second))
+			: 0.0f;
 		particle.speed = math::random(particleSpeedRange.first, particleSpeedRange.second);
 		particle.transform.position = position;
 		particle.transform.scale.x = particle.transform.scale.y = math::random(particleSizeRange.first, particleSizeRange.second);
