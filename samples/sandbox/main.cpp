@@ -47,7 +47,7 @@ void showFPS(GLFWwindow* pWindow)
 	}
 }
 
-std::unique_ptr< Renderer> renderer;
+std::unique_ptr< Renderer2D> renderer;
 math::vec3 mouse;
 
 int main(void)
@@ -72,7 +72,7 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	renderer = std::make_unique< Renderer>(640, 480);
+	renderer = std::make_unique< Renderer2D>(640, 480);
 	renderer->init();
 
 	init();
@@ -204,18 +204,18 @@ void testCase2()
 
 	static std::vector<Entity> s_entities;
 
-	statsBegin();
+	// statsBegin();
 
 	if (s_entities.empty())
 	{
-		for (int i = 0; i < 1000; ++i)
+		for (int i = 0; i < 5000; ++i)
 		{
 			Entity entity;
 
 			const float size = math::random(1.f, 1.f);
 
-			entity.transform.position.x = math::random(-9.f, 9.f);
-			entity.transform.position.y = math::random(-9.f, 9.f);
+			entity.transform.position.x = math::random(-20.f, 20.f);
+			entity.transform.position.y = math::random(-20.f, 20.f);
 			entity.transform.position.z = 0.0f;
 
 			entity.transform.rotation.z = math::random(0.f, 360.f);
@@ -236,7 +236,7 @@ void testCase2()
 			s_entities.push_back(entity);
 		}
 
-		statsEnd("generate data", true);
+		// statsEnd("generate data", true);
 	}
 
 	for (Entity& entity : s_entities)
@@ -249,7 +249,7 @@ void testCase2()
 		renderer->drawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
 	}
 
-	statsEnd("draw textures");
+	// statsEnd("draw textures");
 }
 
 // Screen (input) coords to World coords

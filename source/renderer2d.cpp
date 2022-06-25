@@ -1,4 +1,4 @@
-#include <vdtgraphics/renderer.h>
+#include <vdtgraphics/renderer2d.h>
 
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
@@ -14,7 +14,7 @@
 
 namespace graphics
 {
-	Renderer::Renderer(const int width, const int height, const Settings& settings)
+	Renderer2D::Renderer2D(const int width, const int height, const Settings& settings)
 		: m_width(width)
 		, m_height(height)
 		, m_initialized(false)
@@ -32,11 +32,10 @@ namespace graphics
 		, m_colorProgram(nullptr)
 		, m_polygonProgram(nullptr)
 		, m_spritebatchProgram(nullptr)
-		, m_textureProgram(nullptr)
 	{
 	}
 
-	void Renderer::init()
+	void Renderer2D::init()
 	{
 		if (m_initialized) return;
 
@@ -50,10 +49,10 @@ namespace graphics
 			// shaders
 			m_colorProgram = createProgram(ShaderLibrary::names::ColorShader);
 		}
-		// gizmos
+		// polygonbatch
 		{
 			// shaders
-			m_polygonProgram = createProgram(ShaderLibrary::names::GizmosShader);
+			m_polygonProgram = createProgram(ShaderLibrary::names::PolygonBatchShader);
 
 			// render data
 			m_polygonRenderable = std::make_unique< Renderable>();
@@ -111,11 +110,6 @@ namespace graphics
 
 			m_spriteBatchRenderable->bind();
 		}
-		// texture
-		{
-			// shaders
-			m_textureProgram = createProgram(ShaderLibrary::names::TextureShader);
-		}
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -124,7 +118,7 @@ namespace graphics
 		m_initialized = true;
 	}
 
-	void Renderer::begin()
+	void Renderer2D::begin()
 	{
 		init();
 
@@ -133,7 +127,7 @@ namespace graphics
 		glViewport(0, 0, m_width, m_height);
 	}
 
-	int Renderer::flush()
+	int Renderer2D::flush()
 	{
 		if (!m_initialized) return 0;
 
@@ -220,35 +214,35 @@ namespace graphics
 		return drawCalls;
 	}
 
-	void Renderer::setClearColor(const Color& color)
+	void Renderer2D::setClearColor(const Color& color)
 	{
 		m_clearColor = color;
 	}
 
-	void Renderer::setViewport(const int width, const int height)
+	void Renderer2D::setViewport(const int width, const int height)
 	{
 		m_width = width;
 		m_height = height;
 	}
 
-	void Renderer::setProjectionMatrix(const math::matrix4& m)
+	void Renderer2D::setProjectionMatrix(const math::matrix4& m)
 	{
 		m_projectionMatrix = m;
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void Renderer::setViewMatrix(const math::matrix4& m)
+	void Renderer2D::setViewMatrix(const math::matrix4& m)
 	{
 		m_viewMatrix = m;
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void Renderer::setPolygonStyle(PolygonStyle style)
+	void Renderer2D::setPolygonStyle(PolygonStyle style)
 	{
 		m_polygonStyle = style;
 	}
 
-	void Renderer::drawCircle(const math::vec3& position, float radius, const Color& color)
+	void Renderer2D::drawCircle(const math::vec3& position, float radius, const Color& color)
 	{
 		static const unsigned int s_triangles = 20; // number of triangles
 		static const float s_twoPi = 2.0f * math::pi;
@@ -275,14 +269,14 @@ namespace graphics
 		}
 	}
 
-	void Renderer::drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color)
+	void Renderer2D::drawLine(const math::vec3& point1, const math::vec3& point2, const Color& color)
 	{
 		m_strokePolygonBatch.reserve(2);
 		m_strokePolygonBatch.batch(point1, color);
 		m_strokePolygonBatch.batch(point2, color);
 	}
 
-	void Renderer::drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points)
+	void Renderer2D::drawPolygon(const std::vector<std::pair<math::vec3, Color>>& points)
 	{
 		PolygonBatch& batch = m_polygonStyle == PolygonStyle::fill
 			? m_fillPolygonBatch
@@ -294,7 +288,7 @@ namespace graphics
 		}
 	}
 
-	void Renderer::drawRect(const math::vec3& position, float width, float height, const Color& color)
+	void Renderer2D::drawRect(const math::vec3& position, float width, float height, const Color& color)
 	{
 		const float w = width / 2;
 		const float h = height / 2;
@@ -323,32 +317,32 @@ namespace graphics
 		}
 	}
 
-	void Renderer::drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect, const Color& color)
+	void Renderer2D::drawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, matrix, rect, color);
 	}
 
-	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect, const Color& color)
+	void Renderer2D::drawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, math::matrix4::translate(position), rect, color);
 	}
 
-	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const TextureRect& rect, const Color& color)
+	void Renderer2D::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, math::matrix4::translate(position) * math::matrix4::rotate_z(rotation), rect, color);
 	}
 
-	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const math::vec3& scale, const TextureRect& rect, const Color& color)
+	void Renderer2D::drawTexture(Texture* const texture, const math::vec3& position, const math::vec3& scale, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, math::matrix4::scale(scale) * math::matrix4::translate(position), rect, color);
 	}
 
-	void Renderer::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const math::vec3& scale, const TextureRect& rect, const Color& color)
+	void Renderer2D::drawTexture(Texture* const texture, const math::vec3& position, const float rotation, const math::vec3& scale, const TextureRect& rect, const Color& color)
 	{
 		m_spriteBatch.batch(texture, math::matrix4::scale(scale) * math::matrix4::rotate_z(rotation) * math::matrix4::translate(position), rect, color);
 	}
 
-	std::unique_ptr<ShaderProgram> Renderer::createProgram(const std::string& name)
+	std::unique_ptr<ShaderProgram> Renderer2D::createProgram(const std::string& name)
 	{
 		std::map<Shader::Type, std::string> sources;
 		auto it = m_shaderLibrary.getShaders().find(name);

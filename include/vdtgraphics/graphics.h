@@ -11,7 +11,7 @@
 #include "particle_system.h"
 #include "polygon_batch.h"
 #include "renderable.h"
-#include "renderer.h"
+#include "renderer2d.h"
 #include "shader.h"
 #include "shader_library.h"
 #include "shader_program.h"

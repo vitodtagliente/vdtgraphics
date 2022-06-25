@@ -70,7 +70,7 @@ namespace graphics
 		}
 	}
 
-	void ParticleSystem::render(Renderer& renderer)
+	void ParticleSystem::render(Renderer2D& renderer)
 	{
 		for (const Particle& particle : m_particles)
 		{

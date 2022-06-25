@@ -6,7 +6,7 @@
 #include <vdtmath/transform.h>
 
 #include "color.h"
-#include "renderer.h"
+#include "renderer2d.h"
 #include "texture.h"
 #include "texture_rect.h"
 
@@ -47,7 +47,7 @@ namespace graphics
 		PolygonStyle particlePolygonStyle;
 
 		void update(float deltaTime);
-		void render(Renderer& renderer);
+		void render(Renderer2D& renderer);
 
 		void play();
 		void pause();

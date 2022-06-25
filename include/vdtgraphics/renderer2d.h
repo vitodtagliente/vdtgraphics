@@ -17,7 +17,7 @@
 
 namespace graphics
 {
-	class Renderer
+	class Renderer2D
 	{
 	public:
 		struct Settings
@@ -26,7 +26,7 @@ namespace graphics
 			size_t spriteBatchSize{ 2000 };
 		};
 
-		Renderer(int width, int height, const Settings& settings = {});
+		Renderer2D(int width, int height, const Settings& settings = {});
 
 		void init();
 
@@ -81,6 +81,5 @@ namespace graphics
 		std::unique_ptr<ShaderProgram> m_colorProgram;
 		std::unique_ptr<ShaderProgram> m_polygonProgram;
 		std::unique_ptr<ShaderProgram> m_spritebatchProgram;
-		std::unique_ptr<ShaderProgram> m_textureProgram;
 	};
 }
