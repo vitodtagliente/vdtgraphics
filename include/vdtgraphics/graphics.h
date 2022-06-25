@@ -16,6 +16,7 @@
 #include "shader_library.h"
 #include "shader_program.h"
 #include "sprite_batch.h"
+#include "text_renderer.h"
 #include "texture.h"
 #include "texture_coords.h"
 #include "texture_rect.h"
