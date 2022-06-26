@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "font.h"
 #include "image.h"
 
 namespace graphics
@@ -27,6 +28,7 @@ namespace graphics
 		Texture(const unsigned char* const data, unsigned int width, unsigned int height,
 			unsigned int channels, const Options& options = Options{});
 		Texture(const Image& image, const Options& options = Options{});
+		Texture(const Font& font, const Options& options = Options{});
 		~Texture();
 
 		inline unsigned int id() const { return m_id; }

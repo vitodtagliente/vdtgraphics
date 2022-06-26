@@ -39,14 +39,21 @@ namespace graphics
 			else if (channels == 4)
 				m_format = GL_RGBA;
 
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
 				0, m_format, GL_UNSIGNED_BYTE, data
 			);
+			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 	}
 
 	Texture::Texture(const Image& image, const Options& options)
 		: Texture(image.data.get(), image.width, image.height, image.channels, options)
+	{
+	}
+
+	Texture::Texture(const Font& font, const Options& options)
+		: Texture(font.data.get(), Font::atlasWidth, Font::atlasHeight, Font::channels, options)
 	{
 	}
 
