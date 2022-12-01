@@ -1,6 +1,3 @@
 [submodule "vendor/vdtmath"]
 	path = vendor/vdtmath
 	url = https://github.com/vitodtagliente/vdtmath
-[submodule "vendor/glfw"]
-	path = vendor/glfw
-	url = https://github.com/glfw/glfw
