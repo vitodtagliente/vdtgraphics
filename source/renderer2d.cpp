@@ -118,13 +118,19 @@ namespace graphics
 		m_initialized = true;
 	}
 
-	void Renderer2D::begin()
+	void Renderer2D::begin(const bool clear)
 	{
 		init();
 
 		if (!m_initialized) return;
 
 		glViewport(0, 0, m_width, m_height);
+
+		if (clear)
+		{
+			glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
 	}
 
 	int Renderer2D::flush()
@@ -132,9 +138,6 @@ namespace graphics
 		if (!m_initialized) return 0;
 
 		int drawCalls = 0;
-
-		glClearColor(m_clearColor.red, m_clearColor.green, m_clearColor.blue, m_clearColor.alpha);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_spriteBatch.flush([this, &drawCalls](Texture* const texture, const std::vector<float>& transforms, const std::vector<float>& rects, const std::vector<float>& colors) -> void
 			{

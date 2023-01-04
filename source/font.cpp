@@ -59,6 +59,6 @@ namespace graphics
 
 	bool Font::operator!=(const Font& other) const
 	{
-		return other != other.data;
+		return data != other.data;
 	}
 }

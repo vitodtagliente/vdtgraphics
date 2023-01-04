@@ -62,7 +62,7 @@ namespace graphics
 	void VertexBuffer::activateLayout()
 	{
 		int elementIndex = layout.startingIndex;
-		int offset = 0;
+		size_t offset = 0;
 
 		for (const VertexBufferElement& element : layout.getElements())
 		{
@@ -80,13 +80,13 @@ namespace graphics
 			}
 
 			glVertexAttribPointer(
-				elementIndex,
+				static_cast<GLuint>(elementIndex),
 				// num of components
-				element.size,
+				static_cast<GLint>(element.size),
 				type,
 				element.normalized,
 				// move forward size * sizeof(type) each iteration to get the next position
-				layout.getStride() * size,
+				static_cast<GLsizei>(layout.getStride() * size),
 				// start at the beginning of the buffer
 				(void*)(offset * size)
 			);

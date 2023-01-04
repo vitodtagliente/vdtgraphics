@@ -30,7 +30,7 @@ namespace graphics
 
 		void init();
 
-		void begin();
+		void begin(bool clear = true);
 		int flush();
 
 		void setClearColor(const Color& color);

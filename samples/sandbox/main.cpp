@@ -129,7 +129,7 @@ ParticleSystem particles;
 
 void init()
 {
-	renderer->setClearColor(Color(0.0f, 0.0f, 0.2, 1.0f));
+	renderer->setClearColor(Color(0.0f, 0.0f, 0.2f, 1.0f));
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
 
@@ -243,7 +243,7 @@ void testCase2()
 	{
 		if (entity.rotate)
 		{
-			entity.transform.rotation.z += entity.rotateSpeed * deltaTime;
+			entity.transform.rotation.z += entity.rotateSpeed * static_cast<float>(deltaTime);
 			entity.transform.update();
 		}
 		renderer->drawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
