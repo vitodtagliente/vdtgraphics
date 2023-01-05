@@ -1,3 +1,6 @@
 [submodule "vendor/vdtmath"]
 	path = vendor/vdtmath
 	url = https://github.com/vitodtagliente/vdtmath
+[submodule "vendor/fontstash"]
+	path = vendor/fontstash
+	url = https://github.com/memononen/fontstash
