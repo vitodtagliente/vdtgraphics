@@ -289,7 +289,7 @@ void render_loop()
 
 	testCase2();
 	testCase3();
-	testCase4();
+	// testCase4();
 
 	drawCalls = renderer->flush();
 }
