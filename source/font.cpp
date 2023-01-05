@@ -1,64 +1,84 @@
 #include <vdtgraphics/font.h>
 
-#include <fstream>
-#include <string>
-#include <sstream>
-
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <vdtgraphics/stb_truetype.h>
-
 namespace graphics
 {
-	Font::Font(const std::shared_ptr<uint8_t>& data)
-		: data(data)
+	Font::Font()
+		: data()
+		, path()
+		, size()
 	{
 	}
 
-	std::optional<Font> Font::load(const std::filesystem::path& filename)
+	Font::Font(const std::shared_ptr<unsigned char>& data, const std::filesystem::path& path, const size_t size)
+		: data(data)
+		, path(path)
+		, size(size)
 	{
-		static const auto read = [](const std::filesystem::path& filename) -> std::string
+	}
+
+	Font::Font(const Font& other)
+		: data(other.data)
+		, path(other.path)
+		, size(other.size)
+	{
+	}
+
+	Font::~Font()
+	{
+	}
+
+	Font Font::load(const std::filesystem::path& filename)
+	{
+		FILE* fp = 0;
+		size_t dataSize = 0, readed;
+		unsigned char* data = NULL;
+
+		// Read in the font data.
+		fp = fopen(filename.string().c_str(), "rb");
+		if (fp == NULL) return Font();
+
+		fseek(fp, 0, SEEK_END);
+		dataSize = (int)ftell(fp);
+		fseek(fp, 0, SEEK_SET);
+		data = (unsigned char*)malloc(dataSize);
+		if (data == NULL)
 		{
-			std::ostringstream buf;
-			std::ifstream input(filename.c_str());
-			buf << input.rdbuf();
-			return buf.str();
-		};
-
-		auto fontData = read(filename);
-		std::shared_ptr<uint8_t> data = std::make_shared<uint8_t>(atlasWidth * atlasHeight);
-
-		auto charInfo = std::make_unique<stbtt_packedchar[]>(charCount);
-
-		stbtt_pack_context context;
-		if (!stbtt_PackBegin(&context, data.get(), atlasWidth, atlasHeight, 0, 1, nullptr))
-		{
-			return std::nullopt;
+			fclose(fp);
+			return Font();
 		}
 
-		stbtt_PackSetOversampling(&context, oversampleX, oversampleY);
-		if (!stbtt_PackFontRange(&context, reinterpret_cast<const unsigned char*>(fontData.c_str()), 0, size, firstChar, charCount, charInfo.get()))
+		readed = fread(data, 1, dataSize, fp);
+		fclose(fp);
+		fp = 0;
+		if (readed != dataSize)
 		{
-			return std::nullopt;
+			free(data);
+			if (fp) fclose(fp);
+			return Font();
 		}
 
-		stbtt_PackEnd(&context);
-
-		return Font(data);
+		return Font(std::shared_ptr<unsigned char>(data), filename, dataSize);
 	}
 
 	Font& Font::operator=(const Font& other)
 	{
 		data = other.data;
+		path = other.path;
+		size = other.size;
 		return *this;
 	}
 
 	bool Font::operator==(const Font& other) const
 	{
-		return data == other.data;
+		return data == other.data
+			&& path == other.path
+			&& size == other.size;
 	}
 
 	bool Font::operator!=(const Font& other) const
 	{
-		return data != other.data;
+		return data != other.data
+			|| path != other.path
+			|| size != other.size;
 	}
 }

@@ -52,11 +52,6 @@ namespace graphics
 	{
 	}
 
-	Texture::Texture(const Font& font, const Options& options)
-		: Texture(font.data.get(), Font::atlasWidth, Font::atlasHeight, Font::channels, options)
-	{
-	}
-
 	Texture::~Texture()
 	{
 		free();

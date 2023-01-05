@@ -27,6 +27,7 @@ namespace graphics
 		};
 
 		Renderer2D(int width, int height, const Settings& settings = {});
+		~Renderer2D() = default;
 
 		void init();
 

@@ -47,7 +47,8 @@ void showFPS(GLFWwindow* pWindow)
 	}
 }
 
-std::unique_ptr< Renderer2D> renderer;
+std::unique_ptr<Renderer2D> renderer;
+std::unique_ptr<TextRenderer> textRenderer;
 math::vec3 mouse;
 
 int main(void)
@@ -72,8 +73,10 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	renderer = std::make_unique< Renderer2D>(640, 480);
+	renderer = std::make_unique<Renderer2D>(640, 480);
 	renderer->init();
+	textRenderer = std::make_unique<TextRenderer>();
+	textRenderer->init();
 
 	init();
 
@@ -126,12 +129,15 @@ Image potetoeImg;
 TexturePtr potatoeTexture;
 OrthographicCamera camera;
 ParticleSystem particles;
+Font font;
 
 void init()
 {
 	renderer->setClearColor(Color(0.0f, 0.0f, 0.2f, 1.0f));
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
+
+	font = Font::load("../fonts/DroidSerif-Regular.ttf");
 
 	particles.duration = 60.f;
 	particles.spawnTime = .1f;
@@ -266,6 +272,12 @@ void testCase3()
 	particles.render(*renderer);
 }
 
+// text rendering
+void testCase4()
+{
+	textRenderer->drawText(font, "Hello vdtgraphics!", math::vec2::zero, Color::White, 10.f);
+}
+
 void render_loop()
 {
 	camera.pixelPerfect = true;
@@ -277,6 +289,7 @@ void render_loop()
 
 	testCase2();
 	testCase3();
+	testCase4();
 
 	drawCalls = renderer->flush();
 }
