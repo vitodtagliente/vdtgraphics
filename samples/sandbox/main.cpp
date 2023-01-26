@@ -47,7 +47,9 @@ void showFPS(GLFWwindow* pWindow)
 	}
 }
 
-std::unique_ptr<Renderer2D> renderer;
+std::unique_ptr<Context> context;
+std::unique_ptr<RenderTarget> renderTarget;
+std::unique_ptr<Renderer> renderer;
 std::unique_ptr<TextRenderer> textRenderer;
 math::vec3 mouse;
 
@@ -73,8 +75,17 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	renderer = std::make_unique<Renderer2D>(640, 480);
-	renderer->init();
+	context = std::make_unique<Context>();
+	if (context->initialize() != Context::State::Initialized)
+	{
+		glfwTerminate();
+		return -1;
+	}
+
+	renderer = std::make_unique<Renderer>();
+	renderer->init(context.get());
+	renderTarget = std::make_unique<RenderTarget>(100, 100);
+	// renderer->setRenderTarget(renderTarget.get());
 	textRenderer = std::make_unique<TextRenderer>();
 	textRenderer->init();
 
@@ -133,7 +144,6 @@ Font font;
 
 void init()
 {
-	renderer->setClearColor(Color(0.0f, 0.0f, 0.2f, 1.0f));
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
 
@@ -174,27 +184,11 @@ void statsEnd(const std::string& context, const bool refresh = false)
 // Draw lines
 void testCase1()
 {
-	static const int accuracy = 100;
-	static const float radius = 1.f;
-	const float step = (2 * math::pi) / accuracy;
-	float angle = 0.0f;
-	for (int i = 0; i < accuracy; ++i)
-	{
-		renderer->drawLine(
-			math::vec3(radius * std::sin(angle), radius * std::cos(angle), 0),
-			math::vec3(-radius * std::sin(angle), -radius * std::cos(angle), 0),
-			Color(math::random(0.f, 1.f), math::random(0.f, 1.f), math::random(0.f, 1.f))
-		);
-		angle += step;
-	}
-
-	renderer->drawRect(math::vec3::zero, 1.f, 1.f, Color::Magenta);
-	renderer->drawRect(math::vec3(.4f, .3f, 2.1f), .5f, .5f, Color::Green);
-
-	renderer->drawCircle(math::vec3::zero, .5f, Color::Yellow);
-
-	const float s = 1.f / 11;
-	renderer->drawTexture(potatoeTexture.get(), math::vec3(.3f, .3f, 2.f), TextureRect(s * 9, s * 1, s, s));
+	renderer->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 1.f, 1.f, Color::Magenta);
+	renderer->submitDrawRect(ShapeRenderStyle::stroke, math::vec3(.4f, .3f, 0.0f), .5f, .5f, Color::Green);
+	renderer->submitDrawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 1.f, Color::Yellow);
+	renderer->submitDrawLine(math::vec3(-1.f, -1.f, 0.f), Color::Red, math::vec3::ones, Color::Yellow);
+	renderer->submitDrawTexture(potatoeTexture.get(), math::vec3::zero);
 }
 
 // Draw different entities
@@ -252,7 +246,7 @@ void testCase2()
 			entity.transform.rotation.z += entity.rotateSpeed * static_cast<float>(deltaTime);
 			entity.transform.update();
 		}
-		renderer->drawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
+		renderer->submitDrawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
 	}
 
 	// statsEnd("draw textures");
@@ -262,14 +256,14 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	renderer->setPolygonStyle(PolygonStyle::fill);
-	auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
-	worldCoords.z = 1.0f;
-
-	particles.position = worldCoords;
-	particles.play();
-	particles.update((float)deltaTime);
-	particles.render(*renderer);
+	// renderer->setPolygonStyle(PolygonStyle::fill);
+	// auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
+	// worldCoords.z = 1.0f;
+	// 
+	// particles.position = worldCoords;
+	// particles.play();
+	// particles.update((float)deltaTime);
+	// particles.render(*renderer);
 }
 
 // text rendering
@@ -285,11 +279,12 @@ void render_loop()
 	camera.update();
 	renderer->setViewMatrix(camera.getViewMatrix());
 
-	renderer->begin();
+	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 
+	// testCase1();
 	testCase2();
 	testCase3();
 	// testCase4();
 
-	drawCalls = renderer->flush();
+	renderer->flush();
 }

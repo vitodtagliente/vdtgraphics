@@ -136,9 +136,52 @@ namespace graphics
 			}
 		)"
 		));
+		m_shaders.insert(std::make_pair(names::TextureShader, R"(
+			#shader vertex
+
+			#version 330 core
+ 
+			// an attribute is an input (in) to a vertex shader.
+			// It will receive data from a buffer
+			layout(location = 0) in vec4 a_position;
+			layout(location = 1) in vec4 a_texcoord;
+
+			out vec2 v_texcoord;
+ 
+			// all shaders have a main function
+			void main() {
+ 
+				// gl_Position is a special variable a vertex shader
+				// is responsible for setting
+				gl_Position = a_position;
+				v_texcoord = a_texcoord;
+			}
+
+			#shader fragment
+
+			#version 330 core
+
+			// fragment shaders don't have a default precision so we need
+			// to pick one. highp is a good default. It means "high precision"
+			precision highp float;
+ 
+			in vec2 v_texcoord;
+
+			// The texture.
+			uniform sampler2D u_texture;
+
+			out vec4 outColor;
+ 
+			void main() {
+				// Just set the output to a constant reddish-purple
+				FragColor = texture(u_texture, v_texcoord);
+			}		
+		)"
+		));
 	}
 
 	const std::string ShaderLibrary::names::ColorShader = "Color";
 	const std::string ShaderLibrary::names::PolygonBatchShader = "PolygonBatch";
 	const std::string ShaderLibrary::names::SpriteBatchShader = "SpriteBatch";
+	const std::string ShaderLibrary::names::TextureShader = "Texture";
 }
