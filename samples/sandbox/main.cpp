@@ -105,6 +105,9 @@ int main(void)
 		}
 	);
 
+	// remove the fps cap
+	glfwSwapInterval(0);
+
 	/* Loop until the user closes the window */
 	bool run = true;
 	while (!glfwWindowShouldClose(window) && run)
