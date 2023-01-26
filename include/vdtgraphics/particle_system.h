@@ -5,8 +5,9 @@
 
 #include <vdtmath/transform.h>
 
+#include "common.h"
 #include "color.h"
-#include "renderer2d.h"
+#include "renderer.h"
 #include "texture.h"
 #include "texture_rect.h"
 
@@ -43,11 +44,11 @@ namespace graphics
 		std::pair<float, float> particleSpeedRange;
 		TexturePtr particleTexture;
 		TextureRect particleTextureRect;
-		PolygonType particlePolygonType;
-		PolygonStyle particlePolygonStyle;
+		ShapeRenderType particleShapeType;
+		ShapeRenderStyle particleShapeStyle;
 
 		void update(float deltaTime);
-		void render(Renderer2D& renderer);
+		void render(Renderer& renderer);
 
 		void play();
 		void pause();

@@ -4,12 +4,12 @@
 
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
+#include <vdtgraphics/render_command.h>
 #include <vdtgraphics/render_commands.h>
 #include <vdtgraphics/render_target.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_library.h>
 #include <vdtgraphics/shader_program.h>
-#include <vdtgraphics/sprite_batch.h>
 #include <vdtgraphics/texture.h>
 #include <vdtgraphics/vertex_buffer.h>
 
@@ -90,6 +90,7 @@ namespace graphics
 
 	void Renderer::clear(const Color& color)
 	{
+		stats.drawCalls = 0;
 		m_commands.clear();
 		glClearColor(color.red, color.green, color.blue, color.alpha);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -153,7 +154,10 @@ namespace graphics
 	{
 		for (const auto& command : m_commands)
 		{
-			command->execute();
+			if (command->execute() == RenderCommandResult::OK)
+			{
+				++stats.drawCalls;
+			}
 		}
 		m_commands.clear();
 	}

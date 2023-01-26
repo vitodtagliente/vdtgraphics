@@ -3,10 +3,16 @@
 
 namespace graphics
 {
+	enum class RenderCommandResult
+	{
+		Invalid,
+		OK
+	};
+
 	struct RenderCommand
 	{
 		virtual ~RenderCommand() = default;
 
-		virtual void execute() = 0;
+		virtual RenderCommandResult execute() = 0;
 	};
 }

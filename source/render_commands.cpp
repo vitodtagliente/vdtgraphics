@@ -35,12 +35,12 @@ namespace graphics
 		}
 	}
 
-	void RenderShapeCommand::execute()
+	RenderCommandResult RenderShapeCommand::execute()
 	{
 		if (m_renderable == nullptr
 			|| m_program == nullptr
 			|| !m_program->isValid()
-			|| m_data.empty()) return;
+			|| m_data.empty()) return RenderCommandResult::Invalid;
 
 		m_renderable->bind();
 
@@ -56,6 +56,7 @@ namespace graphics
 		const int count = static_cast<int>(m_data.size()) / static_cast<int>(Vertex::size);
 
 		glDrawArrays(primitiveType, offset, count);
+		return RenderCommandResult::OK;
 	}
 
 	// RenderTextureCommand
@@ -85,14 +86,14 @@ namespace graphics
 		}
 	}
 
-	void RenderTextureCommand::execute()
+	RenderCommandResult RenderTextureCommand::execute()
 	{
 		if (m_renderable == nullptr
 			|| m_program == nullptr
 			|| !m_program->isValid()
 			|| m_texture == nullptr
 			|| !m_texture->isValid()
-			|| m_data.empty()) return;
+			|| m_data.empty()) return RenderCommandResult::Invalid;
 
 		m_renderable->bind();
 
@@ -112,5 +113,6 @@ namespace graphics
 		const int indexType = GL_UNSIGNED_INT;
 
 		glDrawElementsInstanced(primitiveType, count, indexType, offset, numInstances);
+		return RenderCommandResult::OK;
 	}
 }

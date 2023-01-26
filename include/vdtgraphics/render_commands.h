@@ -27,7 +27,7 @@ namespace graphics
 
 		void push(const Vertex& vertex);
 		
-		virtual void execute() override;
+		virtual RenderCommandResult execute() override;
 
 	private:
 		size_t m_capacity;
@@ -52,7 +52,7 @@ namespace graphics
 
 		void push(const SpriteVertex& vertex);
 
-		virtual void execute() override;
+		virtual RenderCommandResult execute() override;
 
 	private:
 		size_t m_capacity; 

@@ -28,6 +28,11 @@ int drawCalls = 0;
 
 math::vector2_t<int> screenSize(640, 480);
 
+std::unique_ptr<Context> context;
+std::unique_ptr<RenderTarget> renderTarget;
+std::unique_ptr<Renderer> renderer;
+math::vec3 mouse;
+
 void showFPS(GLFWwindow* pWindow)
 {
 	static int s_frames = 0;
@@ -38,7 +43,7 @@ void showFPS(GLFWwindow* pWindow)
 	if (s_timer <= 0.0)
 	{
 		std::stringstream ss;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << drawCalls << "]";
+		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << renderer->stats.drawCalls << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
@@ -46,12 +51,6 @@ void showFPS(GLFWwindow* pWindow)
 		s_timer = 1.0;
 	}
 }
-
-std::unique_ptr<Context> context;
-std::unique_ptr<RenderTarget> renderTarget;
-std::unique_ptr<Renderer> renderer;
-std::unique_ptr<TextRenderer> textRenderer;
-math::vec3 mouse;
 
 int main(void)
 {
@@ -86,8 +85,6 @@ int main(void)
 	renderer->init(context.get());
 	renderTarget = std::make_unique<RenderTarget>(100, 100);
 	// renderer->setRenderTarget(renderTarget.get());
-	textRenderer = std::make_unique<TextRenderer>();
-	textRenderer->init();
 
 	init();
 
@@ -140,14 +137,11 @@ Image potetoeImg;
 TexturePtr potatoeTexture;
 OrthographicCamera camera;
 ParticleSystem particles;
-Font font;
 
 void init()
 {
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
-
-	font = Font::load("../fonts/DroidSerif-Regular.ttf");
 
 	particles.duration = 60.f;
 	particles.spawnTime = .1f;
@@ -157,8 +151,8 @@ void init()
 	particles.particleSizeRange = { .2f, .6f };
 	particles.spawnAmountRange = { 1,5 };
 	particles.particleSpeedRange = { 1.f, 3.f };
-	particles.particlePolygonType = PolygonType::circle;
-	particles.particlePolygonStyle = PolygonStyle::fill;
+	// particles.particlePolygonType = PolygonType::circle;
+	// particles.particlePolygonStyle = PolygonStyle::fill;
 	// particles.particleTexture = potatoeTexture;
 	// const float s = 1.f / 11;
 	// particles.particleTextureRect = { s * 9, s * 1, s, s };
@@ -269,7 +263,7 @@ void testCase3()
 // text rendering
 void testCase4()
 {
-	textRenderer->drawText(font, "Hello vdtgraphics!", math::vec2::zero, Color::White, 10.f);
+	
 }
 
 void render_loop()

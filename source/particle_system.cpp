@@ -17,8 +17,8 @@ namespace graphics
 		, particleResizeRange(.1f, 1.f)
 		, particleSpeedRange(1.f, 1.f)
 		, particleTexture()
-		, particlePolygonType(PolygonType::circle)
-		, particlePolygonStyle(PolygonStyle::fill)
+		, particleShapeType(ShapeRenderType::circle)
+		, particleShapeStyle(ShapeRenderStyle::fill)
 		, m_isPlaying(false)
 		, m_lifetime(duration)
 		, m_particles()
@@ -70,27 +70,27 @@ namespace graphics
 		}
 	}
 
-	void ParticleSystem::render(Renderer2D& renderer)
+	void ParticleSystem::render(Renderer& renderer)
 	{
 		for (const Particle& particle : m_particles)
 		{
 			if (particleTexture)
 			{
-				renderer.drawTexture(particleTexture.get(), particle.transform.matrix(), particleTextureRect, particle.color);
+				// renderer.drawTexture(particleTexture.get(), particle.transform.matrix(), particleTextureRect, particle.color);
 			}
 			else
 			{
-				PolygonStyle style = renderer.getPolygonStyle();
-				renderer.setPolygonStyle(particlePolygonStyle);
-				if (particlePolygonType == PolygonType::circle)
-				{
-					renderer.drawCircle(particle.transform.position, particle.transform.scale.x, particle.color);
-				}
-				else
-				{
-					renderer.drawRect(particle.transform.position, particle.transform.scale.x, particle.transform.scale.y, particle.color);
-				}
-				renderer.setPolygonStyle(style);
+				// ShapeRenderStyle style = renderer.getsha();
+				// renderer.setPolygonStyle(particlePolygonStyle);
+				// if (particlePolygonType == PolygonType::circle)
+				// {
+				// 	renderer.drawCircle(particle.transform.position, particle.transform.scale.x, particle.color);
+				// }
+				// else
+				// {
+				// 	renderer.drawRect(particle.transform.position, particle.transform.scale.x, particle.transform.scale.y, particle.color);
+				// }
+				// renderer.setPolygonStyle(style);
 			}
 		}
 	}

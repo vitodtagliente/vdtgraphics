@@ -42,4 +42,10 @@ namespace graphics
 		fill,
 		stroke
 	};
+
+	enum class ShapeRenderType
+	{
+		circle,
+		rect
+	};
 }

@@ -25,6 +25,12 @@ namespace graphics
 	class Renderer
 	{
 	public:
+
+		struct Stats
+		{
+			int drawCalls{ 0 };
+		};
+
 		Renderer() = default;
 		virtual ~Renderer() = default;
 
@@ -55,6 +61,8 @@ namespace graphics
 		void submitDrawTexture(Texture* const texture, const math::vec3& position, float rotation, const math::vec3& scale, const TextureRect& rect = {}, const Color& color = Color::White);
 
 		void flush();
+
+		Stats stats;
 
 	private:
 		std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
