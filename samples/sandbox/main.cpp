@@ -139,26 +139,11 @@ int main(void)
 Image potetoeImg;
 TexturePtr potatoeTexture;
 OrthographicCamera camera;
-ParticleSystem particles;
 
 void init()
 {
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
-
-	particles.duration = 60.f;
-	particles.spawnTime = .1f;
-	particles.maxParticles = 100;
-	particles.particleColorRange = { Color::Cyan, Color::Blue };
-	particles.particleLifetimeRange = { 1.f, 2.f };
-	particles.particleSizeRange = { .2f, .6f };
-	particles.spawnAmountRange = { 1,5 };
-	particles.particleSpeedRange = { 1.f, 3.f };
-	// particles.particlePolygonType = PolygonType::circle;
-	// particles.particlePolygonStyle = PolygonStyle::fill;
-	// particles.particleTexture = potatoeTexture;
-	// const float s = 1.f / 11;
-	// particles.particleTextureRect = { s * 9, s * 1, s, s };
 }
 
 std::chrono::steady_clock::time_point startTime;

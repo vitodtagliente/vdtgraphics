@@ -9,7 +9,6 @@
 #include "image.h"
 #include "index_buffer.h"
 #include "orthographic_camera.h"
-#include "particle_system.h"
 #include "render_target.h"
 #include "renderable.h"
 #include "renderer.h"
