@@ -66,7 +66,8 @@ namespace graphics
 			IndexBuffer& ib = *m_textureRenderable->addIndexBuffer(Renderable::names::MainBuffer, sizeof(indices), BufferUsageMode::Static);
 			ib.fillData(indices, sizeof(indices));
 
-			VertexBuffer& dataBuffer = *m_textureRenderable->addVertexBuffer("data", SpriteVertex::size * 1000 * sizeof(float), BufferUsageMode::Stream);
+			VertexBuffer& dataBuffer = *m_textureRenderable->addVertexBuffer("data", SpriteVertex::size * 10000 * sizeof(float), BufferUsageMode::Stream);
+			dataBuffer.layout.push(VertexBufferElement("texture", VertexBufferElement::Type::Integer, 1, true, true));
 			dataBuffer.layout.push(VertexBufferElement("crop", VertexBufferElement::Type::Float, 4, true, true));
 			dataBuffer.layout.push(VertexBufferElement("color", VertexBufferElement::Type::Float, 4, true, true));
 			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));
@@ -286,7 +287,7 @@ namespace graphics
 		for (int i = static_cast<int>(m_commands.size()) - 1; i >= 0; --i)
 		{
 			command = dynamic_cast<RenderTextureCommand*>(m_commands[i].get());
-			if (command != nullptr && command->getTexture() == texture)
+			if (command != nullptr && command->hasCapacity(texture))
 			{
 				break;
 			}
@@ -298,18 +299,13 @@ namespace graphics
 			command = new RenderTextureCommand(
 				m_textureRenderable.get(),
 				m_spriteProgram.get(),
-				texture,
 				m_viewProjectionMatrix,
-				1000
+				10000
 			);
 			m_commands.push_back(std::unique_ptr<RenderTextureCommand>(command));
 		}
 
-		command->push({
-			transform, 
-			color,
-			rect
-			});
+		command->push({	transform, color, rect }, texture);
 	}
 
 	void Renderer::submitDrawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect, const Color& color)

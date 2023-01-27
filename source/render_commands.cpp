@@ -23,7 +23,7 @@ namespace graphics
 		m_data.reserve(capacity * Vertex::size);
 	}
 
-	void RenderShapeCommand::push(const Vertex& vertex)
+	bool RenderShapeCommand::push(const Vertex& vertex)
 	{
 		if (m_size < m_capacity)
 		{
@@ -32,7 +32,9 @@ namespace graphics
 				vertex.color.red, vertex.color.green, vertex.color.blue, vertex.color.alpha
 				});
 			++m_size;
+			return true;
 		}
+		return false;
 	}
 
 	RenderCommandResult RenderShapeCommand::execute()
@@ -60,30 +62,51 @@ namespace graphics
 	}
 
 	// RenderTextureCommand
-	RenderTextureCommand::RenderTextureCommand(Renderable* const renderable, ShaderProgram* const program, Texture* const texture, const math::mat4& viewProjectionMatrix, const size_t capacity)
+	RenderTextureCommand::RenderTextureCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const size_t capacity)
 		: RenderCommand()
 		, m_capacity(capacity)
 		, m_data()
 		, m_program(program)
 		, m_renderable(renderable)
 		, m_size(0)
-		, m_texture(texture)
+		, m_textures()
 		, m_viewProjectionMatrix(viewProjectionMatrix)
 	{
-		m_data.reserve(capacity * SpriteVertex::size);
+		m_data.reserve(capacity * (SpriteVertex::size + 1));
+		m_textures.reserve(max_texture_units);
 	}
 
-	void RenderTextureCommand::push(const SpriteVertex& vertex)
+	bool RenderTextureCommand::hasCapacity(Texture* const texture) const
 	{
-		if (m_size < m_capacity)
+		const auto& it = std::find(m_textures.begin(), m_textures.end(), texture);
+		return it != m_textures.end() || m_textures.size() < max_texture_units;
+	}
+
+	bool RenderTextureCommand::push(const SpriteVertex& vertex, Texture* const texture)
+	{
+		static const auto& findIndex = [](Texture* const texture, std::vector<Texture*>& textures) -> int
+		{
+			for (int i = 0; i < textures.size(); ++i)
+			{
+				if (textures[i] == texture) return i;
+			}
+
+			textures.push_back(texture);
+			return static_cast<int>(textures.size()) - 1;
+		};
+
+		if (m_size < m_capacity && texture != nullptr)
 		{
 			m_data.insert(m_data.end(), {
+				static_cast<float>(findIndex(texture, m_textures)),
 				vertex.rect.x, vertex.rect.y, vertex.rect.width, vertex.rect.height,
 				vertex.color.red, vertex.color.green, vertex.color.blue, vertex.color.alpha
 				});
 			m_data.insert(m_data.end(), vertex.transform.data, vertex.transform.data + vertex.transform.length);
 			++m_size;
+			return true;
 		}
+		return false;
 	}
 
 	RenderCommandResult RenderTextureCommand::execute()
@@ -91,8 +114,7 @@ namespace graphics
 		if (m_renderable == nullptr
 			|| m_program == nullptr
 			|| !m_program->isValid()
-			|| m_texture == nullptr
-			|| !m_texture->isValid()
+			|| m_textures.empty()
 			|| m_data.empty()) return RenderCommandResult::Invalid;
 
 		m_renderable->bind();
@@ -102,8 +124,11 @@ namespace graphics
 		data.fillData((void*)&m_data[0], m_data.size() * sizeof(float));
 
 		m_program->bind();
-		m_texture->bind(0);
-		m_program->set("u_texture", 0);
+		for (int i = 0; i < m_textures.size(); ++i)
+		{
+			m_textures[i]->bind(i);
+			m_program->set("u_texture" + std::to_string(i), i);
+		}
 		m_program->set("u_matrix", m_viewProjectionMatrix);
 
 		const int primitiveType = GL_TRIANGLES;

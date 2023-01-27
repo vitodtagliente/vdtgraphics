@@ -25,7 +25,7 @@ namespace graphics
 
 		ShapeRenderStyle getStyle() const { return m_style; }
 
-		void push(const Vertex& vertex);
+		bool push(const Vertex& vertex);
 		
 		virtual RenderCommandResult execute() override;
 
@@ -42,15 +42,16 @@ namespace graphics
 	class RenderTextureCommand : public RenderCommand
 	{
 	public:
-		RenderTextureCommand(Renderable* const renderable, ShaderProgram* const program, Texture* const texture, const math::mat4& viewProjectionMatrix, size_t capacity);
+		RenderTextureCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
 
 		size_t capacity() const { return m_capacity; }
 		size_t size() const { return m_size; }
 		bool hasCapacity(const size_t numOfTextures) const { return m_capacity - m_size >= numOfTextures; }
 
-		Texture* const getTexture() const { return m_texture; }
+		const std::vector<Texture*>& getTextures() const { return m_textures; }
+		bool hasCapacity(Texture* const texture) const;
 
-		void push(const SpriteVertex& vertex);
+		bool push(const SpriteVertex& vertex, Texture* const texture);
 
 		virtual RenderCommandResult execute() override;
 
@@ -60,7 +61,9 @@ namespace graphics
 		ShaderProgram* m_program;
 		Renderable* m_renderable;
 		size_t m_size;
-		Texture* m_texture;
+		std::vector<Texture*> m_textures;
 		math::mat4 m_viewProjectionMatrix;
+
+		static constexpr size_t max_texture_units = 16;
 	};
 }
