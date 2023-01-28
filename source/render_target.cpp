@@ -14,22 +14,26 @@ namespace graphics
 		glGenFramebuffers(1, &m_id);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
 
-		// Create colour texture
-		m_texture = std::make_unique<Texture>(nullptr, width, height, 4);
+		// create the color buffer
+		m_texture = std::make_unique<Texture>(nullptr, width, height, 3);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->id(), 0);
 
-		// Create depth/stencil renderbuffer
+		// create depth/stencil buffer
 		glGenRenderbuffers(1, &m_depthId);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_depthId);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthId);
 
 		// Check for completeness
 		int32_t completeStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (completeStatus != GL_FRAMEBUFFER_COMPLETE)
 		{
-			
+			m_errorMessage = "Invalid FrameBuffer";
+			m_state = State::Error;
+		}
+		else
+		{
+			m_state = State::Ready;
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

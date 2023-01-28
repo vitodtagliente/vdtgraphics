@@ -130,7 +130,7 @@ namespace graphics
 
 		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->id());
 		setViewport(renderTarget->getWidth(), renderTarget->getHeight());
-		clear(renderTarget->getColot());
+		clear(renderTarget->getColor());
 		m_renderTarget = renderTarget;
 	}
 

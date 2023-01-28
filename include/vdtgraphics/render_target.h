@@ -2,6 +2,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "color.h"
 
@@ -12,6 +13,14 @@ namespace graphics
 	class RenderTarget
 	{
 	public:
+
+		enum class State
+		{
+			Unknown,
+			Error,
+			Ready
+		};
+
 		RenderTarget(int width, int height, const Color& color = Color::White);
 		~RenderTarget();
 
@@ -20,7 +29,9 @@ namespace graphics
 
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
-		const Color& getColot() const { return m_color; }
+
+		const Color& getColor() const { return m_color; }
+		const std::string& getErrorMessage() const { return m_errorMessage; }
 		Texture* const getTexture() const { return m_texture.get(); }
 
 	private:
@@ -34,5 +45,9 @@ namespace graphics
 		int m_width, m_height;
 		// clear color
 		graphics::Color m_color;
+		// the error message
+		std::string m_errorMessage;
+		// The state
+		State m_state{ State::Unknown };
 	};
 }

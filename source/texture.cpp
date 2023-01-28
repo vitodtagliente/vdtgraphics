@@ -30,21 +30,18 @@ namespace graphics
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, options.filterMin);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, options.filterMax);
 
-		if (data)
-		{
-			if (channels == 1)
-				m_format = GL_RED;
-			else if (channels == 3)
-				m_format = GL_RGB;
-			else if (channels == 4)
-				m_format = GL_RGBA;
+		if (channels == 1)
+			m_format = GL_RED;
+		else if (channels == 3)
+			m_format = GL_RGB;
+		else if (channels == 4)
+			m_format = GL_RGBA;
 
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
-				0, m_format, GL_UNSIGNED_BYTE, data
-			);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
+			0, m_format, GL_UNSIGNED_BYTE, data
+		);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	Texture::Texture(const Image& image, const Options& options)

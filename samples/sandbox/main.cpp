@@ -26,7 +26,7 @@ double lastTick = 0;
 double deltaTime = 0;
 int drawCalls = 0;
 
-math::vector2_t<int> screenSize(640, 480);
+math::vector2_t<int> screenSize(720, 480);
 
 std::unique_ptr<Context> context;
 std::unique_ptr<RenderTarget> renderTarget;
