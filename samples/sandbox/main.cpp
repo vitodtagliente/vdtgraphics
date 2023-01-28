@@ -83,7 +83,7 @@ int main(void)
 
 	renderer = std::make_unique<Renderer>();
 	renderer->init(context.get());
-	renderTarget = std::make_unique<RenderTarget>(100, 100);
+	renderTarget = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color::Cyan);
 	// renderer->setRenderTarget(renderTarget.get());
 
 	init();
@@ -137,6 +137,7 @@ int main(void)
 }
 
 Image potetoeImg;
+Font font;
 TexturePtr potatoeTexture;
 OrthographicCamera camera;
 
@@ -144,6 +145,7 @@ void init()
 {
 	potetoeImg = Image::load("../../../assets/spritesheet.png");
 	potatoeTexture = std::make_unique<Texture>(potetoeImg);
+	font = Font::load("../../../assets/font.ttf");
 }
 
 std::chrono::steady_clock::time_point startTime;

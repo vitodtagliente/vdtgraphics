@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "color.h"
 #include "context.h"
+#include "font.h"
 #include "image.h"
 #include "index_buffer.h"
 #include "orthographic_camera.h"
