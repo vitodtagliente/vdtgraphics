@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+#include <vdtgraphics/context.h>
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/render_command.h>
@@ -17,6 +18,11 @@ namespace graphics
 {
 	bool Renderer::init(Context* const context)
 	{
+		if (context == nullptr || context->getState() != Context::State::Initialized)
+		{
+			return false;
+		}
+
 		m_shaderLibrary = std::make_unique<ShaderLibrary>();
 
 		// color

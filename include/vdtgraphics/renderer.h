@@ -9,17 +9,16 @@
 
 #include "common.h"
 #include "color.h"
+#include "renderable.h"
 #include "render_command.h"
+#include "shader_library.h"
+#include "shader_program.h"
 #include "texture_rect.h"
 
 namespace graphics
 {
 	class Context;
-	class Renderable;
-	class ShaderLibrary;
 	class RenderTarget;
-	class ShaderProgram;
-	class SpriteBatch;
 	class Texture;
 
 	class Renderer
