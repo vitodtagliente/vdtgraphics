@@ -73,7 +73,7 @@ namespace graphics
 			ib.fillData(indices, sizeof(indices));
 
 			VertexBuffer& dataBuffer = *m_textureRenderable->addVertexBuffer("data", SpriteVertex::size * 10000 * sizeof(float), BufferUsageMode::Stream);
-			dataBuffer.layout.push(VertexBufferElement("texture", VertexBufferElement::Type::Integer, 1, true, true));
+			dataBuffer.layout.push(VertexBufferElement("texture", VertexBufferElement::Type::Float, 1, true, true));
 			dataBuffer.layout.push(VertexBufferElement("crop", VertexBufferElement::Type::Float, 4, true, true));
 			dataBuffer.layout.push(VertexBufferElement("color", VertexBufferElement::Type::Float, 4, true, true));
 			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));

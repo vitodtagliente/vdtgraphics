@@ -136,15 +136,17 @@ int main(void)
 	return 0;
 }
 
-Image potetoeImg;
 Font font;
+TexturePtr circleTexture;
 TexturePtr potatoeTexture;
+TexturePtr squareTexture;
 OrthographicCamera camera;
 
 void init()
 {
-	potetoeImg = Image::load("../../../assets/spritesheet.png");
-	potatoeTexture = std::make_unique<Texture>(potetoeImg);
+	circleTexture = std::make_unique<Texture>(Image::load("../../../assets/circle.png"));
+	potatoeTexture = std::make_unique<Texture>(Image::load("../../../assets/spritesheet.png"));
+	squareTexture = std::make_unique<Texture>(Image::load("../../../assets/square.png"));
 	font = Font::load("../../../assets/font.ttf");
 }
 
@@ -173,6 +175,8 @@ void testCase1()
 	renderer->submitDrawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 1.f, Color::Yellow);
 	renderer->submitDrawLine(math::vec3(-1.f, -1.f, 0.f), Color::Red, math::vec3::ones, Color::Yellow);
 	renderer->submitDrawTexture(potatoeTexture.get(), math::vec3::zero);
+	renderer->submitDrawTexture(circleTexture.get(), math::vec3::zero, {}, Color::Cyan);
+	renderer->submitDrawTexture(squareTexture.get(), math::vec3(0.5f, 0.f, 0.f), math::vec3(0.5f, 0.5f, 1.f), {}, Color::Green);
 }
 
 // Draw different entities
@@ -258,16 +262,16 @@ void testCase4()
 
 void render_loop()
 {
-	camera.pixelPerfect = true;
-	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
-	camera.update();
-	renderer->setViewMatrix(camera.getViewMatrix());
+	// camera.pixelPerfect = true;
+	// renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
+	// camera.update();
+	// renderer->setViewMatrix(camera.getViewMatrix());
 
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 
-	// testCase1();
-	testCase2();
-	testCase3();
+	testCase1();
+	// testCase2();
+	// testCase3();
 	// testCase4();
 
 	renderer->flush();

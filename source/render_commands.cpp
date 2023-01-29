@@ -97,8 +97,9 @@ namespace graphics
 
 		if (m_size < m_capacity && texture != nullptr)
 		{
+			const float textureIndex = static_cast<float>(findIndex(texture, m_textures));
 			m_data.insert(m_data.end(), {
-				static_cast<float>(findIndex(texture, m_textures)),
+				textureIndex,
 				vertex.rect.x, vertex.rect.y, vertex.rect.width, vertex.rect.height,
 				vertex.color.red, vertex.color.green, vertex.color.blue, vertex.color.alpha
 				});

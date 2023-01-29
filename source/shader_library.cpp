@@ -92,7 +92,7 @@ namespace graphics
 			// It will receive data from a buffer
 			layout(location = 0) in vec4 a_position;
 			layout(location = 1) in vec2 a_texcoord;
-			layout(location = 2) in int a_textureIndex;
+			layout(location = 2) in float a_textureIndex;
 			layout(location = 3) in vec4 a_crop;
 			layout(location = 4) in vec4 a_color;
 			layout(location = 5) in mat4 a_transform;
@@ -101,7 +101,7 @@ namespace graphics
  
 			// a varying to pass the texture coordinates to the fragment shader
 			out vec2 v_texcoord;
-			flat out int v_textureIndex;
+			out float v_textureIndex;
 			out vec4 v_crop;
 			out vec4 v_color;
  
@@ -123,7 +123,7 @@ namespace graphics
  
 			// Passed in from the vertex shader.
 			in vec2 v_texcoord;
-			flat in int v_textureIndex;
+			in float v_textureIndex;
 			in vec4 v_crop;
 			in vec4 v_color;
  
@@ -164,7 +164,7 @@ namespace graphics
 				else if (v_textureIndex == 13) outColor = texture(u_texture13, v_texcoord * v_crop.zw + v_crop.xy) * v_color;
 				else if (v_textureIndex == 14) outColor = texture(u_texture14, v_texcoord * v_crop.zw + v_crop.xy) * v_color;
 				else if (v_textureIndex == 15) outColor = texture(u_texture15, v_texcoord * v_crop.zw + v_crop.xy) * v_color;	
-				else outColor = vec4(0, 0, 0, 0);
+				else outColor = vec4(1, 1, 1, 1);
 			
 				if (outColor.a < 0.5) discard;
 			}
