@@ -30,5 +30,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 if(NOT TARGET vdtmath)
     add_subdirectory(vendor/vdtmath)
 endif()
+if(NOT TARGET freetype)
+    add_subdirectory(vendor/freetype EXCLUDE_FROM_ALL)
+endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC vdtmath)
+target_link_libraries(
+    ${PROJECT_NAME} 
+    PUBLIC vdtmath
+    PRIVATE freetype
+)
