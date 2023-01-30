@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include <vdtgraphics/context.h>
+#include <vdtgraphics/font.h>
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/render_command.h>
@@ -46,6 +47,15 @@ namespace graphics
 			VertexBufferLayout& layout = vb.layout;
 			layout.push(VertexBufferElement("position", VertexBufferElement::Type::Float, 3));
 			layout.push(VertexBufferElement("color", VertexBufferElement::Type::Float, 4));
+		}
+		// text
+		{
+			m_textProgram = createProgram(ShaderLibrary::names::TextShader);
+
+			m_textRenderable = std::make_unique<Renderable>();
+			VertexBuffer& vb = *m_textRenderable->addVertexBuffer(Renderable::names::MainBuffer, sizeof(float) * 6 * 4, BufferUsageMode::Dynamic);
+			VertexBufferLayout& layout = vb.layout;
+			layout.push(VertexBufferElement("position", VertexBufferElement::Type::Float, 4));
 		}
 		// textures
 		{
@@ -286,6 +296,15 @@ namespace graphics
 		}
 	}
 
+	void Renderer::submitDrawText(Font* const font, const std::string& text, const math::vec3& position, const float scale, const Color& color)
+	{
+		for (int i = 0; i < text.size(); ++i)
+		{
+			Glyph glyph = font->data[text.at(i)];
+			submitDrawTexture(glyph.texture.get(), position + math::vec3(static_cast<float>(i), 0.f, 0.f), 0.0f, math::vec3(scale, scale, scale), {}, color);
+		}
+	}
+
 	void Renderer::submitDrawTexture(Texture* const texture, const math::mat4& transform, const TextureRect& rect, const Color& color)
 	{
 		RenderTextureCommand* command = nullptr;
@@ -311,7 +330,7 @@ namespace graphics
 			m_commands.push_back(std::unique_ptr<RenderTextureCommand>(command));
 		}
 
-		command->push({	transform, color, rect }, texture);
+		command->push({ transform, color, rect }, texture);
 	}
 
 	void Renderer::submitDrawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect, const Color& color)

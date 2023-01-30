@@ -41,7 +41,10 @@ namespace graphics
 		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
 			0, m_format, GL_UNSIGNED_BYTE, data
 		);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		if (data != nullptr)
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
 	}
 
 	Texture::Texture(const Image& image, const Options& options)

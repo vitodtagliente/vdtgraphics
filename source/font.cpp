@@ -87,17 +87,43 @@ namespace graphics
 
 	Font& Font::operator=(const Font& other)
 	{
+		data = other.data;
 		path = other.path;
 		return *this;
 	}
 
 	bool Font::operator==(const Font& other) const
 	{
-		return path == other.path;
+		return data == other.data && path == other.path;
 	}
 
 	bool Font::operator!=(const Font& other) const
 	{
-		return path != other.path;
+		return data != other.data || path != other.path;
+	}
+	
+	Glyph& Glyph::operator=(const Glyph& other)
+	{
+		advance = other.advance;
+		bearing = other.bearing;
+		size = other.size;
+		texture = other.texture;
+		return *this;
+	}
+
+	bool Glyph::operator==(const Glyph& other) const
+	{
+		return advance == other.advance
+			&& bearing == other.bearing
+			&& size == other.size
+			&& texture == other.texture;
+	}
+
+	bool Glyph::operator!=(const Glyph& other) const
+	{
+		return advance != other.advance
+			|| bearing != other.bearing
+			|| size != other.size
+			|| texture != other.texture;
 	}
 }

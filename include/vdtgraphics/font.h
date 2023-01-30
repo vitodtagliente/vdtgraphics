@@ -19,11 +19,16 @@ namespace graphics
 		math::vec2 bearing;
 		// the size of the glyph
 		math::vec2 size;
-		std::shared_ptr<Texture> texture;
+		TexturePtr texture;
+
+		Glyph& operator= (const Glyph& other);
+		bool operator== (const Glyph& other) const;
+		bool operator!= (const Glyph& other) const;
 	};
 
-	struct Font final
+	class Font final
 	{
+	public:
 		Font();
 		Font(const std::map<char, Glyph>& data, const std::filesystem::path& path);
 		Font(const Font& other);

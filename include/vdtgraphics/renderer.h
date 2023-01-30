@@ -18,6 +18,7 @@
 namespace graphics
 {
 	class Context;
+	class Font;
 	class RenderTarget;
 	class Texture;
 
@@ -53,6 +54,7 @@ namespace graphics
 		void submitDrawLine(const math::vec3& point1, const Color& color1, const math::vec3& point2, const Color& color2);
 		void submitDrawShape(ShapeRenderStyle style, const std::vector<Vertex>& vertices);
 		void submitDrawRect(ShapeRenderStyle style, const math::vec3& position, float width, float height, const Color& color);
+		void submitDrawText(Font* const font, const std::string& text, const math::vec3& position, float scale = 1.0f, const Color& color = Color::White);
 		void submitDrawTexture(Texture* const texture, const math::mat4& matrix, const TextureRect& rect = {}, const Color& color = Color::White);
 		void submitDrawTexture(Texture* const texture, const math::vec3& position, const TextureRect& rect = {}, const Color& color = Color::White);
 		void submitDrawTexture(Texture* const texture, const math::vec3& position, float rotation, const TextureRect& rect = {}, const Color& color = Color::White);
@@ -76,11 +78,13 @@ namespace graphics
 		// renderables
 		std::unique_ptr<Renderable> m_shapeFillRenderable;
 		std::unique_ptr<Renderable> m_shapeStrokeRenderable;
+		std::unique_ptr<Renderable> m_textRenderable;
 		std::unique_ptr<Renderable> m_textureRenderable;
 		// programs
 		std::unique_ptr<ShaderProgram> m_colorProgram;
 		std::unique_ptr<ShaderProgram> m_shapeProgram;
 		std::unique_ptr<ShaderProgram> m_spriteProgram;
+		std::unique_ptr<ShaderProgram> m_textProgram;
 		std::unique_ptr<ShaderProgram> m_textureProgram;
 	};
 }
