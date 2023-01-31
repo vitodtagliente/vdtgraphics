@@ -257,7 +257,7 @@ void testCase3()
 // text rendering
 void testCase4()
 {
-	renderer->submitDrawText(&font, "Hello", math::vec3::zero, 5.f, Color::White);
+	renderer->submitDrawText(&font, "Hello", math::vec3::zero, 1.f, Color::White);
 }
 
 void render_loop()
