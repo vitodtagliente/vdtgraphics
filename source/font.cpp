@@ -14,7 +14,7 @@ namespace graphics
 			FT_Library data;
 			bool initialized = false;
 			bool ready = false;
-		} context{};
+		};
 	}
 
 	Font::Font()
@@ -41,6 +41,8 @@ namespace graphics
 
 	Font Font::load(const std::filesystem::path& path)
 	{
+		static Context context;
+
 		if (!context.initialized)
 		{
 			context.ready = FT_Init_FreeType(&context.data) == 0;
@@ -56,7 +58,7 @@ namespace graphics
 
 		FT_Set_Pixel_Sizes(face, 0, 48);
 		std::map<char, Glyph> data;
-		for (unsigned char c = 0; c < 128; c++)
+		for (unsigned char c = 0; c < num_glyphs; c++)
 		{
 			// load character glyph 
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
@@ -69,7 +71,7 @@ namespace graphics
 			options.wrapT = GL_CLAMP_TO_EDGE;
 			options.filterMin = GL_LINEAR;
 			options.filterMax = GL_LINEAR;
-			TexturePtr texture = std::make_shared<Texture>(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, 3);
+			TexturePtr texture = std::make_shared<Texture>(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows, 1);
 			
 			Glyph glyph = {
 				static_cast<unsigned int>(face->glyph->advance.x),

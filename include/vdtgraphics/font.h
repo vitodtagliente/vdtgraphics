@@ -44,5 +44,8 @@ namespace graphics
 
 		std::filesystem::path path;
 		std::map<char, Glyph> data;
+
+	private:
+		static constexpr size_t num_glyphs = 128;
 	};
 }
