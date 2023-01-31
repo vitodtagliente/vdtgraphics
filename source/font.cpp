@@ -63,7 +63,7 @@ namespace graphics
 		// determine the size of the atlas
 		int atlas_width = 0;
 		int atlas_height = 0;
-		for (unsigned char c = 0; c < num_glyphs; c++)
+		for (unsigned char c = 32; c < num_glyphs; c++)
 		{
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
 			{
@@ -89,24 +89,24 @@ namespace graphics
 		std::map<char, Glyph> data;
 
 		int x_pos = 0;
-		for (unsigned char c = 0; c < num_glyphs; c++)
+		for (unsigned char c = 32; c < num_glyphs; c++)
 		{
 			// load character glyph 
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
 			{
 				continue;
 			}
-						
-			texture->fillSubData(x_pos, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
-			x_pos += face->glyph->bitmap.width;
 
 			Glyph glyph = {
-				math::vec2(static_cast<float>(face->glyph->advance.x >> 6), static_cast<float>(face->glyph->advance.x >> 6)),
+				static_cast<unsigned int>(face->glyph->advance.x),
 				math::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
-				TextureRect(static_cast<float>(x_pos / atlas_width), 0.f, 1.f, 1.f),
+				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, static_cast<float>(face->glyph->bitmap.width) / atlas_width, 1.f),
 				math::vec2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows))
 			};
 			data.insert(std::pair<char, Glyph>(c, glyph));
+
+			texture->fillSubData(x_pos, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
+			x_pos += face->glyph->bitmap.width;
 		}
 
 		FT_Done_Face(face);

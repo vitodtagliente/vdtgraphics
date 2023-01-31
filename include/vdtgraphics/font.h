@@ -15,7 +15,7 @@ namespace graphics
 	struct Glyph final
 	{
 		// offset to advance to next glyph
-		math::vec2 advance;
+		unsigned int advance;
 		// offset from baseline to left/top of glyph
 		math::vec2 bearing;
 		// the texture rect

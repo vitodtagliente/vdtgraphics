@@ -257,15 +257,15 @@ void testCase3()
 // text rendering
 void testCase4()
 {
-	renderer->submitDrawText(&font, "A", math::vec3::zero, 1.f, Color::White);
+	renderer->submitDrawText(&font, "Hello", math::vec3::zero, 5.f, Color::White);
 }
 
 void render_loop()
 {
-	// camera.pixelPerfect = true;
-	// renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
-	// camera.update();
-	// renderer->setViewMatrix(camera.getViewMatrix());
+	camera.pixelPerfect = true;
+	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
+	camera.update();
+	renderer->setViewMatrix(camera.getViewMatrix());
 
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 

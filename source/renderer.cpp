@@ -351,16 +351,18 @@ namespace graphics
 			m_commands.push_back(std::unique_ptr<RenderTextCommand>(command));
 		}
 
-		math::vec3 char_position = position;
+		float x = position.x;
 		for (const char c : text)
 		{
 			const auto& it = font->data.find(c);
 			if (it == font->data.end()) continue;
 
 			const Glyph& glyph = it->second;
-			command->push({ math::matrix4::scale(scale) * math::matrix4::translate(char_position), color, glyph.rect }, font);
+			const float x_pos = x + glyph.bearing.x * scale;
+			const float y_pos = position.y - (glyph.size.y - glyph.bearing.y) * scale;
+			command->push({ math::matrix4::scale(scale) * math::matrix4::translate(math::vec3(x_pos, y_pos, position.z)), color, glyph.rect }, font);
 
-			char_position += math::vec3(glyph.advance.x, glyph.advance.y, 0.f);
+			x += static_cast<float>(glyph.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
 		}
 	}
 
