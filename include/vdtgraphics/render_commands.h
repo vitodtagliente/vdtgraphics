@@ -10,6 +10,7 @@
 
 namespace graphics
 {
+	class Font;
 	class Renderable;
 	class ShaderProgram;
 	class Texture;
@@ -39,6 +40,34 @@ namespace graphics
 		math::mat4 m_viewProjectionMatrix;
 	};
 
+	class RenderTextCommand : public RenderCommand
+	{
+	public:
+		RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
+
+		size_t capacity() const { return m_capacity; }
+		size_t size() const { return m_size; }
+		bool hasCapacity(const size_t numOfFonts) const { return m_capacity - m_size >= numOfFonts; }
+
+		const std::vector<Font*>& getFonts() const { return m_fonts; }
+		bool hasCapacity(Font* const font) const;
+
+		bool push(const SpriteVertex& vertex, Font* const font);
+
+		virtual RenderCommandResult execute() override;
+
+	private:
+		size_t m_capacity; 
+		std::vector<float> m_data;
+		std::vector<Font*> m_fonts;
+		ShaderProgram* m_program;
+		Renderable* m_renderable;
+		size_t m_size;
+		math::mat4 m_viewProjectionMatrix;
+
+		static constexpr size_t max_font_units = 16;
+	};
+
 	class RenderTextureCommand : public RenderCommand
 	{
 	public:
@@ -56,7 +85,7 @@ namespace graphics
 		virtual RenderCommandResult execute() override;
 
 	private:
-		size_t m_capacity; 
+		size_t m_capacity;
 		std::vector<float> m_data;
 		ShaderProgram* m_program;
 		Renderable* m_renderable;

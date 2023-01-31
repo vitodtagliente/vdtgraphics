@@ -29,6 +29,8 @@ namespace graphics
 		Texture(const Image& image, const Options& options = Options{});
 		~Texture();
 
+		void fillSubData(int offsetX, int offsetY, int width, int height, unsigned char* const data);
+
 		inline unsigned int id() const { return m_id; }
 		inline bool isValid() const { return m_id != 0; }
 

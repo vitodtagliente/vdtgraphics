@@ -8,18 +8,20 @@
 #include <vdtmath/vector2.h>
 
 #include "texture.h"
+#include "texture_rect.h"
 
 namespace graphics
 {
 	struct Glyph final
 	{
 		// offset to advance to next glyph
-		unsigned int advance;
+		math::vec2 advance;
 		// offset from baseline to left/top of glyph
 		math::vec2 bearing;
+		// the texture rect
+		TextureRect rect;
 		// the size of the glyph
 		math::vec2 size;
-		TexturePtr texture;
 
 		Glyph& operator= (const Glyph& other);
 		bool operator== (const Glyph& other) const;
@@ -30,7 +32,7 @@ namespace graphics
 	{
 	public:
 		Font();
-		Font(const std::map<char, Glyph>& data, const std::filesystem::path& path);
+		Font(TexturePtr texture, const std::map<char, Glyph>& data, const std::filesystem::path& path);
 		Font(const Font& other);
 		~Font();
 
@@ -42,8 +44,9 @@ namespace graphics
 		bool operator== (const Font& other) const;
 		bool operator!= (const Font& other) const;
 
-		std::filesystem::path path;
 		std::map<char, Glyph> data;
+		std::filesystem::path path;
+		TexturePtr texture;
 
 	private:
 		static constexpr size_t num_glyphs = 128;

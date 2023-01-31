@@ -52,10 +52,38 @@ namespace graphics
 		{
 			m_textProgram = createProgram(ShaderLibrary::names::TextShader);
 
+			float vertices[] =
+			{
+				 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+				 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+				-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+				-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			unsigned int indices[] = {
+				0, 1, 3, 1, 2, 3
+			};
+
 			m_textRenderable = std::make_unique<Renderable>();
-			VertexBuffer& vb = *m_textRenderable->addVertexBuffer(Renderable::names::MainBuffer, sizeof(float) * 6 * 4, BufferUsageMode::Dynamic);
+			VertexBuffer& vb = *m_textRenderable->addVertexBuffer(Renderable::names::MainBuffer, sizeof(vertices), BufferUsageMode::Static);
+			vb.fillData(vertices, sizeof(vertices));
 			VertexBufferLayout& layout = vb.layout;
-			layout.push(VertexBufferElement("position", VertexBufferElement::Type::Float, 4));
+			layout.push(VertexBufferElement("position", VertexBufferElement::Type::Float, 3));
+			layout.push(VertexBufferElement("coords", VertexBufferElement::Type::Float, 2));
+			IndexBuffer& ib = *m_textRenderable->addIndexBuffer(Renderable::names::MainBuffer, sizeof(indices), BufferUsageMode::Static);
+			ib.fillData(indices, sizeof(indices));
+
+			VertexBuffer& dataBuffer = *m_textRenderable->addVertexBuffer("data", SpriteVertex::size * 10000 * sizeof(float), BufferUsageMode::Stream);
+			dataBuffer.layout.push(VertexBufferElement("texture", VertexBufferElement::Type::Float, 1, true, true));
+			dataBuffer.layout.push(VertexBufferElement("crop", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.push(VertexBufferElement("color", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.push(VertexBufferElement("transform", VertexBufferElement::Type::Float, 4, true, true));
+			dataBuffer.layout.startingIndex = 2;
+
+			m_textRenderable->bind();
 		}
 		// textures
 		{
@@ -298,15 +326,48 @@ namespace graphics
 
 	void Renderer::submitDrawText(Font* const font, const std::string& text, const math::vec3& position, const float scale, const Color& color)
 	{
-		for (int i = 0; i < text.size(); ++i)
+		if (text.empty() || font == nullptr) return;
+
+		RenderTextCommand* command = nullptr;
+
+		for (int i = static_cast<int>(m_commands.size()) - 1; i >= 0; --i)
 		{
-			Glyph glyph = font->data[text.at(i)];
-			submitDrawTexture(glyph.texture.get(), position + math::vec3(static_cast<float>(i), 0.f, 0.f), 0.0f, math::vec3(scale, scale, scale), {}, color);
+			command = dynamic_cast<RenderTextCommand*>(m_commands[i].get());
+			if (command != nullptr && command->hasCapacity(font))
+			{
+				break;
+			}
+			command = nullptr;
+		}
+
+		if (command == nullptr || !command->hasCapacity(1))
+		{
+			command = new RenderTextCommand(
+				m_textRenderable.get(),
+				m_textProgram.get(),
+				m_viewProjectionMatrix,
+				10000
+			);
+			m_commands.push_back(std::unique_ptr<RenderTextCommand>(command));
+		}
+
+		math::vec3 char_position = position;
+		for (const char c : text)
+		{
+			const auto& it = font->data.find(c);
+			if (it == font->data.end()) continue;
+
+			const Glyph& glyph = it->second;
+			command->push({ math::matrix4::scale(scale) * math::matrix4::translate(char_position), color, glyph.rect }, font);
+
+			char_position += math::vec3(glyph.advance.x, glyph.advance.y, 0.f);
 		}
 	}
 
 	void Renderer::submitDrawTexture(Texture* const texture, const math::mat4& transform, const TextureRect& rect, const Color& color)
 	{
+		if (texture == nullptr) return;
+
 		RenderTextureCommand* command = nullptr;
 
 		for (int i = static_cast<int>(m_commands.size()) - 1; i >= 0; --i)

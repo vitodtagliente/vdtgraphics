@@ -174,33 +174,86 @@ namespace graphics
 			#shader vertex
 
 			#version 330 core
-			
-			layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-			out vec2 TexCoords;
+ 
+			// an attribute is an input (in) to a vertex shader.
+			// It will receive data from a buffer
+			layout(location = 0) in vec4 a_position;
+			layout(location = 1) in vec2 a_texcoord;
+			layout(location = 2) in float a_textureIndex;
+			layout(location = 3) in vec4 a_crop;
+			layout(location = 4) in vec4 a_color;
+			layout(location = 5) in mat4 a_transform;
 
 			uniform mat4 u_matrix;
-
-			void main()
-			{
-				gl_Position = u_matrix * vec4(vertex.xy, 0.0, 1.0);
-				TexCoords = vertex.zw;
+ 
+			// a varying to pass the texture coordinates to the fragment shader
+			out vec2 v_texcoord;
+			out float v_textureIndex;
+			out vec4 v_crop;
+			out vec4 v_color;
+ 
+			void main() {
+				// Multiply the position by the matrix.
+				gl_Position = u_matrix * a_transform * a_position;
+ 
+				// Pass the texcoord to the fragment shader.
+				v_texcoord = a_texcoord;
+				v_textureIndex = a_textureIndex;
+				v_crop = a_crop;
+				v_color = a_color;
 			}
 
 			#shader fragment
 
 			#version 330 core
-
-			in vec2 TexCoords;
-			out vec4 color;
-
+			precision highp float;
+ 
+			// Passed in from the vertex shader.
+			in vec2 v_texcoord;
+			in float v_textureIndex;
+			in vec4 v_crop;
+			in vec4 v_color;
+ 
+			// The textures
 			uniform sampler2D u_texture0;
-			uniform vec3 u_color;
+			uniform sampler2D u_texture1;
+			uniform sampler2D u_texture2;
+			uniform sampler2D u_texture3;
+			uniform sampler2D u_texture4;
+			uniform sampler2D u_texture5;
+			uniform sampler2D u_texture6;
+			uniform sampler2D u_texture7;
+			uniform sampler2D u_texture8;
+			uniform sampler2D u_texture9;
+			uniform sampler2D u_texture10;
+			uniform sampler2D u_texture11;
+			uniform sampler2D u_texture12;
+			uniform sampler2D u_texture13;
+			uniform sampler2D u_texture14;
+			uniform sampler2D u_texture15;
+ 
+			out vec4 outColor;
+ 
+			void main() {
+				if (v_textureIndex == 0) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture0, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 1) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture1, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 2) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture2, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 3) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture3, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 4) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture4, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 5) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture5, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 6) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture6, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 7) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture7, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 8) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture8, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 9) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture9, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 10) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture10, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 11) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture11, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 12) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture12, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 13) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture13, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 14) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture14, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;
+				else if (v_textureIndex == 15) outColor = vec4(1.0, 1.0, 1.0, texture(u_texture15, v_texcoord * v_crop.zw + v_crop.xy).r) * v_color;	
 
-			void main()
-			{    
-				vec4 sampled = vec4(1.0, 1.0, 1.0, texture(u_texture0, TexCoords).r);
-				color = vec4(u_color, 1.0) * sampled;
-			} 
+				if (outColor.a < 0.5) discard;
+			}
 		)"
 		));
 		m_shaders.insert(std::make_pair(names::TextureShader, R"(
