@@ -257,7 +257,7 @@ void testCase3()
 // text rendering
 void testCase4()
 {
-	renderer->submitDrawText(&font, "Hello vdtgraphics!", math::vec3(-7.f, 0.f, 1.f), 1.f, Color::Black);
+	renderer->submitDrawText(&font, "Hello vdtgraphics!", math::vec3(-7.f, 0.f, 1.f), 1.f, Color::White);
 }
 
 void render_loop()
@@ -266,13 +266,18 @@ void render_loop()
 	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
 	camera.update();
 	renderer->setViewMatrix(camera.getViewMatrix());
-
+	
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
+
+	renderer->setRenderTarget(renderTarget.get());
 
 	// testCase1();
 	testCase2();
 	// testCase3();
 	testCase4();
+
+	renderer->setRenderTarget(nullptr);
+	renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero, 0.f, math::vec3(10.f, 10.f, 1.f));
 
 	renderer->flush();
 }

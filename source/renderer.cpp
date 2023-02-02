@@ -160,10 +160,11 @@ namespace graphics
 
 	void Renderer::setRenderTarget(RenderTarget* const renderTarget)
 	{
-		if (renderTarget == nullptr)
+		if (renderTarget == nullptr || !renderTarget->isValid())
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			// flush before switching target
 			flush();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			return;
 		}
 
