@@ -58,7 +58,7 @@ namespace graphics
 		{
 			return Font(nullptr, {}, path);
 		}
-		FT_Set_Pixel_Sizes(face, 0, 48);
+		FT_Set_Pixel_Sizes(face, 0, font_size);
 
 		// determine the size of the atlas
 		int atlas_width = 0;
@@ -98,10 +98,14 @@ namespace graphics
 			}
 
 			Glyph glyph = {
-				static_cast<unsigned int>(face->glyph->advance.x),
-				math::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
+				// advance
+				static_cast<float>(face->glyph->advance.x / 64) / font_size,
+				// bearing
+				math::vec2(static_cast<float>(face->glyph->bitmap_left) / font_size, static_cast<float>(face->glyph->bitmap_top) / font_size),
+				// texture rect
 				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, static_cast<float>(face->glyph->bitmap.width) / atlas_width, 1.f),
-				math::vec2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows))
+				// size
+				math::vec2(static_cast<float>(face->glyph->bitmap.width) / font_size, static_cast<float>(face->glyph->bitmap.rows) / font_size)
 			};
 			data.insert(std::pair<char, Glyph>(c, glyph));
 
@@ -131,7 +135,7 @@ namespace graphics
 	{
 		return data != other.data || path != other.path || texture != other.texture;
 	}
-	
+
 	Glyph& Glyph::operator=(const Glyph& other)
 	{
 		advance = other.advance;

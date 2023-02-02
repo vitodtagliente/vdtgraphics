@@ -15,7 +15,7 @@ namespace graphics
 	struct Glyph final
 	{
 		// offset to advance to next glyph
-		unsigned int advance;
+		float advance;
 		// offset from baseline to left/top of glyph
 		math::vec2 bearing;
 		// the texture rect
@@ -49,6 +49,7 @@ namespace graphics
 		TexturePtr texture;
 
 	private:
+		static constexpr unsigned int font_size = 48;
 		static constexpr size_t num_glyphs = 128;
 	};
 }

@@ -359,11 +359,10 @@ namespace graphics
 
 			const Glyph& glyph = it->second;
 			const float x_pos = x + glyph.bearing.x * scale;
-			const float y_pos = position.y; // +(glyph.size.y - glyph.bearing.y) * scale;
-			command->push({ math::matrix4::scale(scale) * math::matrix4::translate(math::vec3(x_pos, y_pos, position.z)), color, glyph.rect }, font);
+			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y) * scale;
+			command->push({ math::matrix4::scale(math::vec3(glyph.size.x, glyph.size.y, 1.f) * scale) * math::matrix4::translate(math::vec3(x_pos, y_pos, position.z)), color, glyph.rect }, font);
 
-			// x += static_cast<float>(glyph.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-			x += 1.5f * scale;
+			x += scale * .5f + glyph.advance * scale;
 		}
 	}
 
