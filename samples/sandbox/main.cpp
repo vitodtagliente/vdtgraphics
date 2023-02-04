@@ -263,21 +263,22 @@ void testCase4()
 
 void render_loop()
 {
-	static bool s_test_render_target = true;
+	static bool s_test_render_target = false;
 
 	renderer->setWireframeMode(false);
 
-	camera.pixelPerfect = true;
-	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
-	camera.update();
-	renderer->setViewMatrix(camera.getViewMatrix());
-	
 	if (s_test_render_target)
 	{
 		renderer->setRenderTarget(renderTarget.get());
 	}
 
+	camera.pixelPerfect = true;
+	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
+	camera.update();
+	renderer->setViewMatrix(camera.getViewMatrix());
+
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
+	renderer->setViewport(screenSize.x, screenSize.y);
 	testCase1();
 	testCase2();
 	testCase3();

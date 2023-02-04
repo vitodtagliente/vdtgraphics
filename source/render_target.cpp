@@ -48,5 +48,6 @@ namespace graphics
 	{
 		m_texture->bind();
 		m_texture->resize(width, height);
+		m_texture->unbind();
 	}
 }
