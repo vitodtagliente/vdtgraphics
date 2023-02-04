@@ -4,6 +4,7 @@
 
 #include <vdtgraphics/context.h>
 #include <vdtgraphics/font.h>
+#include <vdtgraphics/image.h>
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
 #include <vdtgraphics/render_command.h>
@@ -89,21 +90,33 @@ namespace graphics
 		{
 			m_spriteProgram = createProgram(ShaderLibrary::names::SpriteBatchShader);
 
-			float vertices[] =
+			std::vector<float> vertices;
+			if (Image::flip_vertically)
 			{
-				 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-				 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-				-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
-			};
+				vertices = {
+					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
+				};
+			}
+			else
+			{
+				vertices = {
+					 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+					 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+					-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+					-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
+				};
+			}
 
 			unsigned int indices[] = {
 				0, 1, 3, 1, 2, 3
 			};
 
 			m_textureRenderable = std::make_unique<Renderable>();
-			VertexBuffer& vb = *m_textureRenderable->addVertexBuffer(Renderable::names::MainBuffer, sizeof(vertices), BufferUsageMode::Static);
-			vb.fillData(vertices, sizeof(vertices));
+			VertexBuffer& vb = *m_textureRenderable->addVertexBuffer(Renderable::names::MainBuffer, vertices.size() * sizeof(float), BufferUsageMode::Static);
+			vb.fillData(&vertices[0], vertices.size() * sizeof(float));
 			VertexBufferLayout& layout = vb.layout;
 			layout.push(VertexBufferElement("position", VertexBufferElement::Type::Float, 3));
 			layout.push(VertexBufferElement("coords", VertexBufferElement::Type::Float, 2));

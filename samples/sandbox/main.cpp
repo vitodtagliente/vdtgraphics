@@ -170,13 +170,13 @@ void statsEnd(const std::string& context, const bool refresh = false)
 // Draw lines
 void testCase1()
 {
-	renderer->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 1.f, 1.f, Color::Magenta);
-	renderer->submitDrawRect(ShapeRenderStyle::stroke, math::vec3(.4f, .3f, 0.0f), .5f, .5f, Color::Green);
-	renderer->submitDrawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 1.f, Color::Yellow);
-	renderer->submitDrawLine(math::vec3(-1.f, -1.f, 0.f), Color::Red, math::vec3::ones, Color::Yellow);
+	renderer->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 10.f, 10.f, Color::Magenta);
+	renderer->submitDrawRect(ShapeRenderStyle::stroke, math::vec3(-5.4f, 5.3f, 0.0f), 5.f, 5.f, Color::Green);
+	renderer->submitDrawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 15.f, Color::Yellow);
+	renderer->submitDrawLine(math::vec3(-10.f, -10.f, 0.f), Color::Red, math::vec3(10.f, 10.f, 0.f), Color::Yellow);
 	renderer->submitDrawTexture(potatoeTexture.get(), math::vec3::zero);
-	renderer->submitDrawTexture(circleTexture.get(), math::vec3::zero, {}, Color::Cyan);
-	renderer->submitDrawTexture(squareTexture.get(), math::vec3(0.5f, 0.f, 0.f), math::vec3(0.5f, 0.5f, 1.f), {}, Color::Green);
+	renderer->submitDrawTexture(circleTexture.get(), math::vec3::zero, math::vec3(10.f, 10.f, 1.f), {}, Color::Cyan);
+	renderer->submitDrawTexture(squareTexture.get(), math::vec3(5.f, 5.f, 0.f), math::vec3(5.f, 5.f, 1.f), {}, Color::Green);
 }
 
 // Draw different entities
@@ -219,7 +219,7 @@ void testCase2()
 			}
 
 			const float s = 1.f / 11;
-			entity.rect = TextureRect(s * 9, s * math::random(1, 5), s, s);
+			entity.rect = TextureRect(s * 9, s * math::random(0, 5), s, s);
 
 			s_entities.push_back(entity);
 		}
@@ -262,22 +262,33 @@ void testCase4()
 
 void render_loop()
 {
+	static bool s_test_render_target = true;
+
 	camera.pixelPerfect = true;
 	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
 	camera.update();
 	renderer->setViewMatrix(camera.getViewMatrix());
 	
+	if (s_test_render_target)
+	{
+		renderer->setRenderTarget(renderTarget.get());
+	}
+
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
-
-	renderer->setRenderTarget(renderTarget.get());
-
-	// testCase1();
+	testCase1();
 	testCase2();
-	// testCase3();
+	testCase3();
 	testCase4();
 
-	renderer->setRenderTarget(nullptr);
-	renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero, 0.f, math::vec3(10.f, 10.f, 1.f));
+	if (s_test_render_target)
+	{
+		renderer->setRenderTarget(nullptr);
+		renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
+		renderer->setViewport(screenSize.x, screenSize.y);
+		renderer->setProjectionMatrix(math::mat4::identity);
+		renderer->setViewMatrix(math::mat4::identity);
+		renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
+	}
 
 	renderer->flush();
 }

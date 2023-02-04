@@ -4,6 +4,7 @@
 
 namespace graphics
 {
+	bool Image::flip_vertically = false;
 
 	Image::Image()
 		: data()
@@ -38,6 +39,7 @@ namespace graphics
 	{
 		// stbi_set_flip_vertically_on_load(1);
 		int width, height, channels;
+		stbi_set_flip_vertically_on_load(flip_vertically);
 		std::shared_ptr<unsigned char> data(stbi_load(filename.string().c_str(), &width, &height, &channels, 4));
 		return Image(data, width, height, channels);
 	}

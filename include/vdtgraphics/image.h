@@ -23,5 +23,7 @@ namespace graphics
 		int width;
 		int height;
 		int channels;
+
+		static bool flip_vertically;
 	};
 }
