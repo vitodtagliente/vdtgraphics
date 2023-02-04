@@ -24,6 +24,8 @@ namespace graphics
 		RenderTarget(int width, int height, const Color& color = Color::White);
 		~RenderTarget();
 
+		void resize(int width, int height);
+
 		inline unsigned int id() const { return m_id; }
 		inline bool isValid() const { return m_id != 0; }
 

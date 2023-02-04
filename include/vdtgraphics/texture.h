@@ -30,6 +30,7 @@ namespace graphics
 		~Texture();
 
 		void fillSubData(int offsetX, int offsetY, int width, int height, unsigned char* const data);
+		void resize(int width, int height);
 
 		inline unsigned int id() const { return m_id; }
 		inline bool isValid() const { return m_id != 0; }

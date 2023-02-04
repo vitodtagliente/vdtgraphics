@@ -57,9 +57,18 @@ namespace graphics
 		free();
 	}
 
-	void Texture::fillSubData(int offsetX, int offsetY, int width, int height, unsigned char* const data)
+	void Texture::fillSubData(const int offsetX, const int offsetY, const int width, const int height, unsigned char* const data)
 	{
 		glTexSubImage2D(GL_TEXTURE_2D, 0, offsetX, offsetY, width, height, m_format, GL_UNSIGNED_BYTE, data);
+	}
+
+	void Texture::resize(const int width, const int height)
+	{
+		m_width = width;
+		m_height = height;
+		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
+			0, m_format, GL_UNSIGNED_BYTE, nullptr
+		);
 	}
 
 	void Texture::bind(const unsigned int slot)

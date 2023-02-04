@@ -89,11 +89,12 @@ int main(void)
 	init();
 
 	glfwSetFramebufferSizeCallback(window,
-		[](GLFWwindow*, int width, int height)
+		[](GLFWwindow*, const int width, const int height)
 		{
 			screenSize.x = width;
 			screenSize.y = height;
 			renderer->setViewport(width, height);
+			renderTarget->resize(width, height);
 		}
 	);
 
@@ -264,6 +265,8 @@ void render_loop()
 {
 	static bool s_test_render_target = true;
 
+	renderer->setWireframeMode(false);
+
 	camera.pixelPerfect = true;
 	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
 	camera.update();
@@ -285,7 +288,7 @@ void render_loop()
 		renderer->setRenderTarget(nullptr);
 		renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 		renderer->setViewport(screenSize.x, screenSize.y);
-		renderer->setProjectionMatrix(math::mat4::identity);
+		renderer->setProjectionMatrix(math::mat4::scale({ 1.f, -1.f, 1.f }));
 		renderer->setViewMatrix(math::mat4::identity);
 		renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
 	}

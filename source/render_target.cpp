@@ -43,4 +43,10 @@ namespace graphics
 	{
 		glDeleteFramebuffers(1, &m_id);
 	}
+
+	void RenderTarget::resize(const int width, const int height)
+	{
+		m_texture->bind();
+		m_texture->resize(width, height);
+	}
 }
