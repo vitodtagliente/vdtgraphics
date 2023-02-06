@@ -245,9 +245,35 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
-	worldCoords.z = 0.5f;
-	renderer->submitDrawTexture(circleTexture.get(), worldCoords, math::vec3(1.f, 1.f, 1.0f), {}, Color::Cyan);
+	const float depth = 0.f;
+	math::vec4 viewport = math::vec4(0, 0, screenSize.x, screenSize.y);
+	math::vec3 wincoord = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
+	// math::vec3 objcoord = math::unProject(wincoord, model, projection, viewport);
+	/*  https://github.com/g-truc/glm/blob/master/glm/ext/matrix_projection.inl
+		mat<4, 4, T, Q> Inverse = inverse(proj * model);
+
+		vec<4, T, Q> tmp = vec<4, T, Q>(win, T(1));
+		tmp.x = (tmp.x - T(viewport[0])) / T(viewport[2]);
+		tmp.y = (tmp.y - T(viewport[1])) / T(viewport[3]);
+		tmp.x = tmp.x * static_cast<T>(2) - static_cast<T>(1);
+		tmp.y = tmp.y * static_cast<T>(2) - static_cast<T>(1);
+
+		vec<4, T, Q> obj = Inverse * tmp;
+		obj /= obj.w;
+
+		return vec<3, T, Q>(obj);	
+	*/
+	bool isInvertible = false;
+	const math::mat4 inverse = (renderer->getProjectionMatrix() * renderer->getViewMatrix()).inverse(isInvertible);
+	math::vec4 temp = math::vec4(wincoord.x, wincoord.y, wincoord.z, 1.f);
+	temp.x = (temp.x - viewport.x) / viewport.z;
+	temp.y = (temp.y - viewport.y) / viewport.w;
+	temp.x = temp.x * 2.f - 1.f;
+	temp.y = temp.y * 2.f - 1.f;
+	math::vec4 objcoord = inverse * temp;
+	objcoord /= objcoord.w;
+
+	renderer->submitDrawTexture(circleTexture.get(), math::vec3(objcoord.x, objcoord.y, 0.5f), math::vec3(1.f, 1.f, 1.0f), {}, Color::Yellow);
 }
 
 // text rendering
@@ -268,6 +294,8 @@ void render_loop()
 	}
 
 	camera.pixelPerfect = true;
+	camera.transform.scale.x = 1.f;
+	camera.transform.scale.y = 1.f;
 	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
 	camera.update();
 	renderer->setViewMatrix(camera.getViewMatrix());
