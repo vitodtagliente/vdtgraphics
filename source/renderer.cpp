@@ -55,10 +55,10 @@ namespace graphics
 
 			float vertices[] =
 			{
-				 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-				 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-				-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
-				-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
+				 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
+				 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+				-0.5f,  0.5f, 0.0f, 0.0f, 0.0f,
+				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f
 			};
 
 			unsigned int indices[] = {
@@ -94,19 +94,19 @@ namespace graphics
 			if (Image::flip_vertically)
 			{
 				vertices = {
-					 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-					 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-					-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-					-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
+					 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+					 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+					-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+					-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 				};
 			}
 			else
 			{
 				vertices = {
-					 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-					 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-					-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
-					-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
+					 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
+					 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+					-0.5f,  0.5f, 0.0f, 0.0f, 0.0f,
+					-0.5f, -0.5f, 0.0f, 0.0f, 1.0f
 				};
 			}
 
@@ -376,7 +376,7 @@ namespace graphics
 			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y) * scale;
 			command->push({ math::matrix4::scale(math::vec3(glyph.size.x, glyph.size.y, 1.f) * scale) * math::matrix4::translate(math::vec3(x_pos, y_pos, position.z)), color, glyph.rect }, font);
 
-			x += scale * .5f + glyph.advance * scale;
+			x += scale * 0.25f + glyph.advance * scale;
 		}
 	}
 

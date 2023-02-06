@@ -245,20 +245,15 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	// renderer->setPolygonStyle(PolygonStyle::fill);
-	// auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
-	// worldCoords.z = 1.0f;
-	// 
-	// particles.position = worldCoords;
-	// particles.play();
-	// particles.update((float)deltaTime);
-	// particles.render(*renderer);
+	auto worldCoords = camera.screenToWorldCoords({ mouse.x, mouse.y }, screenSize.x, screenSize.y);
+	worldCoords.z = 0.5f;
+	renderer->submitDrawTexture(circleTexture.get(), worldCoords, math::vec3(1.f, 1.f, 1.0f), {}, Color::Cyan);
 }
 
 // text rendering
 void testCase4()
 {
-	renderer->submitDrawText(&font, "Hello vdtgraphics!", math::vec3(-7.f, 0.f, 1.f), 1.f, Color::White);
+	renderer->submitDrawText(&font, "Hello vdtgraphics!", math::vec3(-4.f, 0.f, 1.f), 1.f, Color::White);
 }
 
 void render_loop()
