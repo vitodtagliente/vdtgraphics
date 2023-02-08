@@ -272,6 +272,7 @@ void render_loop()
 
 	const float aspectRatio = 1.0f;
 	renderer->setViewMatrix(Camera::view(camera));
+	// 32 pixel per unit
 	renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio));
 
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
