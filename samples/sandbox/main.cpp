@@ -32,6 +32,7 @@ std::unique_ptr<Context> context;
 std::unique_ptr<RenderTarget> renderTarget;
 std::unique_ptr<Renderer> renderer;
 math::vec3 mouse;
+math::transform camera;
 
 void showFPS(GLFWwindow* pWindow)
 {
@@ -141,7 +142,6 @@ Font font;
 TexturePtr circleTexture;
 TexturePtr potatoeTexture;
 TexturePtr squareTexture;
-OrthographicCamera camera;
 
 void init()
 {
@@ -250,7 +250,7 @@ void testCase3()
 	math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
 	math::vec3 objcoords = math::mat4::unproject(screencoords, renderer->getViewMatrix(), renderer->getProjectionMatrix(), viewport);
 	objcoords.z = 0.5f;
-	renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(1.f, 1.f, 1.0f), {}, Color::Yellow);
+	renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Cyan);
 }
 
 // text rendering
@@ -270,12 +270,9 @@ void render_loop()
 		renderer->setRenderTarget(renderTarget.get());
 	}
 
-	camera.pixelPerfect = true;
-	camera.transform.scale.x = 1.f;
-	camera.transform.scale.y = 1.f;
-	renderer->setProjectionMatrix(camera.getProjectionMatrix(screenSize.x, screenSize.y));
-	camera.update();
-	renderer->setViewMatrix(camera.getViewMatrix());
+	const float aspectRatio = 1.0f;
+	renderer->setViewMatrix(Camera::view(camera));
+	renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio));
 
 	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 	renderer->setViewport(screenSize.x, screenSize.y);

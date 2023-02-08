@@ -5,18 +5,10 @@
 
 namespace graphics
 {
-	class Camera
+	struct Camera final
 	{
-	public:
-		Camera() = default;
-
-		math::transform transform;
-
-		virtual math::matrix4 getViewMatrix() const;
-		virtual math::matrix4 getProjectionMatrix(int screenWidth, int screenHeight) const;
-
-		virtual math::vec3 screenToWorldCoords(const math::vec2& screenCoords, int screenWidth, int screenHeight) const;
-
-		void update();
+		static math::mat4 view(const math::transform& transform);
+		static math::mat4 view(math::transform& transform);
+		static math::mat4 ortho(float nearPlane, float farPlane, int screenWidth, int screenHeight, float aspectRatio = 1.0f);
 	};
 }
