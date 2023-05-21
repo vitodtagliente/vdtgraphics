@@ -31,6 +31,10 @@ add_executable(
     ${VENDORS_SOURCES}
 )
 
+if(MSVC)
+	target_compile_options(${PROJECT_NAME} PRIVATE "/MP")
+endif()
+
 target_link_libraries(
     ${PROJECT_NAME} 
 )
