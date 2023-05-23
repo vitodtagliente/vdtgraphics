@@ -84,8 +84,7 @@ int main(void)
 
 	renderer = std::make_unique<Renderer>();
 	renderer->init(context.get());
-	renderTarget = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color::Cyan);
-	// renderer->setRenderTarget(renderTarget.get());
+	renderTarget = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color(0.0f, 0.0f, 0.2f, 1.0f));
 
 	init();
 
@@ -261,7 +260,7 @@ void testCase4()
 
 void render_loop()
 {
-	static bool s_test_render_target = false;
+	static bool s_test_render_target = true;
 
 	renderer->setWireframeMode(false);
 
@@ -275,7 +274,11 @@ void render_loop()
 	// 32 pixel per unit
 	renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio));
 
-	renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
+	if (!s_test_render_target)
+	{
+		renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
+	}
+
 	renderer->setViewport(screenSize.x, screenSize.y);
 	testCase1();
 	testCase2();
@@ -285,9 +288,8 @@ void render_loop()
 	if (s_test_render_target)
 	{
 		renderer->setRenderTarget(nullptr);
-		renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
 		renderer->setViewport(screenSize.x, screenSize.y);
-		renderer->setProjectionMatrix(math::mat4::scale({ 1.f, -1.f, 1.f }));
+		renderer->setProjectionMatrix(math::mat4::scale({ 2.f, -2.f, 1.f }));
 		renderer->setViewMatrix(math::mat4::identity);
 		renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
 	}

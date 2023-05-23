@@ -46,8 +46,15 @@ namespace graphics
 
 	void RenderTarget::resize(const int width, const int height)
 	{
+		m_width = width;
+		m_height = height;
+
 		m_texture->bind();
 		m_texture->resize(width, height);
 		m_texture->unbind();
+
+		glBindRenderbuffer(GL_RENDERBUFFER, m_depthId);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 }

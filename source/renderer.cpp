@@ -178,6 +178,7 @@ namespace graphics
 			// flush before switching target
 			flush();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glDisable(GL_DEPTH_TEST);
 			return;
 		}
 
@@ -187,8 +188,8 @@ namespace graphics
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->id());
-		setViewport(renderTarget->getWidth(), renderTarget->getHeight());
 		clear(renderTarget->getColor());
+		glEnable(GL_DEPTH_TEST);
 		m_renderTarget = renderTarget;
 	}
 
