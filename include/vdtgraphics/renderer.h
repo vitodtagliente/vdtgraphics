@@ -37,11 +37,8 @@ namespace graphics
 		bool init(Context* const context);
 		void uninit();
 
-		void clear(const Color& color);
-		void setViewport(int width, int height);
-		void setWireframeMode(bool enabled);
-
 		void setRenderTarget(RenderTarget* const renderTarget);
+		RenderTarget* const getRenderTarget() const { return m_renderTarget; }
 
 		void setProjectionMatrix(const math::matrix4& m);
 		void setViewMatrix(const math::matrix4& m);
@@ -50,6 +47,8 @@ namespace graphics
 		const math::matrix4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
 		void submit(std::unique_ptr<RenderCommand> command);
+		void submitClear(const Color& color);
+		void submitSetViewport(int width, int height);
 		void submitDrawCircle(ShapeRenderStyle style, const math::vec3& position, float radius, const Color& color);
 		void submitDrawLine(const math::vec3& point1, const Color& color1, const math::vec3& point2, const Color& color2);
 		void submitDrawShape(ShapeRenderStyle style, const std::vector<Vertex>& vertices);
@@ -61,7 +60,7 @@ namespace graphics
 		void submitDrawTexture(Texture* const texture, const math::vec3& position, const math::vec3& scale, const TextureRect& rect = {}, const Color& color = Color::White);
 		void submitDrawTexture(Texture* const texture, const math::vec3& position, float rotation, const math::vec3& scale, const TextureRect& rect = {}, const Color& color = Color::White);
 
-		void flush();
+		void draw();
 
 		Stats stats;
 

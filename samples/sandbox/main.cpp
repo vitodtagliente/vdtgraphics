@@ -15,6 +15,7 @@ using namespace math;
 
 void init();
 void render_loop();
+void update();
 
 float RandomFloat(float min, float max)
 {
@@ -31,8 +32,19 @@ math::vector2_t<int> screenSize(720, 480);
 std::unique_ptr<Context> context;
 std::unique_ptr<RenderTarget> renderTarget;
 std::unique_ptr<Renderer> renderer;
+std::unique_ptr<Renderer> renderer2;
 math::vec3 mouse;
 math::transform camera;
+
+
+// last mouse wheel position
+math::vec2 lastMouseWheelPosition;
+// mouse wheel position
+math::vec2 mouseWheelPosition;
+// delta mouse wheel position
+math::vec2 deltaMouseWheelPosition;
+// zoom
+float zoom_speed{ 1.0f };
 
 void showFPS(GLFWwindow* pWindow)
 {
@@ -44,7 +56,7 @@ void showFPS(GLFWwindow* pWindow)
 	if (s_timer <= 0.0)
 	{
 		std::stringstream ss;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << renderer->stats.drawCalls << "]";
+		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << (renderer->stats.drawCalls + renderer2->stats.drawCalls) << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
@@ -84,6 +96,8 @@ int main(void)
 
 	renderer = std::make_unique<Renderer>();
 	renderer->init(context.get());
+	renderer2 = std::make_unique<Renderer>();
+	renderer2->init(context.get());
 	renderTarget = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color(0.0f, 0.0f, 0.2f, 1.0f));
 
 	init();
@@ -93,7 +107,8 @@ int main(void)
 		{
 			screenSize.x = width;
 			screenSize.y = height;
-			renderer->setViewport(width, height);
+			renderer->submitSetViewport(width, height);
+			renderer2->submitSetViewport(width, height);
 			renderTarget->resize(width, height);
 		}
 	);
@@ -103,6 +118,16 @@ int main(void)
 		{
 			mouse.x = (float)xpos;
 			mouse.y = (float)ypos;
+		}
+	);
+
+	// mouse wheel
+	glfwSetScrollCallback(window,
+		[](GLFWwindow*, const double x, const double y)
+		{
+			lastMouseWheelPosition = mouseWheelPosition;
+			mouseWheelPosition = { static_cast<float>(x), static_cast<float>(y) };
+			deltaMouseWheelPosition = mouseWheelPosition - lastMouseWheelPosition;
 		}
 	);
 
@@ -122,6 +147,8 @@ int main(void)
 
 		// display the FPS
 		showFPS(window);
+
+		update();
 
 		// render logic
 		render_loop();
@@ -249,50 +276,46 @@ void testCase3()
 	math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
 	math::vec3 objcoords = math::mat4::unproject(screencoords, renderer->getViewMatrix(), renderer->getProjectionMatrix(), viewport);
 	objcoords.z = 0.5f;
-	renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Cyan);
+	renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Coral);
 }
 
-// text rendering
-void testCase4()
+void update()
 {
-	renderer->submitDrawText(&font, "Hello vdtgraphics!", math::vec3(-4.f, 0.f, 1.f), 1.f, Color::White);
+	if (deltaMouseWheelPosition.y != 0.f)
+	{
+		math::vec3& scale = camera.scale;
+		scale.x = scale.y = scale.x + zoom_speed * static_cast<float>(deltaTime) * -deltaMouseWheelPosition.y;
+	}
 }
 
 void render_loop()
 {
-	static bool s_test_render_target = true;
-
-	renderer->setWireframeMode(false);
-
-	if (s_test_render_target)
+	// scene graph layer like
 	{
 		renderer->setRenderTarget(renderTarget.get());
-	}
+		const float aspectRatio = 1.0f;
+		renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+		renderer->setViewMatrix(Camera::view(camera));
+		renderer->submitSetViewport(screenSize.x, screenSize.y);
+		testCase1();
+		testCase2();
+		testCase3();
 
-	const float aspectRatio = 1.0f;
-	renderer->setViewMatrix(Camera::view(camera));
-	// 32 pixel per unit
-	renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio));
-
-	if (!s_test_render_target)
-	{
-		renderer->clear(Color(0.0f, 0.0f, 0.2f, 1.0f));
-	}
-
-	renderer->setViewport(screenSize.x, screenSize.y);
-	testCase1();
-	testCase2();
-	testCase3();
-	testCase4();
-
-	if (s_test_render_target)
-	{
 		renderer->setRenderTarget(nullptr);
-		renderer->setViewport(screenSize.x, screenSize.y);
 		renderer->setProjectionMatrix(math::mat4::scale({ 2.f, -2.f, 1.f }));
 		renderer->setViewMatrix(math::mat4::identity);
+		renderer->submitSetViewport(screenSize.x, screenSize.y);
 		renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
+		renderer->draw();
 	}
 
-	renderer->flush();
+	// ui layer like
+	{
+		renderer2->setProjectionMatrix(math::mat4::identity);
+		renderer2->setViewMatrix(math::mat4::identity);
+		renderer2->submitSetViewport(screenSize.x, screenSize.y);
+		renderer2->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 1.2f, .3f, Color::Aquamarine);
+		renderer2->submitDrawText(&font, "vdtgraphics", math::vec3(-.3f, 0.f, 1.f), .1f, Color::White);
+		renderer2->draw();
+	}
 }

@@ -9,7 +9,7 @@ namespace graphics
 	RenderTarget::RenderTarget(const int width, const int height, const Color& color)
 		: m_width(width)
 		, m_height(height)
-		, m_color(color)
+		, color(color)
 	{
 		glGenFramebuffers(1, &m_id);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_id);

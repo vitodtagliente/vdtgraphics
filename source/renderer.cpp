@@ -146,37 +146,12 @@ namespace graphics
 	{
 	}
 
-	void Renderer::clear(const Color& color)
-	{
-		stats.drawCalls = 0;
-		m_commands.clear();
-		glClearColor(color.red, color.green, color.blue, color.alpha);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-
-	void Renderer::setViewport(const int width, const int height)
-	{
-		glViewport(0, 0, width, height);
-	}
-
-	void Renderer::setWireframeMode(const bool enabled)
-	{
-		if (enabled)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-	}
-
 	void Renderer::setRenderTarget(RenderTarget* const renderTarget)
 	{
 		if (renderTarget == nullptr || !renderTarget->isValid())
 		{
 			// flush before switching target
-			flush();
+			draw();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
 			return;
@@ -184,11 +159,11 @@ namespace graphics
 
 		if (renderTarget != renderTarget)
 		{
-			flush();
+			draw();
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->id());
-		clear(renderTarget->getColor());
+		submitClear(renderTarget->color);
 		glEnable(GL_DEPTH_TEST);
 		m_renderTarget = renderTarget;
 	}
@@ -210,16 +185,14 @@ namespace graphics
 		m_commands.push_back(std::move(command));
 	}
 
-	void Renderer::flush()
+	void Renderer::submitClear(const Color& color)
 	{
-		for (const auto& command : m_commands)
-		{
-			if (command->execute() == RenderCommandResult::OK)
-			{
-				++stats.drawCalls;
-			}
-		}
-		m_commands.clear();
+		m_commands.push_back(std::make_unique<ClearCommand>(color, true, true));
+	}
+
+	void Renderer::submitSetViewport(const int width, const int height)
+	{
+		m_commands.push_back(std::make_unique<VieportCommand>(width, height));
 	}
 
 	std::unique_ptr<ShaderProgram> Renderer::createProgram(const std::string& name)
@@ -429,5 +402,18 @@ namespace graphics
 	void Renderer::submitDrawTexture(Texture* const texture, const math::vec3& position, const float rotation, const math::vec3& scale, const TextureRect& rect, const Color& color)
 	{
 		submitDrawTexture(texture, math::matrix4::scale(scale) * math::matrix4::rotate_z(rotation) * math::matrix4::translate(position), rect, color);
+	}
+
+	void Renderer::draw()
+	{
+		stats.drawCalls = 0;
+		for (const auto& command : m_commands)
+		{
+			if (command->execute() == RenderCommandResult::OK)
+			{
+				++stats.drawCalls;
+			}
+		}
+		m_commands.clear();
 	}
 }

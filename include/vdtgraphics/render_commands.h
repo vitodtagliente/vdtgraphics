@@ -15,6 +15,31 @@ namespace graphics
 	class ShaderProgram;
 	class Texture;
 
+	class ClearCommand final : public RenderCommand
+	{
+	public:
+		ClearCommand(const graphics::Color& color, bool clearColorBuffer, bool clearDepthBuffer);
+
+		virtual RenderCommandResult execute() override;
+
+	private:
+		bool m_clearColorBuffer;
+		bool m_clearDepthBuffer;
+		graphics::Color m_color;
+	};
+
+	class VieportCommand final : public RenderCommand
+	{
+	public:
+		VieportCommand(int width, int height);
+
+		virtual RenderCommandResult execute() override;
+
+	private:
+		int m_width;
+		int m_height;
+	};
+
 	class RenderShapeCommand final : public RenderCommand
 	{
 	public:

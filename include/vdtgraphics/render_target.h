@@ -32,10 +32,12 @@ namespace graphics
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
 
-		const Color& getColor() const { return m_color; }
 		const std::string& getErrorMessage() const { return m_errorMessage; }
 		Texture* const getTexture() const { return m_texture.get(); }
 
+		// clear color
+		graphics::Color color;
+	
 	private:
 		// framebuffer id
 		unsigned int m_id;
@@ -45,8 +47,6 @@ namespace graphics
 		unsigned int m_depthId;
 		// framebuffer size
 		int m_width, m_height;
-		// clear color
-		graphics::Color m_color;
 		// the error message
 		std::string m_errorMessage;
 		// The state
