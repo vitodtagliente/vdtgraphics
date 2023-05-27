@@ -46,6 +46,8 @@ namespace graphics
 
 	void RenderTarget::resize(const int width, const int height)
 	{
+		if (width == m_width && height == m_height) return;
+
 		m_width = width;
 		m_height = height;
 

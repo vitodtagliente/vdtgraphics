@@ -150,10 +150,13 @@ namespace graphics
 	{
 		if (renderTarget == nullptr || !renderTarget->isValid())
 		{
+			if (!m_renderTarget) return;
+			
 			// flush before switching target
 			draw();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
+			m_renderTarget = nullptr;
 			return;
 		}
 
