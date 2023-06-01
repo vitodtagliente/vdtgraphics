@@ -41,7 +41,7 @@ namespace graphics
 
 	RenderTarget::~RenderTarget()
 	{
-		glDeleteFramebuffers(1, &m_id);
+		free();
 	}
 
 	void RenderTarget::resize(const int width, const int height)
@@ -58,5 +58,22 @@ namespace graphics
 		glBindRenderbuffer(GL_RENDERBUFFER, m_depthId);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
+	void RenderTarget::bind()
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, m_id);
+	}
+
+	void RenderTarget::unbind()
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	}
+
+	void RenderTarget::free()
+	{
+		glDeleteFramebuffers(1, &m_id);
+		glDeleteRenderbuffers(1, &m_depthId);
+		m_texture->free();
 	}
 }

@@ -35,6 +35,10 @@ namespace graphics
 		const std::string& getErrorMessage() const { return m_errorMessage; }
 		Texture* const getTexture() const { return m_texture.get(); }
 
+		void bind();
+		void unbind();
+		void free();
+
 		// clear color
 		graphics::Color color;
 	
