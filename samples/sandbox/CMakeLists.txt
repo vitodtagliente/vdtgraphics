@@ -13,8 +13,8 @@ include_directories(
 file(GLOB PROJECT_HEADERS "*.h") 
 file(GLOB PROJECT_SOURCES "*.cpp")
 file(GLOB VENDORS_SOURCES 
-	../../vendor/imgui/examples/imgui_impl_glfw.cpp
-	../../vendor/imgui/examples/imgui_impl_opengl3.cpp
+	../../vendor/imgui/backends/imgui_impl_glfw.cpp
+	../../vendor/imgui/backends/imgui_impl_opengl3.cpp
 	../../vendor/imgui/imgui.cpp
 	../../vendor/imgui/imgui_draw.cpp
 	../../vendor/imgui/imgui_tables.cpp

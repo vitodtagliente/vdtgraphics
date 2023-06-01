@@ -99,6 +99,12 @@ int main(void)
 		return -1;
 	}
 
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330 core");
+
 	renderer = std::make_unique<Renderer>();
 	renderer->init(context.get());
 	renderer2 = std::make_unique<Renderer>();
@@ -155,15 +161,38 @@ int main(void)
 
 		update();
 
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		// render logic
 		render_loop();
 
+		// render your GUI
+		ImGui::Begin("Demo window");
+		ImGui::Button("Hello!");
+		ImGui::End();
+
+		// Render dear imgui into screen
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
+		/*
+		int display_w, display_h;
+		glfwGetFramebufferSize(window, &display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		glfwSwapBuffers(window);
+		*/
 
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwTerminate();
 	return 0;
