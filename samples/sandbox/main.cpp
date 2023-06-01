@@ -75,6 +75,7 @@ void showFPS(GLFWwindow* pWindow)
 int main(void)
 {
 	GLFWwindow* window;
+	bool test_ui = false;
 
 	/* Initialize the library */
 	if (!glfwInit())
@@ -101,11 +102,14 @@ int main(void)
 		return -1;
 	}
 
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330 core");
+	if (test_ui)
+	{
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init("#version 330 core");
+	}
 
 	renderer = std::make_unique<Renderer>();
 	renderer->init(context.get());
@@ -168,32 +172,38 @@ int main(void)
 
 		update();
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+		if (test_ui)
+		{
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+		}
 
 		// render logic
-		// render_loop();
+		render_loop();
 
-		// render your GUI
-		ImGui::Begin("Demo window");
-		ImGui::Button("Hello!");
-		if (ImGui::IsItemHovered())
+		if (test_ui)
 		{
-			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-			ImGui::TextUnformatted("Hint text");
-			ImGui::PopTextWrapPos();
-			ImGui::EndTooltip();
+			// render your GUI
+			ImGui::Begin("Demo window");
+			ImGui::Button("Hello!");
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+				ImGui::TextUnformatted("Hint text");
+				ImGui::PopTextWrapPos();
+				ImGui::EndTooltip();
+			}
+			ImGui::InputInt("Numero", &input_number);
+			ImGui::End();
+
+			// Render dear imgui into screen
+			ImGui::Render();
+
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
-		ImGui::InputInt("Numero", &input_number);
-		ImGui::End();
-
-		// Render dear imgui into screen
-		ImGui::Render();
-
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -205,9 +215,12 @@ int main(void)
 		*/
 	}
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	if (test_ui)
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
 
 	glfwTerminate();
 	return 0;
@@ -340,6 +353,7 @@ void update()
 void render_loop()
 {
 	// scene graph layer like
+	if (true)
 	{
 		renderer->setRenderTarget(renderTarget.get());
 		const float aspectRatio = 1.0f;
@@ -359,12 +373,13 @@ void render_loop()
 	}
 
 	// ui layer like
+	if (true)
 	{
 		renderer2->setProjectionMatrix(math::mat4::identity);
 		renderer2->setViewMatrix(math::mat4::identity);
 		renderer2->submitSetViewport(screenSize.x, screenSize.y);
-		renderer2->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 1.2f, .3f, Color::Aquamarine);
-		renderer2->submitDrawText(&font, "vdtgraphics", math::vec3(-.3f, 0.f, 1.f), .1f, Color::White);
+		renderer2->submitDrawRect(ShapeRenderStyle::fill, math::vec3(0.f, 0.f, -.5f), 1.2f, .3f, Color::Aquamarine);
+		renderer2->submitDrawText(&font, "vdtgraphics", math::vec3(-.3f, 0.f, -1.f), .1f, Color::White);
 		renderer2->draw();
 	}
 }

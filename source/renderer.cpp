@@ -1,7 +1,5 @@
 #include <vdtgraphics/renderer.h>
 
-#include <glad/glad.h>
-
 #include <vdtgraphics/context.h>
 #include <vdtgraphics/font.h>
 #include <vdtgraphics/image.h>
@@ -148,26 +146,11 @@ namespace graphics
 
 	void Renderer::setRenderTarget(RenderTarget* const renderTarget)
 	{
-		if (renderTarget == nullptr || !renderTarget->isValid())
-		{
-			if (!m_renderTarget) return;
-			
-			// flush before switching target
-			draw();
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			glDisable(GL_DEPTH_TEST);
-			m_renderTarget = nullptr;
-			return;
-		}
-
-		if (renderTarget != renderTarget)
+		if (!m_commands.empty())
 		{
 			draw();
 		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->id());
-		submitClear(renderTarget->color);
-		glEnable(GL_DEPTH_TEST);
+		
 		m_renderTarget = renderTarget;
 	}
 
@@ -410,6 +393,24 @@ namespace graphics
 	void Renderer::draw()
 	{
 		stats.drawCalls = 0;
+
+		if (s_lastBindedRenderTarget != m_renderTarget && !m_commands.empty())
+		{
+			if (s_lastBindedRenderTarget)
+			{
+				s_lastBindedRenderTarget->unbind();
+				m_commands.insert(m_commands.begin(), std::make_unique<ClearCommand>(Color::Black, true, true));
+			}
+
+			if (m_renderTarget)
+			{
+				m_renderTarget->bind();
+				m_commands.insert(m_commands.begin(), std::make_unique<ClearCommand>(m_renderTarget->color, true, true));
+			}
+
+			s_lastBindedRenderTarget = m_renderTarget;
+		}
+
 		for (const auto& command : m_commands)
 		{
 			if (command->execute() == RenderCommandResult::OK)

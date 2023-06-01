@@ -85,5 +85,7 @@ namespace graphics
 		std::unique_ptr<ShaderProgram> m_spriteProgram;
 		std::unique_ptr<ShaderProgram> m_textProgram;
 		std::unique_ptr<ShaderProgram> m_textureProgram;
+
+		static inline RenderTarget* s_lastBindedRenderTarget = nullptr;
 	};
 }

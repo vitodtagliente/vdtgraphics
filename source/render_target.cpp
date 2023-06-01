@@ -62,12 +62,14 @@ namespace graphics
 
 	void RenderTarget::bind()
 	{
-		glBindRenderbuffer(GL_RENDERBUFFER, m_id);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void RenderTarget::unbind()
 	{
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
 	}
 
 	void RenderTarget::free()
