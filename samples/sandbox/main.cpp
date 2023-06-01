@@ -51,6 +51,8 @@ math::vec2 deltaMouseWheelPosition;
 // zoom
 float zoom_speed{ 1.0f };
 
+int input_number = 0;
+
 void showFPS(GLFWwindow* pWindow)
 {
 	static int s_frames = 0;
@@ -101,7 +103,7 @@ int main(void)
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	// Setup Platform/Renderer bindings
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 
@@ -149,6 +151,11 @@ int main(void)
 	bool run = true;
 	while (!glfwWindowShouldClose(window) && run)
 	{
+		/* Poll for and process events */
+		glfwPollEvents();
+		renderer->submitClear(graphics::Color::Black);
+		renderer->draw();
+
 		// delta time
 		{
 			double currentTime = glfwGetTime();
@@ -164,17 +171,28 @@ int main(void)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 		// render logic
-		render_loop();
+		// render_loop();
 
 		// render your GUI
 		ImGui::Begin("Demo window");
 		ImGui::Button("Hello!");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::TextUnformatted("Hint text");
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+		ImGui::InputInt("Numero", &input_number);
 		ImGui::End();
 
 		// Render dear imgui into screen
 		ImGui::Render();
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		/* Swap front and back buffers */
@@ -185,9 +203,6 @@ int main(void)
 		glViewport(0, 0, display_w, display_h);
 		glfwSwapBuffers(window);
 		*/
-
-		/* Poll for and process events */
-		glfwPollEvents();
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
