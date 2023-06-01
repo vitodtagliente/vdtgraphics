@@ -9,6 +9,11 @@
 #include <vdtgraphics/graphics.h>
 #include <vdtmath/math.h>
 
+#include <imgui.h>
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD 
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 using namespace std;
 using namespace graphics;
 using namespace math;
