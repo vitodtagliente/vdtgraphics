@@ -79,11 +79,6 @@ namespace graphics
 			return Font(nullptr, {}, path);
 		}
 
-		Texture::Options options;
-		options.wrapS = GL_CLAMP_TO_EDGE;
-		options.wrapT = GL_CLAMP_TO_EDGE;
-		options.filterMin = GL_LINEAR;
-		options.filterMax = GL_LINEAR;
 		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, 1);
 
 		std::map<char, Glyph> data;

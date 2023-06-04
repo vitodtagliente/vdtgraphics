@@ -4,15 +4,6 @@
 
 namespace graphics
 {
-	Texture::Options::Options()
-		: wrapS(GL_REPEAT)
-		, wrapT(GL_REPEAT)
-		, filterMin(GL_LINEAR)
-		, filterMax(GL_LINEAR)
-	{
-
-	}
-
 	Texture::Texture(const unsigned char* const data, const unsigned int width, const unsigned int height,
 		const unsigned int channels, const Options& options /* = Options */)
 		: m_id()
@@ -24,11 +15,30 @@ namespace graphics
 		glGenTextures(1, &m_id);
 		glBindTexture(GL_TEXTURE_2D, m_id);
 
+		unsigned int filter = 0;
+		switch (options.filter)
+		{
+		case Options::Filter::LinearMipmap: filter = GL_LINEAR_MIPMAP_LINEAR; break;
+		case Options::Filter::Nearest: filter = GL_NEAREST; break;
+		case Options::Filter::NearestMipmap: filter = GL_NEAREST_MIPMAP_NEAREST; break;
+		default:
+		case Options::Filter::Linear: filter = GL_LINEAR; break;
+		}
+
+		unsigned int repeat = 0;
+		switch (options.repeat)
+		{
+		case Options::Repeat::Enabled: filter = GL_REPEAT; break;
+		case Options::Repeat::Mirror: filter = GL_MIRRORED_REPEAT; break;
+		default:
+		case Options::Repeat::Disabled: filter = GL_CLAMP_TO_EDGE; break;
+		}
+
 		/* set the texture wrapping/filtering options (on the currently bound texture object) */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, options.wrapS);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, options.wrapT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, options.filterMin);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, options.filterMax);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
 		if (channels == 1)
 			m_format = GL_RED;

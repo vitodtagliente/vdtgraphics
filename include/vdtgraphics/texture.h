@@ -12,16 +12,23 @@ namespace graphics
 	public:
 		struct Options
 		{
-			Options();
+			enum class Filter
+			{
+				Linear,
+				LinearMipmap,
+				Nearest,
+				NearestMipmap,
+			};
 
-			// Wrapping mode on S axis
-			unsigned int wrapS;
-			// Wrapping mode on T axis 
-			unsigned int wrapT;
-			// Filtering mode if texture pixels < screen pixels
-			unsigned int filterMin;
-			// Filtering mode if texture pixels > screen pixels
-			unsigned int filterMax;
+			enum class Repeat
+			{
+				Disabled,
+				Enabled,
+				Mirror
+			};
+
+			Filter filter{ Filter::Linear };
+			Repeat repeat{ Repeat::Disabled };
 		};
 
 		Texture(const unsigned char* const data, unsigned int width, unsigned int height,

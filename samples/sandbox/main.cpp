@@ -233,8 +233,11 @@ TexturePtr squareTexture;
 
 void init()
 {
+	Texture::Options options2D;
+	options2D.filter = Texture::Options::Filter::Nearest;
+
 	circleTexture = std::make_unique<Texture>(Image::load("../../../assets/circle.png"));
-	potatoeTexture = std::make_unique<Texture>(Image::load("../../../assets/spritesheet.png"));
+	potatoeTexture = std::make_unique<Texture>(Image::load("../../../assets/spritesheet.png"), options2D);
 	squareTexture = std::make_unique<Texture>(Image::load("../../../assets/square.png"));
 	font = Font::load("../../../assets/font.ttf");
 }
@@ -355,7 +358,7 @@ void render_loop()
 	// scene graph layer like
 	if (true)
 	{
-		renderer->setRenderTarget(renderTarget.get());
+		// renderer->setRenderTarget(renderTarget.get());
 		const float aspectRatio = 1.0f;
 		renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
 		renderer->setViewMatrix(Camera::view(camera));
@@ -364,11 +367,11 @@ void render_loop()
 		testCase2();
 		testCase3();
 
-		renderer->setRenderTarget(nullptr);
-		renderer->setProjectionMatrix(math::mat4::scale({ 2.f, -2.f, 1.f }));
-		renderer->setViewMatrix(math::mat4::identity);
-		renderer->submitSetViewport(screenSize.x, screenSize.y);
-		renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
+		// renderer->setRenderTarget(nullptr);
+		// renderer->setProjectionMatrix(math::mat4::scale({ 2.f, -2.f, 1.f }));
+		// renderer->setViewMatrix(math::mat4::identity);
+		// renderer->submitSetViewport(screenSize.x, screenSize.y);
+		// renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
 		renderer->draw();
 	}
 
