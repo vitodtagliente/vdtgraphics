@@ -1,7 +1,5 @@
 #include <vdtgraphics/font.h>
 
-#include <glad/glad.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H  
 
@@ -51,7 +49,11 @@ namespace graphics
 			context.ready = FT_Init_FreeType(&context.data) == 0;
 		}
 
-		if (!context.ready) return Font(nullptr, {}, path);
+		if (!context.ready
+			|| !std::filesystem::exists(path))
+		{
+			return Font(nullptr, {}, path);
+		}
 
 		FT_Face face;
 		if (FT_New_Face(context.data, path.string().c_str(), 0, &face) != 0)
@@ -79,8 +81,11 @@ namespace graphics
 			return Font(nullptr, {}, path);
 		}
 
-		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, 1);
-
+		Texture::Options options;
+		options.filter = Texture::Options::Filter::Linear;
+		options.repeat = Texture::Options::Repeat::Disabled;
+		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, 4, options);
+		
 		std::map<char, Glyph> data;
 
 		int x_pos = 0;
@@ -92,20 +97,55 @@ namespace graphics
 				continue;
 			}
 
+			const unsigned int width = face->glyph->bitmap.width;
+			const unsigned int height = face->glyph->bitmap.rows;
+			const std::size_t buffer_size = width * height * 4;
+
+			if (buffer_size == 0) {
+				continue;
+			}
+
+			std::vector<unsigned char> buffer(buffer_size);
+
+			unsigned char* src = face->glyph->bitmap.buffer;
+			unsigned char* startOfLine = src;
+			int dst = 0;
+
+			for (unsigned int y = 0; y < height; ++y) {
+				src = startOfLine;
+				for (unsigned int x = 0; x < width; ++x) {
+					auto value = *src;
+					src++;
+
+					buffer[dst++] = 0xff;
+					buffer[dst++] = 0xff;
+					buffer[dst++] = 0xff;
+					if (value != 0)
+					{
+						buffer[dst++] = value;
+					}
+					else 
+					{
+						buffer[dst++] = 0xff;
+					}
+				}
+				startOfLine += face->glyph->bitmap.pitch;
+			}
+
 			Glyph glyph = {
 				// advance
-				static_cast<float>(face->glyph->advance.x / 64) / font_size,
+				static_cast<float>(face->glyph->advance.x / 64),
 				// bearing
-				math::vec2(static_cast<float>(face->glyph->bitmap_left) / font_size, static_cast<float>(face->glyph->bitmap_top) / font_size),
+				math::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
 				// texture rect
-				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, static_cast<float>(face->glyph->bitmap.width) / atlas_width, 1.f),
+				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, static_cast<float>(width) / atlas_width, 1.f),
 				// size
-				math::vec2(static_cast<float>(face->glyph->bitmap.width) / font_size, static_cast<float>(face->glyph->bitmap.rows) / font_size)
+				math::vec2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows)),
 			};
 			data.insert(std::pair<char, Glyph>(c, glyph));
 
-			texture->fillSubData(x_pos, 0, face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
-			x_pos += face->glyph->bitmap.width;
+			texture->fillSubData(x_pos, 0, width, height, &buffer[0]);
+			x_pos += width;
 		}
 
 		FT_Done_Face(face);

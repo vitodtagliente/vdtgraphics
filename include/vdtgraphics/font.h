@@ -49,7 +49,7 @@ namespace graphics
 		TexturePtr texture;
 
 	private:
-		static constexpr unsigned int font_size = 48;
+		static constexpr unsigned int font_size = 72;
 		static constexpr size_t num_glyphs = 128;
 	};
 }

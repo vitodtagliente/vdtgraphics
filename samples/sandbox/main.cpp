@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include <vdtgraphics/graphics.h>
+#include <vdtgraphics/text_renderer.h>
 #include <vdtmath/math.h>
 
 #include <imgui.h>
@@ -35,9 +36,12 @@ int drawCalls = 0;
 math::vector2_t<int> screenSize(720, 480);
 
 std::unique_ptr<Context> context;
-std::unique_ptr<RenderTarget> renderTarget;
-std::unique_ptr<Renderer> renderer;
-std::unique_ptr<Renderer> renderer2;
+std::unique_ptr<PrimitiveBatch> primitive_batch;
+std::unique_ptr<SpriteBatch> sprite_batch;
+std::unique_ptr<TextBatch> text_batch;
+std::unique_ptr<TextRenderer> text_renderer;
+std::unique_ptr<TextureViewer> texture_viewer;
+
 math::vec3 mouse;
 math::transform camera;
 
@@ -63,7 +67,11 @@ void showFPS(GLFWwindow* pWindow)
 	if (s_timer <= 0.0)
 	{
 		std::stringstream ss;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << (renderer->stats.drawCalls + renderer2->stats.drawCalls) << "]";
+		const std::size_t draw_calls = sprite_batch->stats().drawCalls
+			+ primitive_batch->stats().drawCalls
+			+ text_batch->stats().drawCalls
+			;
+		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << draw_calls << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
@@ -111,11 +119,12 @@ int main(void)
 		ImGui_ImplOpenGL3_Init("#version 330 core");
 	}
 
-	renderer = std::make_unique<Renderer>();
-	renderer->init(context.get());
-	renderer2 = std::make_unique<Renderer>();
-	renderer2->init(context.get());
-	renderTarget = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color(0.0f, 0.0f, 0.2f, 1.0f));
+	primitive_batch = std::make_unique<PrimitiveBatch>(context.get());
+	sprite_batch = std::make_unique<SpriteBatch>(context.get());
+	text_batch = std::make_unique<TextBatch>(context.get());
+	texture_viewer = std::make_unique<TextureViewer>(context.get());
+
+	text_renderer = std::make_unique<TextRenderer>(screenSize.x, screenSize.y);
 
 	init();
 
@@ -124,9 +133,7 @@ int main(void)
 		{
 			screenSize.x = width;
 			screenSize.y = height;
-			renderer->submitSetViewport(width, height);
-			renderer2->submitSetViewport(width, height);
-			renderTarget->resize(width, height);
+			context->viewport(width, height);
 		}
 	);
 
@@ -157,8 +164,8 @@ int main(void)
 	{
 		/* Poll for and process events */
 		glfwPollEvents();
-		renderer->submitClear(graphics::Color::Black);
-		renderer->draw();
+		// renderer->submitClear(graphics::Color::Black);
+		// renderer->draw();
 
 		// delta time
 		{
@@ -230,6 +237,7 @@ Font font;
 TexturePtr circleTexture;
 TexturePtr potatoeTexture;
 TexturePtr squareTexture;
+TexturePtr testTexture;
 
 void init()
 {
@@ -239,7 +247,12 @@ void init()
 	circleTexture = std::make_unique<Texture>(Image::load("../../../assets/circle.png"));
 	potatoeTexture = std::make_unique<Texture>(Image::load("../../../assets/spritesheet.png"), options2D);
 	squareTexture = std::make_unique<Texture>(Image::load("../../../assets/square.png"));
-	font = Font::load("../../../assets/font.ttf");
+
+	Image potatoeImage = Image::load("../../../assets/spritesheet.png");
+	testTexture = std::make_unique<Texture>(nullptr, potatoeImage.width, potatoeImage.height, potatoeImage.channels);
+	testTexture->fillSubData(0, 0, potatoeImage.width, potatoeImage.height, potatoeImage.data.get());
+
+	font = Font::load("../../../assets/Font.ttf");
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -262,13 +275,13 @@ void statsEnd(const std::string& context, const bool refresh = false)
 // Draw lines
 void testCase1()
 {
-	renderer->submitDrawRect(ShapeRenderStyle::fill, math::vec3::zero, 10.f, 10.f, Color::Magenta);
-	renderer->submitDrawRect(ShapeRenderStyle::stroke, math::vec3(-5.4f, 5.3f, 0.0f), 5.f, 5.f, Color::Green);
-	renderer->submitDrawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 15.f, Color::Yellow);
-	renderer->submitDrawLine(math::vec3(-10.f, -10.f, 0.f), Color::Red, math::vec3(10.f, 10.f, 0.f), Color::Yellow);
-	renderer->submitDrawTexture(potatoeTexture.get(), math::vec3::zero);
-	renderer->submitDrawTexture(circleTexture.get(), math::vec3::zero, math::vec3(10.f, 10.f, 1.f), {}, Color::Cyan);
-	renderer->submitDrawTexture(squareTexture.get(), math::vec3(5.f, 5.f, 0.f), math::vec3(5.f, 5.f, 1.f), {}, Color::Green);
+	primitive_batch->drawRect(ShapeRenderStyle::fill, math::vec3::zero, 10.f, 10.f, Color::Magenta);
+	primitive_batch->drawRect(ShapeRenderStyle::stroke, math::vec3(-5.4f, 5.3f, 0.0f), 5.f, 5.f, Color::Green);
+	primitive_batch->drawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 15.f, Color::Yellow);
+	primitive_batch->drawLine(math::vec3(-10.f, -10.f, 0.f), Color::Red, math::vec3(10.f, 10.f, 0.f), Color::Yellow);
+	sprite_batch->draw(potatoeTexture.get(), math::vec3::zero);
+	sprite_batch->draw(circleTexture.get(), math::vec3::zero, math::vec3(10.f, 10.f, 1.f), {}, Color::Cyan);
+	sprite_batch->draw(squareTexture.get(), math::vec3(5.f, 5.f, 0.f), math::vec3(5.f, 5.f, 1.f), {}, Color::Green);
 }
 
 // Draw different entities
@@ -288,7 +301,7 @@ void testCase2()
 
 	if (s_entities.empty())
 	{
-		for (int i = 0; i < 5000; ++i)
+		for (int i = 0; i < 8000; ++i)
 		{
 			Entity entity;
 
@@ -326,7 +339,7 @@ void testCase2()
 			entity.transform.rotation.z += entity.rotateSpeed * static_cast<float>(deltaTime);
 			entity.transform.update();
 		}
-		renderer->submitDrawTexture(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
+		sprite_batch->draw(potatoeTexture.get(), entity.transform.matrix(), entity.rect);
 	}
 
 	// statsEnd("draw textures");
@@ -336,12 +349,12 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	const float depth = 0.f;
-	math::vec4 viewport = math::vec4(0, 0, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y));
-	math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
-	math::vec3 objcoords = math::mat4::unproject(screencoords, renderer->getViewMatrix(), renderer->getProjectionMatrix(), viewport);
-	objcoords.z = 0.5f;
-	renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Coral);
+	// const float depth = 0.f;
+	// math::vec4 viewport = math::vec4(0, 0, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y));
+	// math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
+	// math::vec3 objcoords = math::mat4::unproject(screencoords, renderer->getViewMatrix(), renderer->getProjectionMatrix(), viewport);
+	// objcoords.z = 0.5f;
+	// renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Coral);
 }
 
 void update()
@@ -355,34 +368,26 @@ void update()
 
 void render_loop()
 {
-	// scene graph layer like
-	if (true)
-	{
-		// renderer->setRenderTarget(renderTarget.get());
-		const float aspectRatio = 1.0f;
-		renderer->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
-		renderer->setViewMatrix(Camera::view(camera));
-		renderer->submitSetViewport(screenSize.x, screenSize.y);
-		testCase1();
-		testCase2();
-		testCase3();
+	context->clear(Color::Cyan);
 
-		// renderer->setRenderTarget(nullptr);
-		// renderer->setProjectionMatrix(math::mat4::scale({ 2.f, -2.f, 1.f }));
-		// renderer->setViewMatrix(math::mat4::identity);
-		// renderer->submitSetViewport(screenSize.x, screenSize.y);
-		// renderer->submitDrawTexture(renderTarget->getTexture(), math::vec3::zero);
-		renderer->draw();
-	}
+	const float aspectRatio = 1.0f;
+	primitive_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+	primitive_batch->setViewMatrix(Camera::view(camera));
+	// sprite_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+	// sprite_batch->setViewMatrix(Camera::view(camera));
 
-	// ui layer like
-	if (true)
-	{
-		renderer2->setProjectionMatrix(math::mat4::identity);
-		renderer2->setViewMatrix(math::mat4::identity);
-		renderer2->submitSetViewport(screenSize.x, screenSize.y);
-		renderer2->submitDrawRect(ShapeRenderStyle::fill, math::vec3(0.f, 0.f, -.5f), 1.2f, .3f, Color::Aquamarine);
-		renderer2->submitDrawText(&font, "vdtgraphics", math::vec3(-.3f, 0.f, -1.f), .1f, Color::White);
-		renderer2->draw();
-	}
+	text_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+	text_batch->setViewMatrix(math::mat4::identity);
+
+	// testCase1();
+	// testCase2();
+	// testCase3();
+
+	// texture_viewer->draw(font.texture.get(), Color::White);
+
+	text_batch->draw(&font, "a", math::vec3::zero, .01f, Color::Red);
+
+	primitive_batch->flush();
+	sprite_batch->flush();
+	text_batch->flush();
 }

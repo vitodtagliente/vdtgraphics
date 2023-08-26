@@ -14,8 +14,23 @@ namespace graphics
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				glEnable(GL_DEPTH_TEST);
+				glEnable(GL_TEXTURE_2D);
 			}
 		}
 		return m_state;
+	}
+
+	void Context::viewport(const int width, const int height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
+	void Context::clear(const Color& color, bool clearColorBuffer, bool clearDepthBuffer)
+	{
+		glClearColor(color.red, color.green, color.blue, color.alpha);
+		int mode = 0;
+		if (clearColorBuffer) mode |= GL_COLOR_BUFFER_BIT;
+		if (clearDepthBuffer) mode |= GL_DEPTH_BUFFER_BIT;
+		glClear(mode);
 	}
 }

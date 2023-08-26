@@ -13,7 +13,8 @@ namespace graphics
 		Image(const Image& other);
 		~Image();
 
-		static Image load(const std::filesystem::path& filename);
+		static Image load(const std::filesystem::path& path);
+		void save(const std::filesystem::path& path);
 
 		Image& operator= (const Image& other);
 		bool operator== (const Image& other) const;

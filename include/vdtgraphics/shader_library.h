@@ -21,6 +21,7 @@ namespace graphics
 			static const std::string PolygonBatchShader;
 			static const std::string SpriteBatchShader;
 			static const std::string TextShader;
+			static const std::string TextTextureShader;
 			static const std::string TextureShader;
 		};
 

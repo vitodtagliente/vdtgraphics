@@ -42,12 +42,16 @@ namespace graphics
 		inline unsigned int id() const { return m_id; }
 		inline bool isValid() const { return m_id != 0; }
 
+		std::shared_ptr<unsigned char> getData() const;
 		inline unsigned int getWidth() const { return m_width; }
 		inline unsigned int getHeight() const { return m_height; }
+		inline unsigned int getChannels() const { return m_channels; }
 
 		void bind(unsigned int slot = 0);
 		void unbind();
 		void free();
+
+		void save(const std::filesystem::path& path) const;
 
 	protected:
 
@@ -55,6 +59,8 @@ namespace graphics
 		unsigned int m_id;
 		// texture size
 		unsigned int m_width, m_height;
+		// number of channels
+		unsigned int m_channels;
 		// format of the texture object
 		unsigned int m_format;
 	};

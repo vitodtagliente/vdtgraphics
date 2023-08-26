@@ -9,7 +9,8 @@ namespace graphics
 		: m_id()
 		, m_width(width)
 		, m_height(height)
-		, m_format(channels)
+		, m_channels(channels)
+		, m_format(0)
 	{
 		// generate the texture
 		glGenTextures(1, &m_id);
@@ -47,10 +48,15 @@ namespace graphics
 		else if (channels == 4)
 			m_format = GL_RGBA;
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		if (channels == 1)
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		}
+
 		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
 			0, m_format, GL_UNSIGNED_BYTE, data
 		);
+
 		if (data != nullptr)
 		{
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -69,16 +75,36 @@ namespace graphics
 
 	void Texture::fillSubData(const int offsetX, const int offsetY, const int width, const int height, unsigned char* const data)
 	{
+		if (m_channels == 1)
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		}
+
 		glTexSubImage2D(GL_TEXTURE_2D, 0, offsetX, offsetY, width, height, m_format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	void Texture::resize(const int width, const int height)
 	{
+		if (m_channels == 1)
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		}
+
 		m_width = width;
 		m_height = height;
+		
 		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
 			0, m_format, GL_UNSIGNED_BYTE, nullptr
 		);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	std::shared_ptr<unsigned char> Texture::getData() const
+	{
+		std::shared_ptr<unsigned char> pixels(new unsigned char[m_width * m_height * m_channels]);
+		glGetTexImage(GL_TEXTURE_2D, 0, m_format, GL_UNSIGNED_BYTE, pixels.get());
+		return pixels;
 	}
 
 	void Texture::bind(const unsigned int slot)
@@ -95,5 +121,11 @@ namespace graphics
 	void Texture::free()
 	{
 		glDeleteTextures(1, &m_id);
+	}
+
+	void Texture::save(const std::filesystem::path& path) const
+	{
+		Image image(getData(), m_width, m_height, m_channels);
+		image.save(path);
 	}
 }

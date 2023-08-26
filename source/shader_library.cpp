@@ -256,6 +256,48 @@ namespace graphics
 			}
 		)"
 		));
+		m_shaders.insert(std::make_pair(names::TextTextureShader, R"(
+			#shader vertex
+
+			#version 330 core
+ 
+			// an attribute is an input (in) to a vertex shader.
+			// It will receive data from a buffer
+			layout(location = 0) in vec4 a_position;
+			layout(location = 1) in vec2 a_texcoord;
+
+			out vec2 v_texcoord;
+ 
+			// all shaders have a main function
+			void main() {
+ 
+				// gl_Position is a special variable a vertex shader
+				// is responsible for setting
+				gl_Position = a_position;
+				v_texcoord = a_texcoord;
+			}
+
+			#shader fragment
+
+			#version 330 core
+
+			// fragment shaders don't have a default precision so we need
+			// to pick one. highp is a good default. It means "high precision"
+			precision highp float;
+ 
+			in vec2 v_texcoord;
+
+			// The texture.
+			uniform vec4 u_color;
+			uniform sampler2D u_texture;
+
+			out vec4 outColor;
+ 
+			void main() {
+				outColor = vec4(1.0, 1.0, 1.0, texture(u_texture0, v_texcoord).r) * u_color;
+			}		
+		)"
+		));
 		m_shaders.insert(std::make_pair(names::TextureShader, R"(
 			#shader vertex
 
@@ -264,7 +306,7 @@ namespace graphics
 			// an attribute is an input (in) to a vertex shader.
 			// It will receive data from a buffer
 			layout(location = 0) in vec4 a_position;
-			layout(location = 1) in vec4 a_texcoord;
+			layout(location = 1) in vec2 a_texcoord;
 
 			out vec2 v_texcoord;
  
@@ -289,12 +331,12 @@ namespace graphics
 
 			// The texture.
 			uniform sampler2D u_texture;
+			uniform vec4 u_color;
 
 			out vec4 outColor;
  
 			void main() {
-				// Just set the output to a constant reddish-purple
-				FragColor = texture(u_texture, v_texcoord);
+				outColor = texture(u_texture, v_texcoord) * u_color;
 			}		
 		)"
 		));
@@ -304,5 +346,6 @@ namespace graphics
 	const std::string ShaderLibrary::names::PolygonBatchShader = "PolygonBatch";
 	const std::string ShaderLibrary::names::SpriteBatchShader = "SpriteBatch";
 	const std::string ShaderLibrary::names::TextShader = "Text";
+	const std::string ShaderLibrary::names::TextTextureShader = "TextTexture";
 	const std::string ShaderLibrary::names::TextureShader = "Texture";
 }
