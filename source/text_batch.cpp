@@ -19,10 +19,10 @@ namespace graphics
 
 		float vertices[] =
 		{
-			 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-			 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
-			-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
+			 1.0f,  0.0f, 0.0f, 1.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+			 0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+			 0.0f,  0.0f, 0.0f, 0.0f, 0.0f
 		};
 
 		unsigned int indices[] = {
@@ -104,6 +104,8 @@ namespace graphics
 			m_commands.push_back(std::unique_ptr<RenderTextCommand>(command));
 		}
 
+		const float scale = static_cast<float>(size) / font->size;
+
 		float x = position.x;
 		for (const char c : text)
 		{
@@ -111,13 +113,12 @@ namespace graphics
 			if (it == font->data.end()) continue;
 
 			const Glyph& glyph = it->second;
-			const float scale = size;
-			const float x_pos = x + glyph.bearing.x;
-			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y);
-			const float w = glyph.size.x;
-			const float h = glyph.size.y;
+			const float x_pos = x + glyph.bearing.x * scale;
+			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y) * scale;
+			const float w = glyph.size.x * scale;
+			const float h = glyph.size.y * scale;
 
-			const math::mat4 transform = math::mat4::scale(math::vec3(w * 0.5f, h * 0.5f, 1.f) * scale)
+			const math::mat4 transform = math::mat4::scale(math::vec3(w, h, 1.f))
 				* math::matrix4::translate(math::vec3(x_pos, y_pos, position.z));
 			command->push({ transform, color, glyph.rect }, font);
 

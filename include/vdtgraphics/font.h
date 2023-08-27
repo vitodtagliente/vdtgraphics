@@ -32,7 +32,7 @@ namespace graphics
 	{
 	public:
 		Font();
-		Font(TexturePtr texture, const std::map<char, Glyph>& data, const std::filesystem::path& path);
+		Font(TexturePtr texture, const std::map<char, Glyph>& data, const std::filesystem::path& path, std::size_t size);
 		Font(const Font& other);
 		~Font();
 
@@ -46,6 +46,7 @@ namespace graphics
 
 		std::map<char, Glyph> data;
 		std::filesystem::path path;
+		std::size_t size;
 		TexturePtr texture;
 
 	private:

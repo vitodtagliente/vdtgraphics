@@ -18,13 +18,15 @@ namespace graphics
 	Font::Font()
 		: data()
 		, path()
+		, size()
 		, texture()
 	{
 	}
 
-	Font::Font(TexturePtr texture, const std::map<char, Glyph>& data, const std::filesystem::path& path)
+	Font::Font(TexturePtr texture, const std::map<char, Glyph>& data, const std::filesystem::path& path, const std::size_t size)
 		: data(data)
 		, path(path)
+		, size(size)
 		, texture(texture)
 	{
 	}
@@ -32,6 +34,7 @@ namespace graphics
 	Font::Font(const Font& other)
 		: data(other.data)
 		, path(other.path)
+		, size(other.size)
 		, texture(other.texture)
 	{
 	}
@@ -52,13 +55,13 @@ namespace graphics
 		if (!context.ready
 			|| !std::filesystem::exists(path))
 		{
-			return Font(nullptr, {}, path);
+			return Font(nullptr, {}, path, 0);
 		}
 
 		FT_Face face;
 		if (FT_New_Face(context.data, path.string().c_str(), 0, &face) != 0)
 		{
-			return Font(nullptr, {}, path);
+			return Font(nullptr, {}, path, 0);
 		}
 		FT_Set_Pixel_Sizes(face, 0, size);
 
@@ -78,13 +81,14 @@ namespace graphics
 
 		if (atlas_width == 0 || atlas_height == 0)
 		{
-			return Font(nullptr, {}, path);
+			return Font(nullptr, {}, path, 0);
 		}
 
 		Texture::Options options;
 		options.filter = Texture::Options::Filter::Linear;
 		options.repeat = Texture::Options::Repeat::Disabled;
-		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, 4, options);
+		constexpr std::size_t channels = 4;
+		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, channels, options);
 		
 		std::map<char, Glyph> data;
 
@@ -119,10 +123,10 @@ namespace graphics
 					auto value = *src;
 					src++;
 
-					buffer[dst++] = value;
-					buffer[dst++] = value;
-					buffer[dst++] = value;
-					buffer[dst++] = 0xff;
+					for (std::size_t c = 0; c < channels; ++c)
+					{
+						buffer[dst++] = value;
+					}
 				}
 				startOfLine += face->glyph->bitmap.pitch;
 			}
@@ -145,25 +149,26 @@ namespace graphics
 
 		FT_Done_Face(face);
 
-		return Font(std::move(texture), data, path);
+		return Font(std::move(texture), data, path, size);
 	}
 
 	Font& Font::operator=(const Font& other)
 	{
 		data = other.data;
 		path = other.path;
+		size = other.size;
 		texture = other.texture;
 		return *this;
 	}
 
 	bool Font::operator==(const Font& other) const
 	{
-		return data == other.data && path == other.path && texture == other.texture;
+		return data == other.data && path == other.path && texture == other.texture && size == other.size;
 	}
 
 	bool Font::operator!=(const Font& other) const
 	{
-		return data != other.data || path != other.path || texture != other.texture;
+		return data != other.data || path != other.path || texture != other.texture || size != other.size;
 	}
 
 	Glyph& Glyph::operator=(const Glyph& other)
