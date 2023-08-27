@@ -114,12 +114,16 @@ namespace graphics
 
 			const Glyph& glyph = it->second;
 			const float x_pos = x + glyph.bearing.x * scale;
-			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y) * scale;
+			const float delta_y = font->data['H'].bearing.y - glyph.bearing.y;
+			const float y_pos = position.y + (delta_y * scale);
 			const float w = glyph.size.x * scale;
 			const float h = glyph.size.y * scale;
 
-			const math::mat4 transform = math::mat4::scale(math::vec3(w, h, 1.f))
-				* math::matrix4::translate(math::vec3(x_pos, y_pos, position.z));
+			const math::mat4 transform = 
+				math::mat4::scale(math::vec3(w, h, 1.f))
+				* 
+				math::matrix4::translate(math::vec3(x_pos, y_pos, position.z))
+				;
 			command->push({ transform, color, glyph.rect }, font);
 
 			x += (glyph.advance) * scale;

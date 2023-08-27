@@ -386,7 +386,7 @@ void render_loop()
 	// testCase2();
 	// testCase3();
 
-	text_batch->draw(&font, "Lives: 3", math::vec3(5.f, 5.f, .1f), 72, Color::Red);
+	text_batch->draw(&font, "Lives: 3", math::vec3(5.f, 5.f, .1f), 24, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
