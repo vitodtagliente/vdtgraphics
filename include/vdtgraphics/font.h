@@ -36,7 +36,7 @@ namespace graphics
 		Font(const Font& other);
 		~Font();
 
-		static Font load(const std::filesystem::path& filename);
+		static Font load(const std::filesystem::path& filename, std::size_t size = 16);
 
 		inline bool isValid() const { return !data.empty(); }
 
@@ -49,7 +49,6 @@ namespace graphics
 		TexturePtr texture;
 
 	private:
-		static constexpr unsigned int font_size = 72;
 		static constexpr size_t num_glyphs = 128;
 	};
 }

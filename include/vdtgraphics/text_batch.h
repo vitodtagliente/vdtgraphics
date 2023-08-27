@@ -39,7 +39,7 @@ namespace graphics
 
         void flush();
 
-        void draw(Font* const font, const std::string& text, const math::vec3& position, float scale = 1.0f, const Color& color = Color::White);
+        void draw(Font* const font, const std::string& text, const math::vec3& position, std::size_t size = 16, const Color& color = Color::White);
 
         const Stats& stats() const { return m_stats; }
 

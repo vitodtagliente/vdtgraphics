@@ -40,7 +40,7 @@ namespace graphics
 	{
 	}
 
-	Font Font::load(const std::filesystem::path& path)
+	Font Font::load(const std::filesystem::path& path, const std::size_t size)
 	{
 		static Context context;
 
@@ -60,7 +60,7 @@ namespace graphics
 		{
 			return Font(nullptr, {}, path);
 		}
-		FT_Set_Pixel_Sizes(face, 0, font_size);
+		FT_Set_Pixel_Sizes(face, 0, size);
 
 		// determine the size of the atlas
 		int atlas_width = 0;
@@ -98,7 +98,9 @@ namespace graphics
 			}
 
 			const unsigned int width = face->glyph->bitmap.width;
+			const float width_f = static_cast<float>(width);
 			const unsigned int height = face->glyph->bitmap.rows;
+			const float height_f = static_cast<float>(height);
 			const std::size_t buffer_size = width * height * 4;
 
 			if (buffer_size == 0) {
@@ -117,17 +119,10 @@ namespace graphics
 					auto value = *src;
 					src++;
 
+					buffer[dst++] = value;
+					buffer[dst++] = value;
+					buffer[dst++] = value;
 					buffer[dst++] = 0xff;
-					buffer[dst++] = 0xff;
-					buffer[dst++] = 0xff;
-					if (value != 0)
-					{
-						buffer[dst++] = value;
-					}
-					else 
-					{
-						buffer[dst++] = 0xff;
-					}
 				}
 				startOfLine += face->glyph->bitmap.pitch;
 			}
@@ -138,9 +133,9 @@ namespace graphics
 				// bearing
 				math::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
 				// texture rect
-				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, static_cast<float>(width) / atlas_width, 1.f),
+				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, width_f / atlas_width, 1.f),
 				// size
-				math::vec2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows)),
+				math::vec2(width_f, height_f),
 			};
 			data.insert(std::pair<char, Glyph>(c, glyph));
 

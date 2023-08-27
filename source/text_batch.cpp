@@ -19,10 +19,10 @@ namespace graphics
 
 		float vertices[] =
 		{
-			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 0.0f,
-			-0.5f, -0.5f, 0.0f, 0.0f, 1.0f
+			 1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+			-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 1.0f
 		};
 
 		unsigned int indices[] = {
@@ -77,7 +77,7 @@ namespace graphics
 		m_commands.clear();
 	}
 
-	void TextBatch::draw(Font* const font, const std::string& text, const math::vec3& position, const float scale, const Color& color)
+	void TextBatch::draw(Font* const font, const std::string& text, const math::vec3& position, const std::size_t size, const Color& color)
 	{
 		if (text.empty() || font == nullptr) return;
 
@@ -111,11 +111,17 @@ namespace graphics
 			if (it == font->data.end()) continue;
 
 			const Glyph& glyph = it->second;
-			const float x_pos = x + glyph.bearing.x * scale;
-			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y) * scale;
-			command->push({ math::matrix4::scale(math::vec3(glyph.size.x, glyph.size.y, 1.f) * scale) * math::matrix4::translate(math::vec3(x_pos, y_pos, position.z)), color, glyph.rect }, font);
+			const float scale = size;
+			const float x_pos = x + glyph.bearing.x;
+			const float y_pos = position.y + (glyph.size.y - glyph.bearing.y);
+			const float w = glyph.size.x;
+			const float h = glyph.size.y;
 
-			x += scale * 1.f + glyph.advance * scale;
+			const math::mat4 transform = math::mat4::scale(math::vec3(w * 0.5f, h * 0.5f, 1.f) * scale)
+				* math::matrix4::translate(math::vec3(x_pos, y_pos, position.z));
+			command->push({ transform, color, glyph.rect }, font);
+
+			x += (glyph.advance) * scale;
 		}
 	}
 

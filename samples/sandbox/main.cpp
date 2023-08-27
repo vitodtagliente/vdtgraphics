@@ -252,7 +252,10 @@ void init()
 	testTexture = std::make_unique<Texture>(nullptr, potatoeImage.width, potatoeImage.height, potatoeImage.channels);
 	testTexture->fillSubData(0, 0, potatoeImage.width, potatoeImage.height, potatoeImage.data.get());
 
-	font = Font::load("../../../assets/Font.ttf");
+	font = Font::load("../../../assets/Font.ttf", 24);
+	font.texture->save("font.png");
+
+	text_renderer->Load("../../../assets/Font.ttf", 24);
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -368,24 +371,23 @@ void update()
 
 void render_loop()
 {
-	context->clear(Color::Cyan);
+	context->clear(Color::Black);
 
 	const float aspectRatio = 1.0f;
-	primitive_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+	primitive_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 64, screenSize.y / 64, aspectRatio)); // 32 pixel per unit
 	primitive_batch->setViewMatrix(Camera::view(camera));
-	// sprite_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
-	// sprite_batch->setViewMatrix(Camera::view(camera));
+	sprite_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 64, screenSize.y / 64, aspectRatio)); // 32 pixel per unit
+	sprite_batch->setViewMatrix(Camera::view(camera));
 
-	text_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 32, screenSize.y / 32, aspectRatio)); // 32 pixel per unit
+	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, screenSize.x, 0.f, screenSize.y, -10.f, 100.f));
 	text_batch->setViewMatrix(math::mat4::identity);
 
 	// testCase1();
 	// testCase2();
 	// testCase3();
 
-	// texture_viewer->draw(font.texture.get(), Color::White);
-
-	text_batch->draw(&font, "a", math::vec3::zero, .01f, Color::Red);
+	text_batch->draw(&font, "ciao", math::vec3(50.f, 100.f, .1f), 5.f, Color::Red);
+	text_renderer->RenderText("foooo", 200.f, 50.f, 1.f, Color::Green);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
