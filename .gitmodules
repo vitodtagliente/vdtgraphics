@@ -4,3 +4,6 @@
 [submodule "vendor/fontstash"]
 	path = vendor/fontstash
 	url = https://github.com/memononen/fontstash
+[submodule "vendor/msdf-atlas-gen"]
+	path = vendor/msdf-atlas-gen
+	url = https://github.com/Chlumsky/msdf-atlas-gen
