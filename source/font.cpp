@@ -100,10 +100,12 @@ namespace graphics
 			{
 				continue;
 			}
+			
+			FT_Bitmap& bitmap = face->glyph->bitmap;
 
-			const unsigned int width = face->glyph->bitmap.width;
+			const unsigned int width = bitmap.width;
 			const float width_f = static_cast<float>(width);
-			const unsigned int height = face->glyph->bitmap.rows;
+			const unsigned int height = bitmap.rows;
 			const float height_f = static_cast<float>(height);
 			const std::size_t buffer_size = width * height * 4;
 
@@ -113,7 +115,7 @@ namespace graphics
 
 			std::vector<unsigned char> buffer(buffer_size);
 
-			unsigned char* src = face->glyph->bitmap.buffer;
+			unsigned char* src = bitmap.buffer;
 			unsigned char* startOfLine = src;
 			int dst = 0;
 
@@ -128,7 +130,7 @@ namespace graphics
 						buffer[dst++] = value;
 					}
 				}
-				startOfLine += face->glyph->bitmap.pitch;
+				startOfLine += bitmap.pitch;
 			}
 
 			Glyph glyph = {
@@ -137,7 +139,7 @@ namespace graphics
 				// bearing
 				math::vec2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
 				// texture rect
-				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, width_f / atlas_width, 1.f),
+				TextureRect(static_cast<float>(x_pos) / atlas_width, 0.f, width_f / atlas_width, height_f / atlas_height),
 				// size
 				math::vec2(width_f, height_f),
 			};

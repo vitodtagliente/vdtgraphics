@@ -107,7 +107,6 @@ namespace graphics
 		const float scale = static_cast<float>(size) / font->size;
 
 		const float h_bearing_top = font->data['H'].bearing.y;
-		const float h_size_y = font->data['H'].size.y;
 
 		float x = position.x;
 		for (const char c : text)
@@ -117,14 +116,9 @@ namespace graphics
 
 			const Glyph& glyph = it->second;
 			const float x_pos = x + glyph.bearing.x * scale;
-			const float delta_y = h_bearing_top - glyph.bearing.y;
-			float y_pos = position.y + delta_y * scale;
-			if (glyph.bearing.y < h_bearing_top)
-			{
-				y_pos = position.y + (delta_y + glyph.bearing.y / 2) * scale;
-			}
+			float y_pos = position.y + (h_bearing_top - glyph.bearing.y) * scale;
 			const float w = glyph.size.x * scale;
-			const float h = std::max(0.f, glyph.bearing.y + glyph.size.y) * scale;
+			const float h = glyph.size.y * scale;
 
 			const math::mat4 transform = 
 				math::mat4::scale(math::vec3(w, h, 1.f))
