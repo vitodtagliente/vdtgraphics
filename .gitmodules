@@ -7,3 +7,6 @@
 [submodule "vendor/msdf-atlas-gen"]
 	path = vendor/msdf-atlas-gen
 	url = https://github.com/Chlumsky/msdf-atlas-gen
+[submodule "vendor/msdfgen"]
+	path = vendor/msdfgen
+	url = https://github.com/Chlumsky/msdfgen
