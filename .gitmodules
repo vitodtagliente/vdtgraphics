@@ -1,12 +1,3 @@
 [submodule "vendor/vdtmath"]
 	path = vendor/vdtmath
 	url = https://github.com/vitodtagliente/vdtmath
-[submodule "vendor/fontstash"]
-	path = vendor/fontstash
-	url = https://github.com/memononen/fontstash
-[submodule "vendor/msdf-atlas-gen"]
-	path = vendor/msdf-atlas-gen
-	url = https://github.com/Chlumsky/msdf-atlas-gen
-[submodule "vendor/msdfgen"]
-	path = vendor/msdfgen
-	url = https://github.com/Chlumsky/msdfgen
