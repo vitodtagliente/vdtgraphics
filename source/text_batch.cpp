@@ -117,11 +117,11 @@ namespace graphics
 
 			const Glyph& glyph = it->second;
 			const float x_pos = x + glyph.bearing.x * scale;
-			const float delta_y = h_size_y - glyph.bearing.y;
-			float y_pos = position.y + (delta_y * scale);
-			if (glyph.size.y < h_size_y)
+			const float delta_y = h_bearing_top - glyph.bearing.y;
+			float y_pos = position.y + delta_y * scale;
+			if (glyph.bearing.y < h_bearing_top)
 			{
-				y_pos = position.y + glyph.bearing.y + delta_y * scale;
+				y_pos = position.y + (delta_y + glyph.bearing.y / 2) * scale;
 			}
 			const float w = glyph.size.x * scale;
 			const float h = std::max(0.f, glyph.bearing.y + glyph.size.y) * scale;

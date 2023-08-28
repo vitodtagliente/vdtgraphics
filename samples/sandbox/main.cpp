@@ -252,7 +252,7 @@ void init()
 	testTexture = std::make_unique<Texture>(nullptr, potatoeImage.width, potatoeImage.height, potatoeImage.channels);
 	testTexture->fillSubData(0, 0, potatoeImage.width, potatoeImage.height, potatoeImage.data.get());
 
-	font = Font::load("../../../assets/OCRAEXT.ttf", 72);
+	font = Font::load("../../../assets/OCRAEXT.ttf", 24);
 	font.texture->save("font.png");
 
 	text_renderer->Load("../../../assets/Font.ttf", 24);
@@ -386,7 +386,7 @@ void render_loop()
 	// testCase2();
 	// testCase3();
 
-	text_batch->draw(&font, "Lives: 3", math::vec3(5.f, 5.f, .1f), 72, Color::White);
+	text_batch->draw(&font, "Lives: 3", math::vec3(5.f, 5.f, .1f), 24, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
