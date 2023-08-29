@@ -21,7 +21,6 @@ namespace graphics
     class PrimitiveBatch
     {
     public:
-
         struct Stats
         {
             int drawCalls{ 0 };
@@ -48,9 +47,34 @@ namespace graphics
         std::size_t batch_size = 10000;
 
     private:
+        class RenderPrimitiveCommand final : public RenderCommand
+        {
+        public:
+            RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, ShapeRenderStyle style, size_t capacity);
+
+            size_t capacity() const { return m_capacity; }
+            size_t size() const { return m_size; }
+            bool hasCapacity(const size_t numOfVertices) const { return m_capacity - m_size >= numOfVertices; }
+
+            ShapeRenderStyle getStyle() const { return m_style; }
+
+            bool push(const Vertex& vertex);
+
+            virtual RenderCommandResult execute() override;
+
+        private:
+            size_t m_capacity;
+            std::vector<float> m_data;
+            ShaderProgram* m_program;
+            Renderable* m_renderable;
+            size_t m_size;
+            ShapeRenderStyle m_style;
+            math::mat4 m_viewProjectionMatrix;
+        };
+
         std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
 
-        std::vector<std::unique_ptr<RenderCommand>> m_commands;
+        std::vector<RenderPrimitiveCommand> m_commands;
         std::unique_ptr<Renderable> m_fill_renderable;
         std::unique_ptr<ShaderProgram> m_program;
         std::unique_ptr<Renderable> m_stroke_renderable;

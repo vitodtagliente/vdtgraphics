@@ -8,6 +8,7 @@
 #include <vdtmath/vector2.h>
 
 #include "color.h"
+#include "common.h"
 #include "render_command.h"
 #include "texture_rect.h"
 
@@ -38,7 +39,6 @@ namespace graphics
 	class SpriteBatch
 	{
 	public:
-
         struct Stats
         {
             int drawCalls{ 0 };
@@ -65,10 +65,38 @@ namespace graphics
 
         std::size_t batch_size = 10000;
 
-	private:
+	private:        
+        class RenderSpriteCommand : public RenderCommand
+        {
+        public:
+            RenderSpriteCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
+
+            size_t capacity() const { return m_capacity; }
+            size_t size() const { return m_size; }
+            bool hasCapacity(const size_t numOfTextures) const { return m_capacity - m_size >= numOfTextures; }
+
+            const std::vector<Texture*>& getTextures() const { return m_textures; }
+            bool hasCapacity(Texture* const texture) const;
+
+            bool push(const SpriteVertex& vertex, Texture* const texture);
+
+            virtual RenderCommandResult execute() override;
+
+        private:
+            size_t m_capacity;
+            std::vector<float> m_data;
+            ShaderProgram* m_program;
+            Renderable* m_renderable;
+            size_t m_size;
+            std::vector<Texture*> m_textures;
+            math::mat4 m_viewProjectionMatrix;
+
+            static constexpr size_t max_texture_units = 16;
+        };
+        
         std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
 
-        std::vector<std::unique_ptr<RenderCommand>> m_commands;
+        std::vector<RenderSpriteCommand> m_commands;
         std::unique_ptr<ShaderProgram> m_program;
         std::unique_ptr<Renderable> m_renderable;
         

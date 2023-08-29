@@ -8,13 +8,14 @@
 #include <vdtmath/vector2.h>
 
 #include "color.h"
-#include "font.h"
+#include "common.h"
 #include "render_command.h"
 #include "texture_rect.h"
 
 namespace graphics
 {
     class Context;
+    class Font;
     class Renderable;
     class ShaderProgram;
     class Texture;
@@ -22,7 +23,6 @@ namespace graphics
     class TextBatch
     {
     public:
-
         struct Stats
         {
             int drawCalls{ 0 };
@@ -46,9 +46,37 @@ namespace graphics
         std::size_t batch_size = 10000;
 
     private:
+        class RenderTextCommand : public RenderCommand
+        {
+        public:
+            RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
+
+            size_t capacity() const { return m_capacity; }
+            size_t size() const { return m_size; }
+            bool hasCapacity(const size_t numOfFonts) const { return m_capacity - m_size >= numOfFonts; }
+
+            const std::vector<Font*>& getFonts() const { return m_fonts; }
+            bool hasCapacity(Font* const font) const;
+
+            bool push(const SpriteVertex& vertex, Font* const font);
+
+            virtual RenderCommandResult execute() override;
+
+        private:
+            size_t m_capacity;
+            std::vector<float> m_data;
+            std::vector<Font*> m_fonts;
+            ShaderProgram* m_program;
+            Renderable* m_renderable;
+            size_t m_size;
+            math::mat4 m_viewProjectionMatrix;
+
+            static constexpr size_t max_font_units = 16;
+        };
+
         std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
 
-        std::vector<std::unique_ptr<RenderCommand>> m_commands;
+        std::vector<RenderTextCommand> m_commands;
         std::unique_ptr<ShaderProgram> m_program;
         std::unique_ptr<Renderable> m_renderable;
 

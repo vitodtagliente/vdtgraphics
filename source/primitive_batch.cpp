@@ -1,9 +1,10 @@
 #include <vdtgraphics/primitive_batch.h>
 
+#include <glad/glad.h>
+
 #include <vdtgraphics/context.h>
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
-#include <vdtgraphics/render_commands.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_library.h>
 #include <vdtgraphics/shader_program.h>
@@ -50,9 +51,9 @@ namespace graphics
 	{
 		m_stats.drawCalls = 0;
 
-		for (const auto& command : m_commands)
+		for (auto& command : m_commands)
 		{
-			if (command->execute() == RenderCommandResult::OK)
+			if (command.execute() == RenderCommandResult::OK)
 			{
 				++m_stats.drawCalls;
 			}
@@ -100,28 +101,26 @@ namespace graphics
 
 	void PrimitiveBatch::drawShape(ShapeRenderStyle style, const std::vector<Vertex>& vertices)
 	{
-		RenderShapeCommand* command = nullptr;
+		RenderPrimitiveCommand* command = nullptr;
 
 		for (int i = static_cast<int>(m_commands.size()) - 1; i >= 0; --i)
 		{
-			command = dynamic_cast<RenderShapeCommand*>(m_commands[i].get());
-			if (command != nullptr && command->getStyle() == style)
+			if (m_commands[i].getStyle() == style)
 			{
+				command = &m_commands[i];
 				break;
 			}
-			command = nullptr;
 		}
 
-		if (command == nullptr || !command->hasCapacity(vertices.size()))
+		if (command == nullptr)
 		{
-			command = new RenderShapeCommand(
+			command = &m_commands.emplace_back(
 				style == ShapeRenderStyle::fill ? m_fill_renderable.get() : m_stroke_renderable.get(),
 				m_program.get(),
 				m_viewProjectionMatrix,
 				style,
 				batch_size
 			);
-			m_commands.push_back(std::unique_ptr<RenderShapeCommand>(command));
 		}
 
 		for (const auto& vertex : vertices)
@@ -176,5 +175,56 @@ namespace graphics
 			return std::make_unique<ShaderProgram>(std::initializer_list<Shader*>{ &vs, & fs });
 		}
 		return nullptr;
+	}
+
+	PrimitiveBatch::RenderPrimitiveCommand::RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const ShapeRenderStyle style, const size_t capacity)
+		: RenderCommand()
+		, m_capacity(capacity)
+		, m_data()
+		, m_program(program)
+		, m_renderable(renderable)
+		, m_size(0)
+		, m_style(style)
+		, m_viewProjectionMatrix(viewProjectionMatrix)
+	{
+		m_data.reserve(capacity * Vertex::size);
+	}
+
+	bool PrimitiveBatch::RenderPrimitiveCommand::push(const Vertex& vertex)
+	{
+		if (m_size < m_capacity)
+		{
+			m_data.insert(m_data.end(), {
+				vertex.position.x, vertex.position.y, vertex.position.z,
+				vertex.color.red, vertex.color.green, vertex.color.blue, vertex.color.alpha
+				});
+			++m_size;
+			return true;
+		}
+		return false;
+	}
+
+	RenderCommandResult PrimitiveBatch::RenderPrimitiveCommand::execute()
+	{
+		if (m_renderable == nullptr
+			|| m_program == nullptr
+			|| !m_program->isValid()
+			|| m_data.empty()) return RenderCommandResult::Invalid;
+
+		m_renderable->bind();
+
+		VertexBuffer* vertexBuffer = m_renderable->findVertexBuffer(Renderable::names::MainBuffer);
+		vertexBuffer->bind();
+		vertexBuffer->fillData((void*)&m_data[0], m_data.size() * sizeof(float));
+
+		m_program->bind();
+		m_program->set("u_matrix", m_viewProjectionMatrix);
+
+		const int primitiveType = m_style == ShapeRenderStyle::fill ? GL_TRIANGLES : GL_LINES;
+		const int offset = 0;
+		const int count = static_cast<int>(m_data.size()) / static_cast<int>(Vertex::size);
+
+		glDrawArrays(primitiveType, offset, count);
+		return RenderCommandResult::OK;
 	}
 }

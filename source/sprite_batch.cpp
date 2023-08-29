@@ -1,10 +1,11 @@
 #include <vdtgraphics/sprite_batch.h>
 
+#include <glad/glad.h>
+
 #include <vdtgraphics/context.h>
 #include <vdtgraphics/image.h>
 #include <vdtgraphics/index_buffer.h>
 #include <vdtgraphics/renderable.h>
-#include <vdtgraphics/render_commands.h>
 #include <vdtgraphics/shader.h>
 #include <vdtgraphics/shader_library.h>
 #include <vdtgraphics/shader_program.h>
@@ -79,9 +80,9 @@ namespace graphics
 	{
 		m_stats.drawCalls = 0;
 
-		for (const auto& command : m_commands)
+		for (auto& command : m_commands)
 		{
-			if (command->execute() == RenderCommandResult::OK)
+			if (command.execute() == RenderCommandResult::OK)
 			{
 				++m_stats.drawCalls;
 			}
@@ -93,27 +94,25 @@ namespace graphics
 	{
 		if (texture == nullptr) return;
 
-		RenderTextureCommand* command = nullptr;
+		RenderSpriteCommand* command = nullptr;
 
 		for (int i = static_cast<int>(m_commands.size()) - 1; i >= 0; --i)
 		{
-			command = dynamic_cast<RenderTextureCommand*>(m_commands[i].get());
-			if (command != nullptr && command->hasCapacity(texture))
+			if (m_commands[i].hasCapacity(texture))
 			{
+				command = &m_commands[i];
 				break;
 			}
-			command = nullptr;
 		}
 
-		if (command == nullptr || !command->hasCapacity(1))
+		if (command == nullptr)
 		{
-			command = new RenderTextureCommand(
+			command = &m_commands.emplace_back(
 				m_renderable.get(),
 				m_program.get(),
 				m_viewProjectionMatrix,
 				batch_size
 			);
-			m_commands.push_back(std::unique_ptr<RenderTextureCommand>(command));
 		}
 
 		command->push({ transform, color, rect }, texture);
@@ -152,5 +151,85 @@ namespace graphics
 			return std::make_unique<ShaderProgram>(std::initializer_list<Shader*>{ &vs, & fs });
 		}
 		return nullptr;
+	}
+
+	SpriteBatch::RenderSpriteCommand::RenderSpriteCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const size_t capacity)
+		: RenderCommand()
+		, m_capacity(capacity)
+		, m_data()
+		, m_program(program)
+		, m_renderable(renderable)
+		, m_size(0)
+		, m_textures()
+		, m_viewProjectionMatrix(viewProjectionMatrix)
+	{
+		m_data.reserve(capacity * (SpriteVertex::size + 1));
+		m_textures.reserve(max_texture_units);
+	}
+
+	bool SpriteBatch::RenderSpriteCommand::hasCapacity(Texture* const texture) const
+	{
+		const auto& it = std::find(m_textures.begin(), m_textures.end(), texture);
+		return it != m_textures.end() || m_textures.size() < max_texture_units;
+	}
+
+	bool SpriteBatch::RenderSpriteCommand::push(const SpriteVertex& vertex, Texture* const texture)
+	{
+		static const auto& findIndex = [](Texture* const texture, std::vector<Texture*>& textures) -> int
+		{
+			for (int i = 0; i < textures.size(); ++i)
+			{
+				if (textures[i] == texture) return i;
+			}
+
+			textures.push_back(texture);
+			return static_cast<int>(textures.size()) - 1;
+		};
+
+		if (m_size < m_capacity && texture != nullptr)
+		{
+			const float textureIndex = static_cast<float>(findIndex(texture, m_textures));
+			m_data.insert(m_data.end(), {
+				textureIndex,
+				vertex.rect.x, vertex.rect.y, vertex.rect.width, vertex.rect.height,
+				vertex.color.red, vertex.color.green, vertex.color.blue, vertex.color.alpha
+				});
+			m_data.insert(m_data.end(), vertex.transform.data, vertex.transform.data + vertex.transform.length);
+			++m_size;
+			return true;
+		}
+		return false;
+	}
+
+	RenderCommandResult SpriteBatch::RenderSpriteCommand::execute()
+	{
+		if (m_renderable == nullptr
+			|| m_program == nullptr
+			|| !m_program->isValid()
+			|| m_textures.empty()
+			|| m_data.empty()) return RenderCommandResult::Invalid;
+
+		m_renderable->bind();
+
+		VertexBuffer& data = *m_renderable->findVertexBuffer("data");
+		data.bind();
+		data.fillData((void*)&m_data[0], m_data.size() * sizeof(float));
+
+		m_program->bind();
+		for (int i = 0; i < m_textures.size(); ++i)
+		{
+			m_textures[i]->bind(i);
+			m_program->set("u_texture" + std::to_string(i), i);
+		}
+		m_program->set("u_matrix", m_viewProjectionMatrix);
+
+		const int primitiveType = GL_TRIANGLES;
+		const int offset = 0;
+		const int count = 6;
+		const int numInstances = static_cast<int>(m_size);
+		const int indexType = GL_UNSIGNED_INT;
+
+		glDrawElementsInstanced(primitiveType, count, indexType, offset, numInstances);
+		return RenderCommandResult::OK;
 	}
 }
