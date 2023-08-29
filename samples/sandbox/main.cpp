@@ -38,6 +38,7 @@ std::unique_ptr<Context> context;
 std::unique_ptr<PrimitiveBatch> primitive_batch;
 std::unique_ptr<SpriteBatch> sprite_batch;
 std::unique_ptr<TextBatch> text_batch;
+std::unique_ptr<RenderTarget> render_target;
 
 math::vec3 mouse;
 math::transform camera;
@@ -129,6 +130,7 @@ int main(void)
 	primitive_batch = std::make_unique<PrimitiveBatch>(context.get());
 	sprite_batch = std::make_unique<SpriteBatch>(context.get());
 	text_batch = std::make_unique<TextBatch>(context.get());
+	render_target = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color::Black);
 
 	init();
 
@@ -137,6 +139,7 @@ int main(void)
 		{
 			screenSize.x = width;
 			screenSize.y = height;
+			render_target->resize(width, height);
 			context->viewport(width, height);
 		}
 	);
@@ -382,7 +385,7 @@ void render_loop()
 
 	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y), 0.f, -10.f, 100.f));
 	text_batch->setViewMatrix(math::mat4::identity);
-
+	
 	testCase1();
 	testCase2();
 	testCase3();

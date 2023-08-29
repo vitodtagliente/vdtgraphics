@@ -12,17 +12,18 @@ namespace graphics
 		, color(color)
 	{
 		glGenFramebuffers(1, &m_id);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
+		glGenRenderbuffers(1, &m_depthId);
 
-		// create the color buffer
-		m_texture = std::make_unique<Texture>(nullptr, width, height, 3);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->id(), 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_depthId);
 
 		// create depth/stencil buffer
-		glGenRenderbuffers(1, &m_depthId);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_depthId);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthId);
+
+		// create the color buffer
+		m_texture = std::make_unique<Texture>(nullptr, width, height, 4);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->id(), 0);
 
 		// Check for completeness
 		int32_t completeStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -64,6 +65,10 @@ namespace graphics
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_id);
 		glEnable(GL_DEPTH_TEST);
+
+		glViewport(0, 0, m_width, m_height);
+		glClearColor(color.red, color.blue, color.green, color.alpha);
+		glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	}
 
 	void RenderTarget::unbind()
