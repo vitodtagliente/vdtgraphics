@@ -12,7 +12,6 @@
 #include "primitive_batch.h"
 #include "render_target.h"
 #include "renderable.h"
-#include "renderer.h"
 #include "shader.h"
 #include "shader_library.h"
 #include "shader_program.h"
@@ -21,5 +20,4 @@
 #include "texture.h"
 #include "texture_coords.h"
 #include "texture_rect.h"
-#include "texture_viewer.h"
 #include "vertex_buffer.h"

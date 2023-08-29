@@ -18,10 +18,9 @@ namespace graphics
 			names() = delete;
 
 			static const std::string ColorShader;
-			static const std::string PolygonBatchShader;
+			static const std::string PrimitiveBatchShader;
 			static const std::string SpriteBatchShader;
-			static const std::string TextShader;
-			static const std::string TextTextureShader;
+			static const std::string TextBatchShader;
 			static const std::string TextureShader;
 		};
 

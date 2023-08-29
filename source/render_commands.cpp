@@ -10,37 +10,6 @@
 
 namespace graphics
 {
-	// ClearCommand
-	ClearCommand::ClearCommand(const graphics::Color& color, const bool clearColorBuffer, const bool clearDepthBuffer)
-		: m_clearColorBuffer(clearColorBuffer)
-		, m_clearDepthBuffer(clearDepthBuffer)
-		, m_color(color)
-	{
-	}
-
-	RenderCommandResult ClearCommand::execute()
-	{
-		glClearColor(m_color.red, m_color.green, m_color.blue, m_color.alpha);
-		int mode = 0;
-		if (m_clearColorBuffer) mode |= GL_COLOR_BUFFER_BIT;
-		if (m_clearDepthBuffer) mode |= GL_DEPTH_BUFFER_BIT;
-		glClear(mode);
-		return RenderCommandResult::OK;
-	}
-
-	// VieportCommand
-	VieportCommand::VieportCommand(const int width, const int height)
-		: m_width(width)
-		, m_height(height)
-	{
-	}
-
-	RenderCommandResult VieportCommand::execute()
-	{
-		glViewport(0, 0, m_width, m_height);
-		return RenderCommandResult::OK;
-	}
-
 	// RenderShapeCommand
 	RenderShapeCommand::RenderShapeCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const ShapeRenderStyle style, const size_t capacity)
 		: RenderCommand()

@@ -15,7 +15,7 @@ namespace graphics
 {
 	TextBatch::TextBatch(Context* const context)
 	{
-		m_program = createProgram(ShaderLibrary::names::TextShader);
+		m_program = createProgram(ShaderLibrary::names::TextBatchShader);
 
 		float vertices[] =
 		{

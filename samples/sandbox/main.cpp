@@ -7,7 +7,6 @@
 #include <GLFW/glfw3.h>
 
 #include <vdtgraphics/graphics.h>
-#include <vdtgraphics/text_renderer.h>
 #include <vdtmath/math.h>
 
 #include <imgui.h>
@@ -39,8 +38,6 @@ std::unique_ptr<Context> context;
 std::unique_ptr<PrimitiveBatch> primitive_batch;
 std::unique_ptr<SpriteBatch> sprite_batch;
 std::unique_ptr<TextBatch> text_batch;
-std::unique_ptr<TextRenderer> text_renderer;
-std::unique_ptr<TextureViewer> texture_viewer;
 
 math::vec3 mouse;
 math::transform camera;
@@ -122,9 +119,6 @@ int main(void)
 	primitive_batch = std::make_unique<PrimitiveBatch>(context.get());
 	sprite_batch = std::make_unique<SpriteBatch>(context.get());
 	text_batch = std::make_unique<TextBatch>(context.get());
-	texture_viewer = std::make_unique<TextureViewer>(context.get());
-
-	text_renderer = std::make_unique<TextRenderer>(screenSize.x, screenSize.y);
 
 	init();
 
@@ -254,8 +248,6 @@ void init()
 
 	font = Font::load("../../../assets/OCRAEXT.ttf", 24);
 	font.texture->save("font.png");
-
-	text_renderer->Load("../../../assets/Font.ttf", 24);
 }
 
 std::chrono::steady_clock::time_point startTime;
@@ -283,8 +275,8 @@ void testCase1()
 	primitive_batch->drawCircle(ShapeRenderStyle::stroke, math::vec3::zero, 15.f, Color::Yellow);
 	primitive_batch->drawLine(math::vec3(-10.f, -10.f, 0.f), Color::Red, math::vec3(10.f, 10.f, 0.f), Color::Yellow);
 	sprite_batch->draw(potatoeTexture.get(), math::vec3::zero);
-	sprite_batch->draw(circleTexture.get(), math::vec3::zero, math::vec3(10.f, 10.f, 1.f), {}, Color::Cyan);
-	sprite_batch->draw(squareTexture.get(), math::vec3(5.f, 5.f, 0.f), math::vec3(5.f, 5.f, 1.f), {}, Color::Green);
+	sprite_batch->draw(circleTexture.get(), math::vec3::zero, math::vec3(10.f, 10.f, 0.1f), {}, Color::Cyan);
+	sprite_batch->draw(squareTexture.get(), math::vec3(5.f, 5.f, 0.f), math::vec3(5.f, 5.f, 0.1f), {}, Color::Green);
 }
 
 // Draw different entities
@@ -379,14 +371,14 @@ void render_loop()
 	sprite_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 64, screenSize.y / 64, aspectRatio)); // 32 pixel per unit
 	sprite_batch->setViewMatrix(Camera::view(camera));
 
-	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, screenSize.x, screenSize.y, 0.f, -1.f, 1.f));
+	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y), 0.f, -10.f, 100.f));
 	text_batch->setViewMatrix(math::mat4::identity);
 
-	// testCase1();
-	// testCase2();
+	testCase1();
+	testCase2();
 	// testCase3();
 
-	text_batch->draw(&font, "Lives: 3", math::vec3(5.f, 5.f, .1f), 24, Color::White);
+	text_batch->draw(&font, "Hello vdtgraphics!", math::vec3(5.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();

@@ -11,16 +11,6 @@
 
 namespace graphics
 {
-	struct GlyphVertex
-	{
-		math::vec3 positions[4];
-		TextureCoords uvs[4];
-		float offsetX = 0;
-		float offsetY = 0;
-
-		static constexpr size_t size = (3 * 4) + (2 * 4) + 1 + 1;
-	};
-
 	struct Vertex
 	{
 		math::vec3 position;
@@ -46,7 +36,6 @@ namespace graphics
 
 		static constexpr size_t size = 3 + 4 + 2;
 	};
-
 
 	enum class ShapeRenderStyle
 	{

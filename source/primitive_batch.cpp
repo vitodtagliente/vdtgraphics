@@ -13,7 +13,7 @@ namespace graphics
 {
 	PrimitiveBatch::PrimitiveBatch(Context* const context)
 	{
-		m_program = createProgram(ShaderLibrary::names::PolygonBatchShader);
+		m_program = createProgram(ShaderLibrary::names::PrimitiveBatchShader);
 		
 		// fill
 		{
