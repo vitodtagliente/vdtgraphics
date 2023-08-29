@@ -65,18 +65,32 @@ namespace graphics
 		m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
+	void TextBatch::clear()
+	{
+		m_commands.clear();
+	}
+
 	void TextBatch::flush()
 	{
-		m_stats.drawCalls = 0;
+		m_stats.draw_calls = 0;
+		m_stats.draw_entities = 0;
 
 		for (auto& command : m_commands)
 		{
-			if (command.execute() == RenderCommandResult::OK)
+			if (command.execute(m_viewProjectionMatrix) == RenderCommandResult::OK)
 			{
-				++m_stats.drawCalls;
+				m_stats.draw_entities += command.size();
+				++m_stats.draw_calls;
 			}
+			command.clear();
 		}
-		m_commands.clear();
+
+		const std::size_t commands_size = m_commands.size();
+		while (m_last_used_commands > m_commands.size())
+		{
+			m_commands.pop_back();
+		}
+		m_last_used_commands = commands_size;
 	}
 
 	void TextBatch::draw(Font* const font, const std::string& text, const math::vec3& position, const std::size_t size, const Color& color)
@@ -99,7 +113,6 @@ namespace graphics
 			command = &m_commands.emplace_back(
 				m_renderable.get(),
 				m_program.get(),
-				m_viewProjectionMatrix,
 				batch_size
 			);
 		}
@@ -146,7 +159,7 @@ namespace graphics
 		return nullptr;
 	}
 
-	TextBatch::RenderTextCommand::RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const size_t capacity)
+	TextBatch::RenderTextCommand::RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, const size_t capacity)
 		: RenderCommand()
 		, m_capacity(capacity)
 		, m_data()
@@ -154,7 +167,6 @@ namespace graphics
 		, m_program(program)
 		, m_renderable(renderable)
 		, m_size(0)
-		, m_viewProjectionMatrix(viewProjectionMatrix)
 	{
 		m_data.reserve(capacity * (SpriteVertex::size + 1));
 		m_fonts.reserve(max_font_units);
@@ -164,6 +176,13 @@ namespace graphics
 	{
 		const auto& it = std::find(m_fonts.begin(), m_fonts.end(), font);
 		return it != m_fonts.end() || m_fonts.size() < max_font_units;
+	}
+
+	void TextBatch::RenderTextCommand::clear()
+	{
+		m_data.clear();
+		m_fonts.clear();
+		m_size = 0;
 	}
 
 	bool TextBatch::RenderTextCommand::push(const SpriteVertex& vertex, Font* const font)
@@ -194,7 +213,7 @@ namespace graphics
 		return false;
 	}
 
-	RenderCommandResult TextBatch::RenderTextCommand::execute()
+	RenderCommandResult TextBatch::RenderTextCommand::execute(const math::mat4& viewProjectionMatrix)
 	{
 		if (m_renderable == nullptr
 			|| m_program == nullptr
@@ -214,7 +233,7 @@ namespace graphics
 			m_fonts[i]->texture->bind(i);
 			m_program->set("u_texture" + std::to_string(i), i);
 		}
-		m_program->set("u_matrix", m_viewProjectionMatrix);
+		m_program->set("u_matrix", viewProjectionMatrix);
 
 		const int primitiveType = GL_TRIANGLES;
 		const int offset = 0;

@@ -23,7 +23,8 @@ namespace graphics
     public:
         struct Stats
         {
-            int drawCalls{ 0 };
+            std::size_t draw_calls{ 0 };
+            std::size_t draw_entities{ 0 };
         };
 
         PrimitiveBatch(Context* const context);
@@ -50,17 +51,18 @@ namespace graphics
         class RenderPrimitiveCommand final : public RenderCommand
         {
         public:
-            RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, ShapeRenderStyle style, size_t capacity);
+            RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, ShapeRenderStyle style, size_t capacity);
 
             size_t capacity() const { return m_capacity; }
             size_t size() const { return m_size; }
-            bool hasCapacity(const size_t numOfVertices) const { return m_capacity - m_size >= numOfVertices; }
+            inline bool hasCapacity(const size_t numOfVertices) const { return m_capacity - m_size >= numOfVertices; }
 
-            ShapeRenderStyle getStyle() const { return m_style; }
+            inline ShapeRenderStyle getStyle() const { return m_style; }
 
             bool push(const Vertex& vertex);
 
-            virtual RenderCommandResult execute() override;
+            void clear();
+            virtual RenderCommandResult execute(const math::mat4& viewProjectionMatrix) override;
 
         private:
             size_t m_capacity;
@@ -69,7 +71,6 @@ namespace graphics
             Renderable* m_renderable;
             size_t m_size;
             ShapeRenderStyle m_style;
-            math::mat4 m_viewProjectionMatrix;
         };
 
         std::unique_ptr<ShaderProgram> createProgram(const std::string& name);
@@ -81,6 +82,7 @@ namespace graphics
 
         // stats
         Stats m_stats;
+        std::size_t m_last_used_commands{ 0 };
 
         // matrices
         math::mat4 m_projectionMatrix{ math::mat4::identity };

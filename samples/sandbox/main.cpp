@@ -50,9 +50,16 @@ math::vec2 mouseWheelPosition;
 // delta mouse wheel position
 math::vec2 deltaMouseWheelPosition;
 // zoom
-float zoom_speed{ 1.0f };
+float zoom_speed{ 2.0f };
 
 int input_number = 0;
+
+void setMouseWheelPosition(const double x, const double y)
+{
+	lastMouseWheelPosition = mouseWheelPosition;
+	mouseWheelPosition = { static_cast<float>(x), static_cast<float>(y) };
+	deltaMouseWheelPosition = mouseWheelPosition - lastMouseWheelPosition;
+}
 
 void showFPS(GLFWwindow* pWindow)
 {
@@ -64,11 +71,14 @@ void showFPS(GLFWwindow* pWindow)
 	if (s_timer <= 0.0)
 	{
 		std::stringstream ss;
-		const std::size_t draw_calls = sprite_batch->stats().drawCalls
-			+ primitive_batch->stats().drawCalls
-			+ text_batch->stats().drawCalls
+		const std::size_t draw_calls = sprite_batch->stats().draw_calls
+			+ primitive_batch->stats().draw_calls
+			+ text_batch->stats().draw_calls
 			;
-		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] DrawCalls[" << draw_calls << "]";
+		const std::size_t draw_sprites = sprite_batch->stats().draw_entities;
+		const std::size_t draw_primitives = primitive_batch->stats().draw_entities;
+		const std::size_t draw_text = text_batch->stats().draw_entities;
+		ss << "vdtgraphics" << " " << "1.0" << " [" << s_frames << " FPS] draw_calls[" << draw_calls << "] draw_sprites[" << draw_sprites << "] draw_primitives[" << draw_primitives << "] draw_text[" << draw_text << "]";
 
 		glfwSetWindowTitle(pWindow, ss.str().c_str());
 
@@ -143,9 +153,7 @@ int main(void)
 	glfwSetScrollCallback(window,
 		[](GLFWwindow*, const double x, const double y)
 		{
-			lastMouseWheelPosition = mouseWheelPosition;
-			mouseWheelPosition = { static_cast<float>(x), static_cast<float>(y) };
-			deltaMouseWheelPosition = mouseWheelPosition - lastMouseWheelPosition;
+			setMouseWheelPosition(x, y);
 		}
 	);
 
@@ -357,8 +365,9 @@ void update()
 	if (deltaMouseWheelPosition.y != 0.f)
 	{
 		math::vec3& scale = camera.scale;
-		scale.x = scale.y = scale.x + zoom_speed * static_cast<float>(deltaTime) * -deltaMouseWheelPosition.y;
+		scale.x = scale.y = scale.y + zoom_speed * static_cast<float>(deltaTime) * -deltaMouseWheelPosition.y;
 	}
+	setMouseWheelPosition(0, 0);
 }
 
 void render_loop()

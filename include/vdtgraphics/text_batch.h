@@ -25,7 +25,8 @@ namespace graphics
     public:
         struct Stats
         {
-            int drawCalls{ 0 };
+            std::size_t draw_calls{ 0 };
+            std::size_t draw_entities{ 0 };
         };
 
         TextBatch(Context* const context);
@@ -37,6 +38,7 @@ namespace graphics
         const math::matrix4& getViewMatrix() const { return m_viewMatrix; }
         const math::matrix4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
+        void clear();
         void flush();
 
         void draw(Font* const font, const std::string& text, const math::vec3& position, std::size_t size = 16, const Color& color = Color::White);
@@ -49,18 +51,19 @@ namespace graphics
         class RenderTextCommand : public RenderCommand
         {
         public:
-            RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
+            RenderTextCommand(Renderable* const renderable, ShaderProgram* const program, size_t capacity);
 
             size_t capacity() const { return m_capacity; }
             size_t size() const { return m_size; }
             bool hasCapacity(const size_t numOfFonts) const { return m_capacity - m_size >= numOfFonts; }
 
-            const std::vector<Font*>& getFonts() const { return m_fonts; }
+            inline const std::vector<Font*>& getFonts() const { return m_fonts; }
             bool hasCapacity(Font* const font) const;
 
+            void clear();
             bool push(const SpriteVertex& vertex, Font* const font);
 
-            virtual RenderCommandResult execute() override;
+            virtual RenderCommandResult execute(const math::mat4& viewProjectionMatrix) override;
 
         private:
             size_t m_capacity;
@@ -69,7 +72,6 @@ namespace graphics
             ShaderProgram* m_program;
             Renderable* m_renderable;
             size_t m_size;
-            math::mat4 m_viewProjectionMatrix;
 
             static constexpr size_t max_font_units = 16;
         };
@@ -82,6 +84,7 @@ namespace graphics
 
         // stats
         Stats m_stats;
+        std::size_t m_last_used_commands{ 0 };
 
         // matrices
         math::mat4 m_projectionMatrix{ math::mat4::identity };

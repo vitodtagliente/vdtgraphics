@@ -41,7 +41,8 @@ namespace graphics
 	public:
         struct Stats
         {
-            int drawCalls{ 0 };
+            std::size_t draw_calls{ 0 };
+            std::size_t draw_entities{ 0 };
         };
 
         SpriteBatch(Context* const context);
@@ -53,6 +54,7 @@ namespace graphics
         const math::matrix4& getViewMatrix() const { return m_viewMatrix; }
         const math::matrix4& getViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
+        void clear();
         void flush();
 
         void draw(Texture* const texture, const math::mat4& matrix, const TextureRect& rect = {}, const Color& color = Color::White);
@@ -69,18 +71,19 @@ namespace graphics
         class RenderSpriteCommand : public RenderCommand
         {
         public:
-            RenderSpriteCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, size_t capacity);
+            RenderSpriteCommand(Renderable* const renderable, ShaderProgram* const program, size_t capacity);
 
             size_t capacity() const { return m_capacity; }
             size_t size() const { return m_size; }
             bool hasCapacity(const size_t numOfTextures) const { return m_capacity - m_size >= numOfTextures; }
 
-            const std::vector<Texture*>& getTextures() const { return m_textures; }
+            inline const std::vector<Texture*>& getTextures() const { return m_textures; }
             bool hasCapacity(Texture* const texture) const;
 
             bool push(const SpriteVertex& vertex, Texture* const texture);
 
-            virtual RenderCommandResult execute() override;
+            void clear();
+            virtual RenderCommandResult execute(const math::mat4& viewProjectionMatrix) override;
 
         private:
             size_t m_capacity;
@@ -89,7 +92,6 @@ namespace graphics
             Renderable* m_renderable;
             size_t m_size;
             std::vector<Texture*> m_textures;
-            math::mat4 m_viewProjectionMatrix;
 
             static constexpr size_t max_texture_units = 16;
         };
@@ -102,6 +104,7 @@ namespace graphics
         
         // stats
         Stats m_stats;
+        std::size_t m_last_used_commands{ 0 };
 
         // matrices
         math::mat4 m_projectionMatrix{ math::mat4::identity };

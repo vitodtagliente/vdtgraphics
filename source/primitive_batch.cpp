@@ -49,16 +49,25 @@ namespace graphics
 
 	void PrimitiveBatch::flush()
 	{
-		m_stats.drawCalls = 0;
+		m_stats.draw_calls = 0;
+		m_stats.draw_entities = 0;
 
 		for (auto& command : m_commands)
 		{
-			if (command.execute() == RenderCommandResult::OK)
+			if (command.execute(m_viewProjectionMatrix) == RenderCommandResult::OK)
 			{
-				++m_stats.drawCalls;
+				m_stats.draw_entities += command.size();
+				++m_stats.draw_calls;
 			}
+			command.clear();
 		}
-		m_commands.clear();
+		
+		const std::size_t commands_size = m_commands.size();
+		while (m_last_used_commands > m_commands.size())
+		{
+			m_commands.pop_back();
+		}
+		m_last_used_commands = commands_size;
 	}
 
 	void PrimitiveBatch::drawCircle(ShapeRenderStyle style, const math::vec3& position, float radius, const Color& color)
@@ -117,7 +126,6 @@ namespace graphics
 			command = &m_commands.emplace_back(
 				style == ShapeRenderStyle::fill ? m_fill_renderable.get() : m_stroke_renderable.get(),
 				m_program.get(),
-				m_viewProjectionMatrix,
 				style,
 				batch_size
 			);
@@ -177,7 +185,7 @@ namespace graphics
 		return nullptr;
 	}
 
-	PrimitiveBatch::RenderPrimitiveCommand::RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, const math::mat4& viewProjectionMatrix, const ShapeRenderStyle style, const size_t capacity)
+	PrimitiveBatch::RenderPrimitiveCommand::RenderPrimitiveCommand(Renderable* const renderable, ShaderProgram* const program, const ShapeRenderStyle style, const size_t capacity)
 		: RenderCommand()
 		, m_capacity(capacity)
 		, m_data()
@@ -185,7 +193,6 @@ namespace graphics
 		, m_renderable(renderable)
 		, m_size(0)
 		, m_style(style)
-		, m_viewProjectionMatrix(viewProjectionMatrix)
 	{
 		m_data.reserve(capacity * Vertex::size);
 	}
@@ -204,7 +211,13 @@ namespace graphics
 		return false;
 	}
 
-	RenderCommandResult PrimitiveBatch::RenderPrimitiveCommand::execute()
+	void PrimitiveBatch::RenderPrimitiveCommand::clear()
+	{
+		m_data.clear();
+		m_size = 0;
+	}
+
+	RenderCommandResult PrimitiveBatch::RenderPrimitiveCommand::execute(const math::mat4& viewProjectionMatrix)
 	{
 		if (m_renderable == nullptr
 			|| m_program == nullptr
@@ -218,7 +231,7 @@ namespace graphics
 		vertexBuffer->fillData((void*)&m_data[0], m_data.size() * sizeof(float));
 
 		m_program->bind();
-		m_program->set("u_matrix", m_viewProjectionMatrix);
+		m_program->set("u_matrix", viewProjectionMatrix);
 
 		const int primitiveType = m_style == ShapeRenderStyle::fill ? GL_TRIANGLES : GL_LINES;
 		const int offset = 0;

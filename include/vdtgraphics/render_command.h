@@ -1,6 +1,8 @@
 /// Copyright (c) Vito Domenico Tagliente
 #pragma once
 
+#include <vdtmath/matrix4.h>
+
 namespace graphics
 {
 	enum class RenderCommandResult
@@ -13,6 +15,6 @@ namespace graphics
 	{
 		virtual ~RenderCommand() = default;
 
-		virtual RenderCommandResult execute() = 0;
+		virtual RenderCommandResult execute(const math::mat4& viewProjectionMatrix) = 0;
 	};
 }
