@@ -344,12 +344,12 @@ void testCase2()
 // draw a rectangle on mouse position
 void testCase3()
 {
-	// const float depth = 0.f;
-	// math::vec4 viewport = math::vec4(0, 0, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y));
-	// math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
-	// math::vec3 objcoords = math::mat4::unproject(screencoords, renderer->getViewMatrix(), renderer->getProjectionMatrix(), viewport);
-	// objcoords.z = 0.5f;
-	// renderer->submitDrawTexture(circleTexture.get(), objcoords, math::vec3(.5f, .5f, 1.0f), {}, Color::Coral);
+	const float depth = 0.f;
+	math::vec4 viewport = math::vec4(0, 0, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y));
+	math::vec3 screencoords = math::vec3(mouse.x, screenSize.y - mouse.y - 1, depth);
+	math::vec3 objcoords = math::mat4::unproject(screencoords, sprite_batch->getViewMatrix(), sprite_batch->getProjectionMatrix(), viewport);
+	objcoords.z = 0.5f;
+	sprite_batch->draw(circleTexture.get(), objcoords, math::vec3(1.f, 1.f, 1.0f), {}, Color::Coral);
 }
 
 void update()
@@ -376,9 +376,9 @@ void render_loop()
 
 	testCase1();
 	testCase2();
-	// testCase3();
+	testCase3();
 
-	text_batch->draw(&font, "Hello vdtgraphics!", math::vec3(5.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
+	text_batch->draw(&font, "vdtgraphics!", math::vec3(static_cast<float>(screenSize.x) / 2.f - 240.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
