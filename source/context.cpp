@@ -20,7 +20,7 @@ namespace graphics
 		return m_state;
 	}
 
-	void Context::viewport(const int width, const int height)
+	void Context::viewport(unsigned const int width, unsigned const int height)
 	{
 		glViewport(0, 0, width, height);
 	}

@@ -63,7 +63,7 @@ namespace graphics
 		{
 			return Font(nullptr, {}, path, 0);
 		}
-		FT_Set_Pixel_Sizes(face, 0, size);
+		FT_Set_Pixel_Sizes(face, 0, static_cast<FT_UInt>(size));
 
 		// determine the size of the atlas
 		int atlas_width = 0;
@@ -87,7 +87,7 @@ namespace graphics
 		Texture::Options options;
 		options.filter = Texture::Options::Filter::Linear;
 		options.repeat = Texture::Options::Repeat::Disabled;
-		constexpr std::size_t channels = 4;
+		constexpr unsigned int channels = 4;
 		TexturePtr texture = std::make_shared<Texture>(nullptr, atlas_width, atlas_height, channels, options);
 		
 		std::map<char, Glyph> data;

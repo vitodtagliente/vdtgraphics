@@ -18,7 +18,7 @@ namespace graphics
 		State initialize();
 		State getState() const { return m_state; }
 
-		void viewport(int width, int height);
+		void viewport(unsigned int width, unsigned int height);
 		void clear(const Color& color = Color::Black, bool clearColorBuffer = true, bool clearDepthBuffer = true);
 
 	private:

@@ -91,7 +91,7 @@ void showFPS(GLFWwindow* pWindow)
 int main(void)
 {
 	GLFWwindow* window;
-	bool test_ui = false;
+	bool test_ui = true;
 
 	/* Initialize the library */
 	if (!glfwInit())
@@ -199,6 +199,7 @@ int main(void)
 		{
 			// render your GUI
 			ImGui::Begin("Demo window");
+			ImGui::SetWindowSize(ImVec2(200, 200));
 			ImGui::Button("Hello!");
 			if (ImGui::IsItemHovered())
 			{
@@ -213,18 +214,13 @@ int main(void)
 
 			// Render dear imgui into screen
 			ImGui::Render();
-
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
-
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
-		/*
+				
 		int display_w, display_h;
 		glfwGetFramebufferSize(window, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
+		context->viewport(display_w, display_h);
 		glfwSwapBuffers(window);
-		*/
 	}
 
 	if (test_ui)
