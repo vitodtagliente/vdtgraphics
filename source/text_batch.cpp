@@ -15,7 +15,7 @@
 
 namespace graphics
 {
-	TextBatch::TextBatch(Context* const context)
+	TextBatch::TextBatch(Context* const)
 	{
 		m_program = createProgram(ShaderLibrary::names::TextBatchShader);
 

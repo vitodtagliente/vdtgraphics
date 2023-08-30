@@ -12,7 +12,7 @@
 
 namespace graphics
 {
-	PrimitiveBatch::PrimitiveBatch(Context* const context)
+	PrimitiveBatch::PrimitiveBatch(Context* const)
 	{
 		m_program = createProgram(ShaderLibrary::names::PrimitiveBatchShader);
 		

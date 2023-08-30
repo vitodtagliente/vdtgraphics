@@ -125,7 +125,7 @@ namespace graphics
 					auto value = *src;
 					src++;
 
-					for (std::size_t c = 0; c < channels; ++c)
+					for (std::size_t channel = 0; channel < channels; ++channel)
 					{
 						buffer[dst++] = value;
 					}

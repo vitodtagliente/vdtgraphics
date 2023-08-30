@@ -14,7 +14,7 @@
 
 namespace graphics
 {
-	SpriteBatch::SpriteBatch(Context* const context)
+	SpriteBatch::SpriteBatch(Context* const)
 	{
 		m_program = createProgram(ShaderLibrary::names::SpriteBatchShader);
 
