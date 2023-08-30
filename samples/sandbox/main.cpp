@@ -91,7 +91,7 @@ void showFPS(GLFWwindow* pWindow)
 int main(void)
 {
 	GLFWwindow* window;
-	bool test_ui = true;
+	bool test_ui = false;
 
 	/* Initialize the library */
 	if (!glfwInit())
@@ -122,7 +122,7 @@ int main(void)
 	{
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		// io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 330 core");
 	}
@@ -189,7 +189,7 @@ int main(void)
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
-			ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+			// ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 		}
 
 		// render logic
