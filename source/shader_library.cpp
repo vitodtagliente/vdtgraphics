@@ -166,7 +166,7 @@ namespace graphics
 				else if (v_textureIndex == 15) outColor = texture(u_texture15, v_texcoord * v_crop.zw + v_crop.xy) * v_color;	
 				else outColor = vec4(1, 1, 1, 1);
 			
-				if (outColor.a < 0.5) discard;
+				// if (outColor.a < 0.5) discard;
 			}
 		)"
 		));

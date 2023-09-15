@@ -43,7 +43,7 @@ namespace graphics
 		// stbi_set_flip_vertically_on_load(1);
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(flip_vertically);
-		std::shared_ptr<unsigned char> data(stbi_load(path.string().c_str(), &width, &height, &channels, 4));
+		std::shared_ptr<unsigned char> data(stbi_load(path.string().c_str(), &width, &height, &channels, 0));
 		return Image(data, width, height, channels);
 	}
 

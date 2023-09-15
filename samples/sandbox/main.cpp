@@ -14,6 +14,8 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include "texture_viewer.h"
+
 using namespace std;
 using namespace graphics;
 using namespace math;
@@ -39,6 +41,7 @@ std::unique_ptr<PrimitiveBatch> primitive_batch;
 std::unique_ptr<SpriteBatch> sprite_batch;
 std::unique_ptr<TextBatch> text_batch;
 std::unique_ptr<RenderTarget> render_target;
+std::unique_ptr<TextureViewer> texture_viewer;
 
 math::vec3 mouse;
 math::transform camera;
@@ -131,6 +134,7 @@ int main(void)
 	sprite_batch = std::make_unique<SpriteBatch>(context.get());
 	text_batch = std::make_unique<TextBatch>(context.get());
 	render_target = std::make_unique<RenderTarget>(screenSize.x, screenSize.y, Color::Black);
+	texture_viewer = std::make_unique<TextureViewer>(context.get());
 
 	init();
 
@@ -239,15 +243,18 @@ TexturePtr circleTexture;
 TexturePtr potatoeTexture;
 TexturePtr squareTexture;
 TexturePtr testTexture;
+TexturePtr heroTexture;
 
 void init()
 {
 	Texture::Options options2D;
 	options2D.filter = Texture::Options::Filter::Nearest;
+	options2D.repeat = Texture::Options::Repeat::Disabled;
 
 	circleTexture = std::make_unique<Texture>(Image::load("../../../assets/circle.png"));
 	potatoeTexture = std::make_unique<Texture>(Image::load("../../../assets/spritesheet.png"), options2D);
 	squareTexture = std::make_unique<Texture>(Image::load("../../../assets/square.png"));
+	heroTexture = std::make_unique<Texture>(Image::load("../../../assets/hero_spritesheet.png"), options2D);
 
 	Image potatoeImage = Image::load("../../../assets/spritesheet.png");
 	testTexture = std::make_unique<Texture>(nullptr, potatoeImage.width, potatoeImage.height, potatoeImage.channels);
@@ -371,7 +378,7 @@ void update()
 
 void render_loop()
 {
-	context->clear(Color::Black);
+	context->clear(Color::Gray20);
 
 	const float aspectRatio = 1.0f;
 	primitive_batch->setProjectionMatrix(Camera::ortho(-10.f, 100.f, screenSize.x / 64, screenSize.y / 64, aspectRatio)); // 32 pixel per unit
@@ -382,11 +389,13 @@ void render_loop()
 	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y), 0.f, -10.f, 100.f));
 	text_batch->setViewMatrix(math::mat4::identity);
 	
-	testCase1();
-	testCase2();
-	testCase3();
+	// testCase1();
+	// testCase2();
+	// testCase3();
 
-	text_batch->draw(&font, "vdtgraphics!", math::vec3(static_cast<float>(screenSize.x) / 2.f - 240.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
+	sprite_batch->draw(heroTexture.get(), math::vec3(0.f, 0.f, 2.f), math::vec3(screenSize.x / 64, screenSize.y / 64, 1.f));
+	
+	// text_batch->draw(&font, "vdtgraphics!", math::vec3(static_cast<float>(screenSize.x) / 2.f - 240.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
