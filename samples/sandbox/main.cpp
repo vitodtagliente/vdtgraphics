@@ -389,13 +389,13 @@ void render_loop()
 	text_batch->setProjectionMatrix(math::mat4::orthographic(0.f, static_cast<float>(screenSize.x), static_cast<float>(screenSize.y), 0.f, -10.f, 100.f));
 	text_batch->setViewMatrix(math::mat4::identity);
 	
-	// testCase1();
-	// testCase2();
-	// testCase3();
+	testCase1();
+	testCase2();
+	testCase3();
 
 	sprite_batch->draw(heroTexture.get(), math::vec3(0.f, 0.f, 2.f), math::vec3(screenSize.x / 64, screenSize.y / 64, 1.f));
 	
-	// text_batch->draw(&font, "vdtgraphics!", math::vec3(static_cast<float>(screenSize.x) / 2.f - 240.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
+	text_batch->draw(&font, "vdtgraphics!", math::vec3(static_cast<float>(screenSize.x) / 2.f - 240.f, static_cast<float>(screenSize.y) / 2.f, 5.f), 72, Color::White);
 
 	primitive_batch->flush();
 	sprite_batch->flush();
