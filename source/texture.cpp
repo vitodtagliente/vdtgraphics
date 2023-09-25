@@ -29,10 +29,10 @@ namespace graphics
 		unsigned int repeat = 0;
 		switch (options.repeat)
 		{
-		case Options::Repeat::Enabled: filter = GL_REPEAT; break;
-		case Options::Repeat::Mirror: filter = GL_MIRRORED_REPEAT; break;
+		case Options::Repeat::Enabled: repeat = GL_REPEAT; break;
+		case Options::Repeat::Mirror: repeat = GL_MIRRORED_REPEAT; break;
 		default:
-		case Options::Repeat::Disabled: filter = GL_CLAMP_TO_EDGE; break;
+		case Options::Repeat::Disabled: repeat = GL_CLAMP_TO_EDGE; break;
 		}
 
 		/* set the texture wrapping/filtering options (on the currently bound texture object) */
@@ -53,7 +53,7 @@ namespace graphics
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
 
-		glTexImage2D(GL_TEXTURE_2D, 0, m_format, width, height,
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
 			0, m_format, GL_UNSIGNED_BYTE, data
 		);
 
